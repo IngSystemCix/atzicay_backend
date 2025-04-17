@@ -45,6 +45,11 @@ class GameSession extends Model
         return $this->belongsTo(ProgrammingGame::class, 'ProgrammingGameId', 'Id');
     }
 
+    /**
+     * Relationship with the Assessment entity.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function gameProgress() {
         return $this->hasMany(GameProgress::class, 'GameSessionId', 'Id');
     }
