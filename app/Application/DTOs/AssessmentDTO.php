@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Application\DTOs\Assessment;
+namespace App\Application\DTOs;
 
-class CreateAssessmentDTO
+class AssessmentDTO
 {
     public function __construct(
         public bool $activated,

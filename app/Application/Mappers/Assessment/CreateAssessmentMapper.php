@@ -2,11 +2,11 @@
 
 namespace App\Application\Mappers\Assessment;
 
-use App\Application\DTOs\Assessment\CreateAssessmentDTO;
+use App\Application\DTOs\AssessmentDTO;
 use App\Domain\Entities\Assessment;
 
 class CreateAssessmentMapper {
-    public static function toEntity(CreateAssessmentDTO $dto): Assessment {
+    public static function toEntity(AssessmentDTO $dto): Assessment {
         return new Assessment([
             'Activated' => $dto->activated,
             'GameInstanceId' => $dto->gameInstanceId,
@@ -16,8 +16,8 @@ class CreateAssessmentMapper {
         ]);
     }
 
-    public static function toDTO(Assessment $assessment): CreateAssessmentDTO {
-        return new CreateAssessmentDTO(
+    public static function toDTO(Assessment $assessment): AssessmentDTO {
+        return new AssessmentDTO(
             activated: $assessment->Activated,
             gameInstanceId: $assessment->GameInstanceId,
             userId: $assessment->UserId,
