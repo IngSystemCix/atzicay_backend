@@ -23,7 +23,7 @@ class HangmanController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *          required={"Activated", "GameInstanceId", "UserId", "Value"},
+     *          required={"GameInstanceId", "Word", "Clue", "Presentation"},
      *          @OA\Property(property="GameInstanceId", type="integer", example=1),
      *          @OA\Property(property="Word", type="string", example="Peru"),
      *          @OA\Property(property="Clue", type="String", example="South American country"),
@@ -47,7 +47,6 @@ class HangmanController extends Controller
         $data = request()->all();
 
         $dto = new HangmanDTO(
-            activated: $data['Activated'],
             gameInstanceId: $data['GameInstanceId'],
             word: $data['Word'],
             clue: $data['Clue'],

@@ -25,12 +25,20 @@ class Hangman extends Model
     ];
 
     /**
-     * Relationship with the GameInstances entity.
+     * Summary of gameInstance
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<GameInstances,Hangman>
      */
     public function gameInstances()
     {
         return $this->belongsTo(GameInstances::class, 'GameInstanceId', 'Id');
+    }
+
+    /**
+     * Summary of user
+     * @return \Illuminate\Database\Eloquent\Relatins\BelongsTo<User,Hangman>
+     */
+    public function user(): mixed{
+        return $this->belongsTo(User::class, 'User', 'Id');
     }
 }
