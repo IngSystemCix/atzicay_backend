@@ -172,7 +172,7 @@ class AssessmentController extends Controller
             $data['Comments'] ?? ''
         );
         try {
-            $assessment = $this->updateAssessmentUseCase->execute($id, $dto);
+            $assessment = $this->updateAssessmentUseCase->execute(id: $id, data: $dto);
             return response()->json($assessment, 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Invalid input'], 400);

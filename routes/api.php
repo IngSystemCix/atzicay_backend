@@ -8,4 +8,8 @@ Route::prefix('atzicay/v1')->group(function () {
     Route::get('/assessments/{id}', [AssessmentController::class, 'getAssessmentsById']);
     Route::post('/assessments', [AssessmentController::class, 'createAssessment']);
     Route::post('/hangman', [HangmanController::class,'createHangman']);
+    Route::post('/hangman', [HangmanController::class,'getAllHangman']);
+    Route::post('/hangman/{id}', [HangmanController::class,'getHangmanById']);
+    Route::post('/hangman', [HangmanController::class,'deleteHangman']);
+    Route::post('/hangman', [HangmanController::class,'updateHangman']);
 });

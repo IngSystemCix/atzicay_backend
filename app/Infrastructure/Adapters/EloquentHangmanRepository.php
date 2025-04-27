@@ -10,7 +10,7 @@ class EloquentHangmanRepository implements HangmanRepository
     public function createHangman(array $data): Hangman {
         return Hangman::create($data);
     }
-    public function getById(int $id): Hangman {
+    public function getHangmanById(int $id): Hangman {
         return Hangman::find($id);
     }
     public function getAllHangman(): Array {

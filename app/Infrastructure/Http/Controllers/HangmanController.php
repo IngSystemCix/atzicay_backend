@@ -4,14 +4,38 @@ namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\HangmanDTO;
 use App\Application\UseCase\Hangman\CreateHangmanUseCase;
+use App\Application\UseCase\Hangman\GetAllHangmanUseCase;
+use App\Application\UseCase\Hangman\GetHangmanByIdUseCase;
+use App\Application\UseCase\Hangman\DeleteHangmanUseCase;
+use App\Application\UseCase\Hangman\UpdateHangmanUseCase;
+use App\Infrastructure\Http\Requests\StoreHangmanRequest;
 use Illuminate\Routing\Controller;
 
+/**
+ * @OA\Tag(
+ *     name="Hangman",
+ *     description="Operations related to Hangman"
+ * )
+ */
 class HangmanController extends Controller
 {
     private CreateHangmanUseCase $createHangmanUseCase;
-    public function __construct(CreateHangmanUseCase $createHangmanUseCase)
-    {
+    private GetHangmanByIdUseCase $getHangmanByIdUseCase;
+    private GetAllHangmanUseCase $getAllHangmanUseCase;
+    private UpdateHangmanUseCase $updateHangmanUseCase;
+    private DeleteHangmanUseCase $deleteHangmanUseCase;
+    public function __construct(
+        CreateHangmanUseCase $createHangmanUseCase,
+        GetHangmanByIdUseCase $getHangmanByIdUseCase,
+        GetAllHangmanUseCase $getAllHangmanUseCase,
+        UpdateHangmanUseCase $updateHangmanUseCase,
+        DeleteHangmanUseCase $deleteHangmanUseCase
+    ) {
         $this->createHangmanUseCase = $createHangmanUseCase;
+        $this->getHangmanByIdUseCase = $getHangmanByIdUseCase;
+        $this->getAllHangmanUseCase = $getAllHangmanUseCase;
+        $this->updateHangmanUseCase = $updateHangmanUseCase;
+        $this->deleteHangmanUseCase = $deleteHangmanUseCase;
     }
 
      /**
@@ -42,19 +66,162 @@ class HangmanController extends Controller
      * )
      */
 
-     public function CreateHangman(): mixed
+     public function createHangman(StoreHangmanRequest $request)
      {
-        $data = request()->all();
-
+        $data = $request->all();
         $dto = new HangmanDTO(
             gameInstanceId: $data['GameInstanceId'],
             word: $data['Word'],
             clue: $data['Clue'],
             presentation: $data['Presentation']
         );
-
-        $hangman = $this->createHangmanUseCase->execute($dto);
-
-        return response()->json($hangman, 201);
+        try {
+            $hangman = $this->createHangmanUseCase->execute($dto);
+            return response()->json($hangman, 201);
+        }catch (\Exception $e) {
+            return response()->json(['message' => 'Invalid input'], 400);
+        }
      }
+
+      /**
+     * @OA\Get(
+     *     path="/hangman",
+     *     tags={"Hangman"},
+     *     summary="Get all hangmans",
+     *     description="Retrieves all hangmans.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of hangmans",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Hangman"))
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No hangmans found"
+     *     ),
+     * )
+     */
+     public function getAllHangman(){
+        $hangman = $this->createHangmanUseCase->execute();
+        if(!$hangman){
+            return response()->json(['message'=> 'No hangmans found'],404);
+        }
+        return response()->json($hangman,200);
+     }
+
+     /**
+     * @OA\Get(
+     *     path="/hangman/{id}",
+     *     tags={"Hangman"},
+     *     summary="Get hangman by ID",
+     *     description="Retrieves a hangman by its ID.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the hangman to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Hangman found",
+     *         @OA\JsonContent(ref="#/components/schemas/Hangman")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Hangman not found"
+     *     ),
+     * )
+     */
+     public function getHangmanById(int $id)
+     {
+        $hangman = $this->getHangmanByIdUseCase->execute($id);
+        if(!$hangman) {
+            return response()->json(['message'=> 'Hangman not found'],404);
+        }
+        return response()->json($hangman,200);
+    } 
+
+    /**
+     * @OA\Put(
+     *     path="/hangman/{id}",
+     *     tags={"hangman"},
+     *     summary="Update a hangman",
+     *     description="Updates an existing hangman.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the hangman to update",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/HangmanDTO")
+     *      ),
+     *      @OA\Response(
+     *         response=200,
+     *         description="Hangman updated successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Hangman")
+     *      ),
+     *      @OA\Response(
+     *         response=404,
+     *         description="Hangman not found"
+     *      ),
+     * )
+     */
+    public function updateHangman(HangmanRequest $request, int $id){
+        $data = $request->all();
+        $dto = new HangmanDTO(
+            $data['GameInstanceId'],
+            $data['Word'],
+            $data['Clue'],
+            $data['Presentation'],
+        );
+        try {
+            $hangman = $this->createHangmanUseCase->execute($id, $data);
+            return response()->json($hangman, 200);
+        }catch (\Exception $e) {
+            return response()->json(['message'=> 'Invalid input'], 400);
+        }
+        
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/hangman/{id}",
+     *     tags={"hangman"},
+     *     summary="Update a hangman",
+     *     description="Delete an existing hangman.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the hangman to delete",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/HangmanDTO")
+     *      ),
+     *      @OA\Response(
+     *         response=200,
+     *         description="Hangman deleted successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Hangman")
+     *      ),
+     *      @OA\Response(
+     *         response=404,
+     *         description="Hangman not found"
+     *      ),
+     * )
+     */
+    public function deleteHangman(int $id){
+        try {
+            $this->getHangmanByIdUseCase->execute($id);
+            $this->deleteHangmanUseCase->execute($id);
+            return response()->json(['message'=> 'Hangman deleted successfully'],200);
+
+        }catch (\Exception $e) {
+            return response()->json(['message'=> 'Invalid '], 400);
+        }
+    }
 }
