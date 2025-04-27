@@ -12,6 +12,11 @@
         },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "atzicay/v1/docs"
+        }
+    ],
     "paths": {
         "/assessments": {
             "get": {
@@ -326,16 +331,6 @@
                     "comments": {
                         "type": "string",
                         "example": "Great performance!"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2025-04-26T12:34:56Z"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2025-04-26T12:34:56Z"
                     }
                 },
                 "type": "object"
@@ -353,16 +348,6 @@
                     "name": {
                         "type": "string",
                         "example": "Peru"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2025-04-26T12:34:56Z"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2025-04-26T12:34:56Z"
                     }
                 },
                 "type": "object"

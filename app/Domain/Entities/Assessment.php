@@ -39,18 +39,6 @@ use Illuminate\Database\Eloquent\Model;
  *         type="string",
  *         example="Great performance!"
  *     ),
- *     @OA\Property(
- *         property="created_at",
- *         type="string",
- *         format="date-time",
- *         example="2025-04-26T12:34:56Z"
- *     ),
- *     @OA\Property(
- *         property="updated_at",
- *         type="string",
- *         format="date-time",
- *         example="2025-04-26T12:34:56Z"
- *     )
  * )
  */
 class Assessment extends Model

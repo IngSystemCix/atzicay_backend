@@ -60,6 +60,7 @@ class AssessmentController extends Controller
         return response()->json($assessments, 200);
     }
 
+
     /**
      * @OA\Get(
      *     path="/assessments/{id}",

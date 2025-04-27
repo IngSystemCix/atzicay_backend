@@ -1,2 +1,7 @@
 ### POST | Create a new country
-POST http://localhost:3000/api/countries
+POST http://127.0.0.1:8000/atzicay/v1/countries
+Content-Type: application/json
+
+{
+    "name": "Perú"
+}

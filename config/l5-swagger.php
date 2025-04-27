@@ -5,7 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'L5 Swagger UI',
+                'title' => 'Atzicay API',
             ],
 
             'routes' => [
@@ -45,6 +45,10 @@ return [
                  */
                 'annotations' => [
                     base_path('App/Config'),
+                    base_path('App/Application/DTOs'),
+                    base_path('App/Domain/Entities'),
+                    base_path('App/Infrastructure/Http/Requests'),
+                    base_path('App/Infrastructure/Http/Controllers'),
                 ],
             ],
         ],
