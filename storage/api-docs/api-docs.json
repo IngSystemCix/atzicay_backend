@@ -1,0 +1,1428 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Atzicay API",
+        "description": "API documentation for Atzicay",
+        "contact": {
+            "email": "atzicay@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "atzicay/v1/docs"
+        }
+    ],
+    "paths": {
+        "/assessments": {
+            "get": {
+                "tags": [
+                    "Assessments"
+                ],
+                "summary": "Get all assessments",
+                "description": "Retrieves all assessments.",
+                "operationId": "e9459ee7e3aa37990617037ec3e4625d",
+                "responses": {
+                    "200": {
+                        "description": "List of assessments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Assessment"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No assessments found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Assessments"
+                ],
+                "summary": "Create a new assessment",
+                "description": "Creates a new assessment.",
+                "operationId": "bc01391195129010a0b19c30ec650338",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssessmentDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Assessment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Assessment"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/assessments/{id}": {
+            "get": {
+                "tags": [
+                    "Assessments"
+                ],
+                "summary": "Get assessment by ID",
+                "description": "Retrieves an assessment by its ID.",
+                "operationId": "5609441fcef886c810697aa4464c6151",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the assessment to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Assessment found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Assessment"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assessment not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Assessments"
+                ],
+                "summary": "Update an assessment",
+                "description": "Updates an existing assessment.",
+                "operationId": "cbd8938b5f8cf99c1a3a0c7a05c7f900",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the assessment to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssessmentDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Assessment updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Assessment"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assessment not found"
+                    }
+                }
+            }
+        },
+        "/countries": {
+            "get": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get all countries",
+                "description": "Retrieves all countries.",
+                "operationId": "17305123db947a4359dbc5d21d773244",
+                "responses": {
+                    "200": {
+                        "description": "List of countries",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Country"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No countries found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Create a new country",
+                "description": "Creates a new country.",
+                "operationId": "88f776cde0a666fd5352cb2c6d58a1d1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CountryDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Country created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Country"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/countries/{id}": {
+            "get": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get country by ID",
+                "description": "Retrieves a country by its ID.",
+                "operationId": "65e697d04600692dafea3434983cf6f3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Country ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Country details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Country"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Country not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AssessmentDTO": {
+                "required": [
+                    "activated",
+                    "gameInstanceId",
+                    "userId",
+                    "value"
+                ],
+                "properties": {
+                    "activated": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "gameInstanceId": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "example": 456
+                    },
+                    "value": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "comments": {
+                        "type": "string",
+                        "example": "Excellent performance."
+                    }
+                },
+                "type": "object"
+            },
+            "CountryDTO": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Peru"
+                    }
+                },
+                "type": "object"
+            },
+            "Assessment": {
+                "required": [
+                    "id",
+                    "activated",
+                    "gameInstanceId",
+                    "userId",
+                    "value"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "activated": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "gameInstanceId": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "example": 456
+                    },
+                    "value": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "comments": {
+                        "type": "string",
+                        "example": "Great performance!"
+                    }
+                },
+                "type": "object"
+            },
+            "Country": {
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Peru"
+                    }
+                },
+                "type": "object"
+            },
+            "GameInstances": {
+                "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "professor_id",
+                    "activated",
+                    "difficulty",
+                    "visibility"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Math Game"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A challenging math game for students."
+                    },
+                    "professor_id": {
+                        "description": "The ID of the professor who created the game",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "activated": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "difficulty": {
+                        "description": "The difficulty level of the game",
+                        "type": "string",
+                        "enum": [
+                            "easy",
+                            "medium",
+                            "hard"
+                        ],
+                        "example": "medium"
+                    },
+                    "visibility": {
+                        "description": "The visibility of the game instance",
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private"
+                        ],
+                        "example": "public"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "programming_game": {
+                        "description": "Programming games related to this game instance",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgrammingGame"
+                        }
+                    },
+                    "game_setting": {
+                        "description": "Game settings related to this game instance",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GameSetting"
+                        }
+                    },
+                    "memory_game": {
+                        "description": "Memory games related to this game instance",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MemoryGame"
+                        }
+                    },
+                    "hangman": {
+                        "$ref": "#/components/schemas/Hangman"
+                    },
+                    "puzzle": {
+                        "$ref": "#/components/schemas/Puzzle"
+                    },
+                    "solve_the_word": {
+                        "$ref": "#/components/schemas/SolveTheWord"
+                    },
+                    "assessment": {
+                        "description": "Assessments related to this game instance",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Assessment"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "GameProgress": {
+                "required": [
+                    "id",
+                    "game_session_id",
+                    "progress"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "game_session_id": {
+                        "description": "The ID of the game session associated with this progress",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "progress": {
+                        "description": "The progress made in the game session",
+                        "type": "string",
+                        "example": "50%"
+                    },
+                    "game_session": {
+                        "$ref": "#/components/schemas/GameSession"
+                    }
+                },
+                "type": "object"
+            },
+            "GameSession": {
+                "required": [
+                    "id",
+                    "programming_game_id",
+                    "student_id",
+                    "duration",
+                    "won",
+                    "date_game"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "programming_game_id": {
+                        "description": "The ID of the programming game associated with this game session",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "student_id": {
+                        "description": "The ID of the student participating in this game session",
+                        "type": "integer",
+                        "example": 202
+                    },
+                    "duration": {
+                        "description": "The duration of the game session in minutes",
+                        "type": "integer",
+                        "example": 30
+                    },
+                    "won": {
+                        "description": "Indicates if the player won the game session",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "date_game": {
+                        "description": "The date and time when the game session took place",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-25T14:30:00Z"
+                    },
+                    "programming_game": {
+                        "$ref": "#/components/schemas/ProgrammingGame"
+                    },
+                    "player": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "game_progress": {
+                        "description": "The game progress records associated with this session",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GameProgress"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "GameSetting": {
+                "required": [
+                    "id",
+                    "game_instance_id",
+                    "config_key",
+                    "config_value"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "game_instance_id": {
+                        "description": "The ID of the game instance associated with this setting",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "config_key": {
+                        "description": "The key representing the configuration setting",
+                        "type": "string",
+                        "example": "difficulty_level"
+                    },
+                    "config_value": {
+                        "description": "The value for the configuration setting",
+                        "type": "string",
+                        "example": "hard"
+                    },
+                    "game_instance": {
+                        "$ref": "#/components/schemas/GameInstances"
+                    }
+                },
+                "type": "object"
+            },
+            "Hangman": {
+                "required": [
+                    "id",
+                    "game_instance_id",
+                    "word",
+                    "clue",
+                    "presentation"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "game_instance_id": {
+                        "description": "The ID of the game instance associated with this Hangman game",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "word": {
+                        "description": "The word to be guessed in the Hangman game",
+                        "type": "string",
+                        "example": "programming"
+                    },
+                    "clue": {
+                        "description": "A clue related to the word",
+                        "type": "string",
+                        "example": "A computer science activity"
+                    },
+                    "presentation": {
+                        "description": "The presentation type for the Hangman game",
+                        "type": "string",
+                        "enum": [
+                            "image",
+                            "text",
+                            "audio"
+                        ],
+                        "example": "image"
+                    },
+                    "game_instance": {
+                        "$ref": "#/components/schemas/GameInstances"
+                    }
+                },
+                "type": "object"
+            },
+            "MemoryGame": {
+                "required": [
+                    "id",
+                    "game_instance_id",
+                    "mode",
+                    "path_img1",
+                    "path_img2",
+                    "description_img"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "game_instance_id": {
+                        "description": "The ID of the associated game instance",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "mode": {
+                        "description": "The mode of the MemoryGame",
+                        "type": "string",
+                        "enum": [
+                            "easy",
+                            "medium",
+                            "hard"
+                        ],
+                        "example": "medium"
+                    },
+                    "path_img1": {
+                        "description": "The path to the first image",
+                        "type": "string",
+                        "example": "path/to/img1.jpg"
+                    },
+                    "path_img2": {
+                        "description": "The path to the second image",
+                        "type": "string",
+                        "example": "path/to/img2.jpg"
+                    },
+                    "description_img": {
+                        "description": "Description of the images used in the game",
+                        "type": "string",
+                        "example": "A description of the images shown in the memory game"
+                    },
+                    "game_instance": {
+                        "$ref": "#/components/schemas/GameInstances"
+                    }
+                },
+                "type": "object"
+            },
+            "ProgrammingGame": {
+                "required": [
+                    "id",
+                    "game_instances_id",
+                    "programmer_id",
+                    "name",
+                    "start_time",
+                    "end_time",
+                    "attempts",
+                    "maximum_time"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "game_instances_id": {
+                        "description": "The ID of the associated game instance",
+                        "type": "integer",
+                        "example": 1001
+                    },
+                    "programmer_id": {
+                        "description": "The ID of the programmer who is playing the game",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "name": {
+                        "description": "The name of the programming game",
+                        "type": "string",
+                        "example": "Basic Programming Challenge"
+                    },
+                    "start_time": {
+                        "description": "The start time of the game",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-04-25"
+                    },
+                    "end_time": {
+                        "description": "The end time of the game",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-04-25"
+                    },
+                    "attempts": {
+                        "description": "The number of attempts made by the programmer",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "maximum_time": {
+                        "description": "The maximum time allowed for completing the game in seconds",
+                        "type": "integer",
+                        "example": 60
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "game_instances": {
+                        "$ref": "#/components/schemas/GameInstances"
+                    }
+                },
+                "type": "object"
+            },
+            "Puzzle": {
+                "required": [
+                    "game_instance_id",
+                    "path_img",
+                    "clue",
+                    "rows",
+                    "cols",
+                    "automatic_help"
+                ],
+                "properties": {
+                    "game_instance_id": {
+                        "description": "The ID of the associated game instance",
+                        "type": "integer",
+                        "example": 1001
+                    },
+                    "path_img": {
+                        "description": "The path to the image for the puzzle",
+                        "type": "string",
+                        "example": "/images/puzzle.jpg"
+                    },
+                    "clue": {
+                        "description": "A clue to help solve the puzzle",
+                        "type": "string",
+                        "example": "This is a famous landmark."
+                    },
+                    "rows": {
+                        "description": "The number of rows in the puzzle grid",
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "cols": {
+                        "description": "The number of columns in the puzzle grid",
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "automatic_help": {
+                        "description": "Whether automatic help is enabled for the puzzle",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "game_instances": {
+                        "$ref": "#/components/schemas/GameInstances"
+                    }
+                },
+                "type": "object"
+            },
+            "SolveTheWord": {
+                "required": [
+                    "game_instance_id",
+                    "rows",
+                    "cols"
+                ],
+                "properties": {
+                    "game_instance_id": {
+                        "description": "The ID of the associated game instance",
+                        "type": "integer",
+                        "example": 1001
+                    },
+                    "rows": {
+                        "description": "The number of rows in the puzzle",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "cols": {
+                        "description": "The number of columns in the puzzle",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "game_instances": {
+                        "$ref": "#/components/schemas/GameInstances"
+                    },
+                    "words": {
+                        "description": "The list of words in the puzzle",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "word": {
+                                    "type": "string",
+                                    "example": "HELLO",
+                                    "description": "A word in the word puzzle"
+                                }
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "id",
+                    "email",
+                    "name",
+                    "last_name",
+                    "gender",
+                    "country",
+                    "city",
+                    "birthdate",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the user",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "activated": {
+                        "description": "Indicates if the user account is activated",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "google_id": {
+                        "description": "Google ID associated with the user (if applicable)",
+                        "type": "string",
+                        "example": "abc123googleid"
+                    },
+                    "email": {
+                        "description": "Email address of the user",
+                        "type": "string",
+                        "example": "user@example.com"
+                    },
+                    "name": {
+                        "description": "First name of the user",
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "last_name": {
+                        "description": "Last name of the user",
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "gender": {
+                        "description": "Gender of the user",
+                        "type": "string",
+                        "enum": [
+                            "Male",
+                            "Female",
+                            "Other"
+                        ],
+                        "example": "Male"
+                    },
+                    "country": {
+                        "$ref": "#/components/schemas/Country"
+                    },
+                    "city": {
+                        "description": "City of the user",
+                        "type": "string",
+                        "example": "New York"
+                    },
+                    "birthdate": {
+                        "description": "Birthdate of the user",
+                        "type": "string",
+                        "format": "date",
+                        "example": "1990-01-01"
+                    },
+                    "created_at": {
+                        "description": "The timestamp when the user account was created",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-04-26T12:00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "Words": {
+                "required": [
+                    "id",
+                    "solve_the_word_id",
+                    "word",
+                    "orientation"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the word",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "solve_the_word_id": {
+                        "description": "ID of the SolveTheWord game instance that this word belongs to",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "word": {
+                        "description": "The word for the game",
+                        "type": "string",
+                        "example": "example"
+                    },
+                    "orientation": {
+                        "description": "The orientation of the word (Horizontal or Vertical)",
+                        "type": "string",
+                        "enum": [
+                            "Horizontal",
+                            "Vertical"
+                        ],
+                        "example": "Horizontal"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreAssessmentRequest": {
+                "required": [
+                    "Activated",
+                    "GameInstanceId",
+                    "UserId",
+                    "Value",
+                    "Comments"
+                ],
+                "properties": {
+                    "Activated": {
+                        "description": "Indicates whether the assessment is activated",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "GameInstanceId": {
+                        "description": "The ID of the associated game instance",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "UserId": {
+                        "description": "The ID of the user who is being assessed",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "Value": {
+                        "description": "The value of the assessment",
+                        "type": "integer",
+                        "example": 85
+                    },
+                    "Comments": {
+                        "description": "Additional comments for the assessment",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Great performance in the game!"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreCountryRequest": {
+                "required": [
+                    "Name"
+                ],
+                "properties": {
+                    "Name": {
+                        "description": "The name of the country",
+                        "type": "string",
+                        "maxLength": 56,
+                        "example": "Peru"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreGameInstancesRequest": {
+                "required": [
+                    "Name",
+                    "Description",
+                    "ProfessorId",
+                    "Activated",
+                    "Difficulty",
+                    "Visibility"
+                ],
+                "properties": {
+                    "Name": {
+                        "description": "The name of the game instance",
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "Math Challenge"
+                    },
+                    "Description": {
+                        "description": "A brief description of the game instance",
+                        "type": "string",
+                        "maxLength": 300,
+                        "example": "A fun and educational math challenge."
+                    },
+                    "ProfessorId": {
+                        "description": "The ID of the professor managing the game instance",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "Activated": {
+                        "description": "Whether the game instance is activated or not",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "Difficulty": {
+                        "description": "The difficulty level of the game instance (E: Easy, M: Medium, H: Hard)",
+                        "type": "string",
+                        "enum": [
+                            "E",
+                            "M",
+                            "H"
+                        ],
+                        "example": "M"
+                    },
+                    "Visibility": {
+                        "description": "The visibility of the game instance (P: Public, R: Restricted)",
+                        "type": "string",
+                        "enum": [
+                            "P",
+                            "R"
+                        ],
+                        "example": "P"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreGameProgressRequest": {
+                "required": [
+                    "GameSessionId",
+                    "Progress"
+                ],
+                "properties": {
+                    "GameSessionId": {
+                        "description": "The ID of the game session",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "Progress": {
+                        "description": "The current progress in the game session",
+                        "type": "string",
+                        "example": "Level 1 completed"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreGameSessionRequest": {
+                "required": [
+                    "ProgrammingGameId",
+                    "StudentId",
+                    "Duration",
+                    "Won",
+                    "DateGame"
+                ],
+                "properties": {
+                    "ProgrammingGameId": {
+                        "description": "The ID of the programming game",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "StudentId": {
+                        "description": "The ID of the student",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "Duration": {
+                        "description": "The duration of the game session in minutes",
+                        "type": "integer",
+                        "example": 30
+                    },
+                    "Won": {
+                        "description": "Indicates if the student won the game",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "DateGame": {
+                        "description": "The date of the game session",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-04-26"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreGameSettingRequest": {
+                "required": [
+                    "GameInstanceId",
+                    "ConfigKey",
+                    "ConfigValue"
+                ],
+                "properties": {
+                    "GameInstanceId": {
+                        "description": "The ID of the game instance",
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "ConfigKey": {
+                        "description": "The configuration key of the game setting",
+                        "type": "string",
+                        "example": "difficulty"
+                    },
+                    "ConfigValue": {
+                        "description": "The configuration value of the game setting",
+                        "type": "string",
+                        "example": "hard"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreHangmanRequest": {
+                "required": [
+                    "GameInstanceId",
+                    "Word",
+                    "Presentation"
+                ],
+                "properties": {
+                    "GameInstanceId": {
+                        "description": "The ID of the game instance",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "Word": {
+                        "description": "The word to be guessed in the Hangman game",
+                        "type": "string",
+                        "example": "example"
+                    },
+                    "Clue": {
+                        "description": "An optional clue for the word",
+                        "type": "string",
+                        "example": "A word related to technology"
+                    },
+                    "Presentation": {
+                        "description": "The format of the Hangman presentation. 'A' for active, 'F' for finished",
+                        "type": "string",
+                        "enum": [
+                            "A",
+                            "F"
+                        ],
+                        "example": "A"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreMemoryGameRequest": {
+                "required": [
+                    "GameInstanceId",
+                    "Mode",
+                    "PathImg1",
+                    "PathImg2",
+                    "DescriptionImg"
+                ],
+                "properties": {
+                    "GameInstanceId": {
+                        "description": "The ID of the game instance",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "Mode": {
+                        "description": "The mode of the memory game",
+                        "type": "string",
+                        "enum": [
+                            "II",
+                            "ID"
+                        ],
+                        "example": "II"
+                    },
+                    "PathImg1": {
+                        "description": "The path to the first image",
+                        "type": "string",
+                        "example": "/images/img1.jpg"
+                    },
+                    "PathImg2": {
+                        "description": "The path to the second image",
+                        "type": "string",
+                        "example": "/images/img2.jpg"
+                    },
+                    "DescriptionImg": {
+                        "description": "A description for the images",
+                        "type": "string",
+                        "example": "A description of the images"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreProgrammingGameRequest": {
+                "required": [
+                    "GameInstancesId",
+                    "ProgrammerId",
+                    "name",
+                    "StartTime",
+                    "EndTime",
+                    "Attempts",
+                    "MaximumTime"
+                ],
+                "properties": {
+                    "GameInstancesId": {
+                        "description": "The ID of the game instance",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "ProgrammerId": {
+                        "description": "The ID of the programmer",
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "name": {
+                        "description": "The name of the programming game",
+                        "type": "string",
+                        "example": "Programming Challenge"
+                    },
+                    "StartTime": {
+                        "description": "The start time of the game",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-26T09:00:00Z"
+                    },
+                    "EndTime": {
+                        "description": "The end time of the game",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-26T10:00:00Z"
+                    },
+                    "Attempts": {
+                        "description": "The number of attempts allowed",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "MaximumTime": {
+                        "description": "The maximum time allowed for the game in minutes",
+                        "type": "integer",
+                        "example": 60
+                    }
+                },
+                "type": "object"
+            },
+            "StorePuzzleRequest": {
+                "required": [
+                    "GameInstanceId",
+                    "PathImg",
+                    "Clue",
+                    "Rows",
+                    "Cols",
+                    "automaticHelp"
+                ],
+                "properties": {
+                    "GameInstanceId": {
+                        "description": "The ID of the game instance",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "PathImg": {
+                        "description": "The path to the image for the puzzle",
+                        "type": "string",
+                        "example": "/images/puzzle.jpg"
+                    },
+                    "Clue": {
+                        "description": "A clue related to the puzzle",
+                        "type": "string",
+                        "example": "This is a clue for the puzzle"
+                    },
+                    "Rows": {
+                        "description": "The number of rows in the puzzle grid",
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "Cols": {
+                        "description": "The number of columns in the puzzle grid",
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "automaticHelp": {
+                        "description": "Whether automatic help is enabled",
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "StoreSolveTheWordRequest": {
+                "required": [
+                    "GameInstanceId",
+                    "Rows",
+                    "Cols"
+                ],
+                "properties": {
+                    "GameInstanceId": {
+                        "description": "The ID of the game instance",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "Rows": {
+                        "description": "The number of rows in the puzzle grid",
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "Cols": {
+                        "description": "The number of columns in the puzzle grid",
+                        "type": "integer",
+                        "example": 4
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserRequest": {
+                "required": [
+                    "Activated",
+                    "GoogleId",
+                    "Email",
+                    "Name",
+                    "LastName",
+                    "Gender",
+                    "Country",
+                    "City",
+                    "Birthdate",
+                    "CreatedAt"
+                ],
+                "properties": {
+                    "Activated": {
+                        "description": "Indicates if the user is activated",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "GoogleId": {
+                        "description": "The Google ID of the user",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "google-id-123456"
+                    },
+                    "Email": {
+                        "description": "The email of the user",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "user@example.com"
+                    },
+                    "Name": {
+                        "description": "The first name of the user",
+                        "type": "string",
+                        "maxLength": 35,
+                        "example": "John"
+                    },
+                    "LastName": {
+                        "description": "The last name of the user",
+                        "type": "string",
+                        "maxLength": 35,
+                        "example": "Doe"
+                    },
+                    "Gender": {
+                        "description": "The gender of the user (M=Male, F=Female, O=Other)",
+                        "type": "string",
+                        "enum": [
+                            "M",
+                            "F",
+                            "O"
+                        ],
+                        "example": "M"
+                    },
+                    "Country": {
+                        "description": "The ID of the user's country (must exist in the Country table)",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "City": {
+                        "description": "The city where the user resides",
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "New York"
+                    },
+                    "Birthdate": {
+                        "description": "The birthdate of the user",
+                        "type": "string",
+                        "format": "date",
+                        "example": "1990-01-01"
+                    },
+                    "CreatedAt": {
+                        "description": "The date when the user was created",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-04-26"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreWordsRequest": {
+                "required": [
+                    "SolveTheWordId",
+                    "Word",
+                    "Orientation"
+                ],
+                "properties": {
+                    "SolveTheWordId": {
+                        "description": "The ID of the SolveTheWord record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "Word": {
+                        "description": "The word to be solved",
+                        "type": "string",
+                        "maxLength": 45,
+                        "example": "exampleword"
+                    },
+                    "Orientation": {
+                        "description": "The orientation of the word (HL=Horizontal Left, HR=Horizontal Right, VU=Vertical Up, VD=Vertical Down, DU=Diagonal Up, DD=Diagonal Down)",
+                        "type": "string",
+                        "enum": [
+                            "HL",
+                            "HR",
+                            "VU",
+                            "VD",
+                            "DU",
+                            "DD"
+                        ],
+                        "example": "HL"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Assessments",
+            "description": "Operations related to assessments"
+        },
+        {
+            "name": "Countries",
+            "description": "Operations related to countries"
+        }
+    ]
+}

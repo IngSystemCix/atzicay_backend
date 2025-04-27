@@ -4,6 +4,23 @@ namespace App\Domain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     schema="Country",
+ *     type="object",
+ *     required={"id", "name"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         example="Peru"
+ *     ),
+ * )
+ */
 class Country extends Model
 {
     protected $table = "Country";

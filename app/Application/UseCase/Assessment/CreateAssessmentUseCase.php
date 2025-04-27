@@ -13,6 +13,6 @@ class CreateAssessmentUseCase {
 
     public function execute(AssessmentDTO $dto): Assessment {
         $assessment = AssessmentMapper::toEntity($dto);
-        return $this->repository->createAssessment(data: $assessment->toArray());
+        return $this->repository->createAssessment($assessment->toArray());
     }
 }

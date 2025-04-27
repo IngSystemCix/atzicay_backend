@@ -4,6 +4,44 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreGameSessionRequest",
+ *     type="object",
+ *     required={"ProgrammingGameId", "StudentId", "Duration", "Won", "DateGame"},
+ *     @OA\Property(
+ *         property="ProgrammingGameId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the programming game"
+ *     ),
+ *     @OA\Property(
+ *         property="StudentId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the student"
+ *     ),
+ *     @OA\Property(
+ *         property="Duration",
+ *         type="integer",
+ *         example=30,
+ *         description="The duration of the game session in minutes"
+ *     ),
+ *     @OA\Property(
+ *         property="Won",
+ *         type="boolean",
+ *         example=true,
+ *         description="Indicates if the student won the game"
+ *     ),
+ *     @OA\Property(
+ *         property="DateGame",
+ *         type="string",
+ *         format="date",
+ *         example="2025-04-26",
+ *         description="The date of the game session"
+ *     )
+ * )
+ */
 class StoreGameSessionRequest extends FormRequest
 {
     /**

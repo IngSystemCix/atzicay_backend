@@ -1,9 +1,37 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Schema(
+ *     schema="StoreWordsRequest",
+ *     type="object",
+ *     required={"SolveTheWordId", "Word", "Orientation"},
+ *     @OA\Property(
+ *         property="SolveTheWordId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the SolveTheWord record"
+ *     ),
+ *     @OA\Property(
+ *         property="Word",
+ *         type="string",
+ *         maxLength=45,
+ *         example="exampleword",
+ *         description="The word to be solved"
+ *     ),
+ *     @OA\Property(
+ *         property="Orientation",
+ *         type="string",
+ *         enum={"HL", "HR", "VU", "VD", "DU", "DD"},
+ *         example="HL",
+ *         description="The orientation of the word (HL=Horizontal Left, HR=Horizontal Right, VU=Vertical Up, VD=Vertical Down, DU=Diagonal Up, DD=Diagonal Down)"
+ *     )
+ * )
+ */
 class StoreWordsRequest extends FormRequest
 {
     /**

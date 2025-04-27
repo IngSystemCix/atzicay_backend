@@ -4,6 +4,25 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreGameProgressRequest",
+ *     type="object",
+ *     required={"GameSessionId", "Progress"},
+ *     @OA\Property(
+ *         property="GameSessionId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the game session"
+ *     ),
+ *     @OA\Property(
+ *         property="Progress",
+ *         type="string",
+ *         example="Level 1 completed",
+ *         description="The current progress in the game session"
+ *     )
+ * )
+ */
 class StoreGameProgressRequest extends FormRequest
 {
     /**

@@ -4,6 +4,49 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StorePuzzleRequest",
+ *     type="object",
+ *     required={"GameInstanceId", "PathImg", "Clue", "Rows", "Cols", "automaticHelp"},
+ *     @OA\Property(
+ *         property="GameInstanceId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="PathImg",
+ *         type="string",
+ *         example="/images/puzzle.jpg",
+ *         description="The path to the image for the puzzle"
+ *     ),
+ *     @OA\Property(
+ *         property="Clue",
+ *         type="string",
+ *         example="This is a clue for the puzzle",
+ *         description="A clue related to the puzzle"
+ *     ),
+ *     @OA\Property(
+ *         property="Rows",
+ *         type="integer",
+ *         example=4,
+ *         description="The number of rows in the puzzle grid"
+ *     ),
+ *     @OA\Property(
+ *         property="Cols",
+ *         type="integer",
+ *         example=4,
+ *         description="The number of columns in the puzzle grid"
+ *     ),
+ *     @OA\Property(
+ *         property="automaticHelp",
+ *         type="boolean",
+ *         example=true,
+ *         description="Whether automatic help is enabled"
+ *     )
+ * )
+ */
 class StorePuzzleRequest extends FormRequest
 {
     /**

@@ -4,6 +4,43 @@ namespace App\Domain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     schema="Assessment",
+ *     type="object",
+ *     required={"id", "activated", "gameInstanceId", "userId", "value"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="activated",
+ *         type="boolean",
+ *         example=true
+ *     ),
+ *     @OA\Property(
+ *         property="gameInstanceId",
+ *         type="integer",
+ *         example=123
+ *     ),
+ *     @OA\Property(
+ *         property="userId",
+ *         type="integer",
+ *         example=456
+ *     ),
+ *     @OA\Property(
+ *         property="value",
+ *         type="integer",
+ *         example=10
+ *     ),
+ *     @OA\Property(
+ *         property="comments",
+ *         type="string",
+ *         example="Great performance!"
+ *     ),
+ * )
+ */
 class Assessment extends Model
 {
     protected $table = "Assessment";

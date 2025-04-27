@@ -4,6 +4,21 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Schema(
+ *     schema="StoreCountryRequest",
+ *     type="object",
+ *     required={"Name"},
+ *     @OA\Property(
+ *         property="Name",
+ *         type="string",
+ *         maxLength=56,
+ *         example="Peru",
+ *         description="The name of the country"
+ *     )
+ * )
+ */
 class StoreCountryRequest extends FormRequest
 {
     /**

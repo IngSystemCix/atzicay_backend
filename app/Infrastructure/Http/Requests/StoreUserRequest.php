@@ -4,6 +4,82 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreUserRequest",
+ *     type="object",
+ *     required={"Activated", "GoogleId", "Email", "Name", "LastName", "Gender", "Country", "City", "Birthdate", "CreatedAt"},
+ *     @OA\Property(
+ *         property="Activated",
+ *         type="boolean",
+ *         example=true,
+ *         description="Indicates if the user is activated"
+ *     ),
+ *     @OA\Property(
+ *         property="GoogleId",
+ *         type="string",
+ *         maxLength=255,
+ *         example="google-id-123456",
+ *         description="The Google ID of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="Email",
+ *         type="string",
+ *         format="email",
+ *         maxLength=255,
+ *         example="user@example.com",
+ *         description="The email of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="Name",
+ *         type="string",
+ *         maxLength=35,
+ *         example="John",
+ *         description="The first name of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="LastName",
+ *         type="string",
+ *         maxLength=35,
+ *         example="Doe",
+ *         description="The last name of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="Gender",
+ *         type="string",
+ *         enum={"M", "F", "O"},
+ *         example="M",
+ *         description="The gender of the user (M=Male, F=Female, O=Other)"
+ *     ),
+ *     @OA\Property(
+ *         property="Country",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the user's country (must exist in the Country table)"
+ *     ),
+ *     @OA\Property(
+ *         property="City",
+ *         type="string",
+ *         maxLength=40,
+ *         example="New York",
+ *         description="The city where the user resides"
+ *     ),
+ *     @OA\Property(
+ *         property="Birthdate",
+ *         type="string",
+ *         format="date",
+ *         example="1990-01-01",
+ *         description="The birthdate of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="CreatedAt",
+ *         type="string",
+ *         format="date",
+ *         example="2025-04-26",
+ *         description="The date when the user was created"
+ *     )
+ * )
+ */
 class StoreUserRequest extends FormRequest
 {
     /**

@@ -4,6 +4,57 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreProgrammingGameRequest",
+ *     type="object",
+ *     required={"GameInstancesId", "ProgrammerId", "name", "StartTime", "EndTime", "Attempts", "MaximumTime"},
+ *     @OA\Property(
+ *         property="GameInstancesId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="ProgrammerId",
+ *         type="integer",
+ *         example=2,
+ *         description="The ID of the programmer"
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         example="Programming Challenge",
+ *         description="The name of the programming game"
+ *     ),
+ *     @OA\Property(
+ *         property="StartTime",
+ *         type="string",
+ *         format="date-time",
+ *         example="2025-04-26T09:00:00Z",
+ *         description="The start time of the game"
+ *     ),
+ *     @OA\Property(
+ *         property="EndTime",
+ *         type="string",
+ *         format="date-time",
+ *         example="2025-04-26T10:00:00Z",
+ *         description="The end time of the game"
+ *     ),
+ *     @OA\Property(
+ *         property="Attempts",
+ *         type="integer",
+ *         example=3,
+ *         description="The number of attempts allowed"
+ *     ),
+ *     @OA\Property(
+ *         property="MaximumTime",
+ *         type="integer",
+ *         example=60,
+ *         description="The maximum time allowed for the game in minutes"
+ *     )
+ * )
+ */
 class StoreProgrammingGameRequest extends FormRequest
 {
     /**
