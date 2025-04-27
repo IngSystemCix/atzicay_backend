@@ -8,6 +8,12 @@ use App\Application\UseCase\Country\GetCountryByIdUseCase;
 use App\Infrastructure\Http\Requests\StoreCountryRequest;
 use Illuminate\Routing\Controller;
 
+/**
+ * @OA\Tag(
+ *     name="Countries",
+ *     description="Operations related to countries"
+ * )
+ */
 class CountryController extends Controller {
     private CreateCountryUseCase $createCountryUseCase;
     private GetAllCountriesUseCase $getAllCountriesUseCase;

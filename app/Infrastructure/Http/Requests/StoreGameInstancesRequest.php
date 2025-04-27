@@ -4,6 +4,53 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreGameInstancesRequest",
+ *     type="object",
+ *     required={"Name", "Description", "ProfessorId", "Activated", "Difficulty", "Visibility"},
+ *     @OA\Property(
+ *         property="Name",
+ *         type="string",
+ *         maxLength=40,
+ *         example="Math Challenge",
+ *         description="The name of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="Description",
+ *         type="string",
+ *         maxLength=300,
+ *         example="A fun and educational math challenge.",
+ *         description="A brief description of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="ProfessorId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the professor managing the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="Activated",
+ *         type="boolean",
+ *         example=true,
+ *         description="Whether the game instance is activated or not"
+ *     ),
+ *     @OA\Property(
+ *         property="Difficulty",
+ *         type="string",
+ *         enum={"E", "M", "H"},
+ *         example="M",
+ *         description="The difficulty level of the game instance (E: Easy, M: Medium, H: Hard)"
+ *     ),
+ *     @OA\Property(
+ *         property="Visibility",
+ *         type="string",
+ *         enum={"P", "R"},
+ *         example="P",
+ *         description="The visibility of the game instance (P: Public, R: Restricted)"
+ *     )
+ * )
+ */
 class StoreGameInstancesRequest extends FormRequest
 {
     /**

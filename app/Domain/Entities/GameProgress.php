@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(
  *         property="game_session",
  *         type="object",
- *         ref="#/components/schemas/GameSession",  // Referencia al esquema GameSession
+ *         ref="#/components/schemas/GameSession",
  *         description="The associated game session for this progress"
  *     )
  * )

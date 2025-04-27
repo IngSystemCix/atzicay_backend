@@ -4,6 +4,31 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreGameSettingRequest",
+ *     type="object",
+ *     required={"GameInstanceId", "ConfigKey", "ConfigValue"},
+ *     @OA\Property(
+ *         property="GameInstanceId",
+ *         type="string",
+ *         example="1",
+ *         description="The ID of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="ConfigKey",
+ *         type="string",
+ *         example="difficulty",
+ *         description="The configuration key of the game setting"
+ *     ),
+ *     @OA\Property(
+ *         property="ConfigValue",
+ *         type="string",
+ *         example="hard",
+ *         description="The configuration value of the game setting"
+ *     )
+ * )
+ */
 class StoreGameSettingRequest extends FormRequest
 {
     /**

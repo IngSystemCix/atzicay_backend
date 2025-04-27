@@ -9,6 +9,12 @@ use App\Application\UseCase\Assessment\UpdateAssessmentUseCase;
 use App\Infrastructure\Http\Requests\StoreAssessmentRequest;
 use Illuminate\Routing\Controller;
 
+/**
+ * @OA\Tag(
+ *     name="Assessments",
+ *     description="Operations related to assessments"
+ * )
+ */
 class AssessmentController extends Controller
 {
     private CreateAssessmentUseCase $createAssessmentUseCase;
@@ -107,7 +113,7 @@ class AssessmentController extends Controller
      *         description="Invalid input"
      *      ),
      * )
-    */
+     */
     public function createAssessment(StoreAssessmentRequest $request)
     {
         $data = $request->all();
@@ -153,7 +159,7 @@ class AssessmentController extends Controller
      *         description="Assessment not found"
      *      ),
      * )
-    */
+     */
     public function updateAssessment(StoreAssessmentRequest $request, int $id)
     {
         $data = $request->all();

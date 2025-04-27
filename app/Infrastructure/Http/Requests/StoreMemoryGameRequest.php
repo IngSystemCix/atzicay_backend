@@ -4,6 +4,44 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreMemoryGameRequest",
+ *     type="object",
+ *     required={"GameInstanceId", "Mode", "PathImg1", "PathImg2", "DescriptionImg"},
+ *     @OA\Property(
+ *         property="GameInstanceId",
+ *         type="integer",
+ *         example="1",
+ *         description="The ID of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="Mode",
+ *         type="string",
+ *         enum={"II", "ID"},
+ *         example="II",
+ *         description="The mode of the memory game"
+ *     ),
+ *     @OA\Property(
+ *         property="PathImg1",
+ *         type="string",
+ *         example="/images/img1.jpg",
+ *         description="The path to the first image"
+ *     ),
+ *     @OA\Property(
+ *         property="PathImg2",
+ *         type="string",
+ *         example="/images/img2.jpg",
+ *         description="The path to the second image"
+ *     ),
+ *     @OA\Property(
+ *         property="DescriptionImg",
+ *         type="string",
+ *         example="A description of the images",
+ *         description="A description for the images"
+ *     )
+ * )
+ */
 class StoreMemoryGameRequest extends FormRequest
 {
     /**

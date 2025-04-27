@@ -4,6 +4,31 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreSolveTheWordRequest",
+ *     type="object",
+ *     required={"GameInstanceId", "Rows", "Cols"},
+ *     @OA\Property(
+ *         property="GameInstanceId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="Rows",
+ *         type="integer",
+ *         example=4,
+ *         description="The number of rows in the puzzle grid"
+ *     ),
+ *     @OA\Property(
+ *         property="Cols",
+ *         type="integer",
+ *         example=4,
+ *         description="The number of columns in the puzzle grid"
+ *     )
+ * )
+ */
 class StoreSolveTheWordRequest extends FormRequest
 {
     /**

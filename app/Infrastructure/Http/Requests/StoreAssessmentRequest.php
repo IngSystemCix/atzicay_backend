@@ -4,6 +4,44 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreAssessmentRequest",
+ *     type="object",
+ *     required={"Activated", "GameInstanceId", "UserId", "Value", "Comments"},
+ *     @OA\Property(
+ *         property="Activated",
+ *         type="boolean",
+ *         example=true,
+ *         description="Indicates whether the assessment is activated"
+ *     ),
+ *     @OA\Property(
+ *         property="GameInstanceId",
+ *         type="integer",
+ *         example=1,
+ *         description="The ID of the associated game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="UserId",
+ *         type="integer",
+ *         example=101,
+ *         description="The ID of the user who is being assessed"
+ *     ),
+ *     @OA\Property(
+ *         property="Value",
+ *         type="integer",
+ *         example=85,
+ *         description="The value of the assessment"
+ *     ),
+ *     @OA\Property(
+ *         property="Comments",
+ *         type="string",
+ *         maxLength=255,
+ *         example="Great performance in the game!",
+ *         description="Additional comments for the assessment"
+ *     )
+ * )
+ */
 class StoreAssessmentRequest extends FormRequest
 {
     /**

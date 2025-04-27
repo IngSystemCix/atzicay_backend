@@ -54,7 +54,7 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(
  *         property="user",
  *         type="object",
- *         ref="#/components/schemas/User",  // Hace referencia al esquema User
+ *         ref="#/components/schemas/User",
  *         description="The professor associated with this game instance"
  *     ),
  *     @OA\Property(

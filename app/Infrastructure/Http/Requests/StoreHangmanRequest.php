@@ -4,6 +4,38 @@ namespace App\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreHangmanRequest",
+ *     type="object",
+ *     required={"GameInstanceId", "Word", "Presentation"},
+ *     @OA\Property(
+ *         property="GameInstanceId",
+ *         type="integer",
+ *         example="1",
+ *         description="The ID of the game instance"
+ *     ),
+ *     @OA\Property(
+ *         property="Word",
+ *         type="string",
+ *         example="example",
+ *         description="The word to be guessed in the Hangman game"
+ *     ),
+ *     @OA\Property(
+ *         property="Clue",
+ *         type="string",
+ *         example="A word related to technology",
+ *         description="An optional clue for the word"
+ *     ),
+ *     @OA\Property(
+ *         property="Presentation",
+ *         type="string",
+ *         enum={"A", "F"},
+ *         example="A",
+ *         description="The format of the Hangman presentation. 'A' for active, 'F' for finished"
+ *     )
+ * )
+ */
 class StoreHangmanRequest extends FormRequest
 {
     /**
