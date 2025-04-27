@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Application\UseCase\Assessment;
 
 use App\Application\DTOs\AssessmentDTO;
-use App\Application\Mappers\Assessment\CreateAssessmentMapper;
+use App\Application\Mappers\AssessmentMapper;
 use App\Domain\Entities\Assessment;
 use App\Domain\Repositories\AssessmentRepository;
 
@@ -13,7 +12,7 @@ class CreateAssessmentUseCase {
     ) {}
 
     public function execute(AssessmentDTO $dto): Assessment {
-        $assessment = CreateAssessmentMapper::toEntity($dto);
+        $assessment = AssessmentMapper::toEntity($dto);
         return $this->repository->createAssessment($assessment->toArray());
     }
 }

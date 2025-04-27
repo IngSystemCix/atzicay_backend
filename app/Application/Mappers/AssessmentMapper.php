@@ -1,11 +1,10 @@
 <?php
-
-namespace App\Application\Mappers\Assessment;
+namespace App\Application\Mappers;
 
 use App\Application\DTOs\AssessmentDTO;
 use App\Domain\Entities\Assessment;
 
-class CreateAssessmentMapper {
+class AssessmentMapper {
     public static function toEntity(AssessmentDTO $dto): Assessment {
         return new Assessment([
             'Activated' => $dto->activated,

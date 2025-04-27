@@ -1,0 +1,2 @@
+### POST | Create a new country
+POST http://localhost:3000/api/countries

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Infrastructure\Adapters;
 
 use App\Domain\Entities\Assessment;
@@ -15,7 +14,7 @@ class EloquentAssessmentRepository implements AssessmentRepository
             return $assessment->toArray();
         }, Assessment::all()->toArray());
     }
-    public function getById(int $id): Assessment {
+    public function getAssessmentById(int $id): Assessment {
         return Assessment::find($id);
     }
     public function updateAssessment(int $id, array $data): Assessment {
