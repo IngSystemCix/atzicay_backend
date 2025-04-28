@@ -19,7 +19,7 @@ class UpdateMemoryGameUseCase {
 
         // Map the DTO to the entity
         $updatememoryGame = HangmanMapper::toEntity($data);
-        return $this->repository->updatememoryGame($id, $updatememoryGame->toArray());
+        return $this->repository->updateMemoryGame($id, $updatememoryGame->toArray());
     }
 }
 

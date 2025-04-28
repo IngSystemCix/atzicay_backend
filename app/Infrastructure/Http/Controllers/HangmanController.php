@@ -37,7 +37,7 @@ class HangmanController extends Controller
         $this->updateHangmanUseCase = $updateHangmanUseCase;
         $this->deleteHangmanUseCase = $deleteHangmanUseCase;
     }
-
+    
      /**
      * @OA\Post(
      *     path="/hangman",

@@ -2,6 +2,7 @@
 use App\Infrastructure\Http\Controllers\AssessmentController;
 use App\Infrastructure\Http\Controllers\HangmanController;
 use App\Infrastructure\Http\Controllers\MemoryGameController;
+use App\Infrastructure\Http\Controllers\PuzzleController;
 
 Route::prefix('atzicay/v1')->group(function () {
     // Routes for assessments
@@ -18,4 +19,9 @@ Route::prefix('atzicay/v1')->group(function () {
     Route::post('/memoryGame/{id}', [MemoryGameController::class,'getMemoryGameById']);
     Route::post('/memoryGame', [MemoryGameController::class,'updateMemoryGame']);
     Route::post('/memoryGame', [MemoryGameController::class,'deleteMemoryGame']);
+    Route::post('/puzzle',[PuzzleController::class,'createPuzzle']);
+    Route::post('/puzzle', [PuzzleController::class,'getAllPuzzle']);
+    Route::post('/puzzle', [PuzzleController::class,'getPuzzleById']);
+    Route::post('/puzzle', [PuzzleController::class,'updatePuzzle']);
+    Route::post('/puzzle', [PuzzleController::class,'deletePuzzle']);
 });
