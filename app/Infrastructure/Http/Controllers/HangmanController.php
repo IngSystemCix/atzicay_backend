@@ -79,7 +79,7 @@ class HangmanController extends Controller
             $hangman = $this->createHangmanUseCase->execute($dto);
             return response()->json($hangman, 201);
         }catch (\Exception $e) {
-            return response()->json(['message' => 'Invalid input'], 400);
+            return response()->json(['message' => 'Invalid input'],400);
         }
      }
 
@@ -101,7 +101,7 @@ class HangmanController extends Controller
      * )
      */
      public function getAllHangman(){
-        $hangman = $this->createHangmanUseCase->execute();
+        $hangman = $this->getAllHangman->execute();
         if(!$hangman){
             return response()->json(['message'=> 'No hangmans found'],404);
         }
@@ -169,7 +169,7 @@ class HangmanController extends Controller
      *      ),
      * )
      */
-    public function updateHangman(HangmanRequest $request, int $id){
+    public function updateHangman(StoreHangmanRequest $request, int $id){
         $data = $request->all();
         $dto = new HangmanDTO(
             $data['GameInstanceId'],
@@ -178,7 +178,7 @@ class HangmanController extends Controller
             $data['Presentation'],
         );
         try {
-            $hangman = $this->createHangmanUseCase->execute($id, $data);
+            $hangman = $this->updateHangmanUseCase->execute($id, $data);
             return response()->json($hangman, 200);
         }catch (\Exception $e) {
             return response()->json(['message'=> 'Invalid input'], 400);
@@ -221,7 +221,7 @@ class HangmanController extends Controller
             return response()->json(['message'=> 'Hangman deleted successfully'],200);
 
         }catch (\Exception $e) {
-            return response()->json(['message'=> 'Invalid '], 400);
+            return response()->json(['message'=> 'Invalid input'], 400);
         }
     }
 }

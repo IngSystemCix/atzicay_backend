@@ -2,9 +2,7 @@
 
 namespace App\Application\UseCase\Hangman;
 
-use App\Application\DTOs\HangmanDTO;
 use App\Application\Mappers\HangmanMapper;
-use App\Domain\Entities\Hangman;
 use App\Domain\Repositories\HangmanRepository;
 
 class DeleteHangmanUseCase{

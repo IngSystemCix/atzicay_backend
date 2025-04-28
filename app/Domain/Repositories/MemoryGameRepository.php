@@ -5,10 +5,10 @@ use App\Domain\Entities\MemoryGame;
 
 interface MemoryGameRepository
 {
-    public function createMemoryGame(MemoryGame $memoryGame): MemoryGame;
+    public function createMemoryGame(array $data): MemoryGame;
     public function getAllMemoryGame(): array;
-    public function getById(int $id): MemoryGame;
-    public function updateMemoryGame(MemoryGame $memoryGame): MemoryGame;
-    public function deleteMemoryGame(MemoryGame $memoryGame): MemoryGame;
+    public function getMemoryGameById(int $id): MemoryGame;
+    public function updateMemoryGame(int $id, int $data): MemoryGame;
+    public function deleteMemoryGame(int $id): MemoryGame;
     
 }

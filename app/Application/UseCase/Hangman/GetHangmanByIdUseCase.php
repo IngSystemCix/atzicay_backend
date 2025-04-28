@@ -7,7 +7,7 @@ use App\Domain\Repositories\HangmanRepository;
 
 class GetHangmanByIdUseCase {
     public function __construct(
-        private HangmanRepository $hangmanRepository
+        private HangmanRepository $repository
     ){}
 
     public function execute(int $id): Hangman{

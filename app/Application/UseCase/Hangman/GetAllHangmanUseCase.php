@@ -5,7 +5,7 @@ use App\Domain\Repositories\HangmanRepository;
 
 class GetAllHangmanUseCase{
     public function __construct(
-        private HangmanRepository $hangmanRepository
+        private HangmanRepository $repository
     ){}
     public function execute(): array{
         return $this->repository->getAllHangman();
