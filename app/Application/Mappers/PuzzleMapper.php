@@ -8,9 +8,9 @@ class PuzzleMapper {
     public static function toEntity(PuzzleDTO $dto): Puzzle {
         return new Puzzle([
             'GameInstanceId' => $dto->gameInstanceId,
-            'PathImg' => $dto->pathImg,
-            'Clue' => $dto->clue,
-            'Rows' => $dto->rows,
+            'PathImg'=> $dto->pathImg,
+            'Clue'=> $dto->clue,
+            'Rows'=> $dto->rows,
             'Cols'=> $dto->cols,
             'AutomaticHelp'=> $dto->automaticHelp,
         ]);

@@ -18,7 +18,7 @@ class UpdatePuzzleUseCase {
         }
 
         // Map the DTO to the entity
-        $updatePuzzle = Puzzle::toEntity($data);
+        $updatePuzzle = PuzzleMapper::toEntity($data);
         return $this->repository->updatePuzzle($id, $updatePuzzle->toArray());
     }
 }

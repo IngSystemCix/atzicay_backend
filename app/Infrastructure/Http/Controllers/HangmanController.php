@@ -187,7 +187,7 @@ class HangmanController extends Controller
     }
 
     /**
-     * @OA\Put(
+     * @OA\Delete(
      *     path="/hangman/{id}",
      *     tags={"hangman"},
      *     summary="Update a hangman",
@@ -199,10 +199,6 @@ class HangmanController extends Controller
      *         description="ID of the hangman to delete",
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/HangmanDTO")
-     *      ),
      *      @OA\Response(
      *         response=200,
      *         description="Hangman deleted successfully",

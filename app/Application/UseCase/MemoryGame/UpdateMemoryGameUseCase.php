@@ -2,8 +2,8 @@
 namespace App\Application\UseCase\MemoryGame;
 
 use App\Application\DTOs\MemoryGameDTO;
-use App\Application\Mappers\MemoryGameMapper;
 use App\Domain\Entities\MemoryGame;
+use App\Application\Mappers\MemoryGameMapper;
 use App\Domain\Repositories\MemoryGameRepository;
 
 class UpdateMemoryGameUseCase {
@@ -18,7 +18,7 @@ class UpdateMemoryGameUseCase {
         }
 
         // Map the DTO to the entity
-        $updatememoryGame = HangmanMapper::toEntity($data);
+        $updatememoryGame = MemoryGameMapper::toEntity($data);
         return $this->repository->updateMemoryGame($id, $updatememoryGame->toArray());
     }
 }

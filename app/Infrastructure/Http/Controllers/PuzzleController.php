@@ -16,7 +16,6 @@ use App\Infrastructure\Http\Requests\StorePuzzleRequest;
  *     description="Operations related to Puzzle"
  * )
  */
-
  class PuzzleController extends Controller
  {
     private CreatePuzzleUseCase $createPuzzleUseCase;
@@ -194,7 +193,7 @@ use App\Infrastructure\Http\Requests\StorePuzzleRequest;
     }
 
     /**
-     * @OA\Put(
+     * @OA\Delete(
      *     path="/puzzle/{id}",
      *     tags={"puzzle"},
      *     summary="Update a puzzle",
@@ -206,10 +205,6 @@ use App\Infrastructure\Http\Requests\StorePuzzleRequest;
      *         description="ID of the puzzle to delete",
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/PuzzleDTO")
-     *      ),
      *      @OA\Response(
      *         response=200,
      *         description="Puzzle deleted successfully",

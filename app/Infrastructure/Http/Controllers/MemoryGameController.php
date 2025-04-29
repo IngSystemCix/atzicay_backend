@@ -45,7 +45,7 @@ use Illuminate\Routing\Controller;
      *     path="/memoryGame",
      *     tags={"MemoryGame"},
      *     summary="Create a new MemoryGame",
-     *     description="Creates a new MemoryGame.",
+     *     description="Creates a new Memory game.",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -190,7 +190,7 @@ use Illuminate\Routing\Controller;
     }
 
      /**
-     * @OA\Put(
+     * @OA\Delete(
      *     path="/memoryGame/{id}",
      *     tags={"MemoryGame"},
      *     summary="Update a memoryGame",
@@ -202,10 +202,6 @@ use Illuminate\Routing\Controller;
      *         description="ID of the memoryGame to delete",
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/MemoryGameDTO")
-     *      ),
      *      @OA\Response(
      *         response=200,
      *         description="memoryGame deleted successfully",

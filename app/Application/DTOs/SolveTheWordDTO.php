@@ -1,36 +1,36 @@
 <?php
 namespace App\Application\DTOs;
 
+use App\Domain\Entities\GameInstances;
+
 
 /**
  * @OA\Schema(
- *     schema="AssessmentDTO",
+ *     schema="SolveTheWordDTP",
  *     type="object",
- *     required={"activated", "gameInstanceId", "userId", "value"},
- *     @OA\Property(
- *         property="activated",
- *         type="boolean",
- *         example=true
- *     ),
+ *     required={"gameInstanceId", "Rows", "Cols"},
  *     @OA\Property(
  *         property="gameInstanceId",
  *         type="integer",
  *         example=123
  *     ),
  *     @OA\Property(
- *         property="userId",
+ *         property="Rows",
  *         type="integer",
- *         example=456
+ *         example=7
  *     ),
  *     @OA\Property(
- *         property="value",
+ *         property="Cols",
  *         type="integer",
- *         example=5
+ *         example=7
  *     ),
- *     @OA\Property(
- *         property="comments",
- *         type="string",
- *         example="Excellent performance."
- *     )
  * )
  */
+
+ class SolveTheWordDTO{
+    public function __construct(
+        public GameInstances $gameInstanceId,
+        public int $rows,
+        public int $cols,
+    ){}
+ }
