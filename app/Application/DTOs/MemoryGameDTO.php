@@ -1,47 +1,56 @@
 <?php
-
 namespace App\Application\DTOs;
 
-use App\Domain\Entities\GameInstances;
+use App\Domain\Enums\Mode;
 
 /**
  * @OA\Schema(
  *     schema="MemoryGameDTO",
  *     type="object",
- *     required={"gameInstanceId", "mode", "pathImg1", "pathImg2", "descriptionImg"},
+ *     title="Memory Game DTO",
+ *     description="Data transfer object for Memory Game",
  *     @OA\Property(
- *         property="gameInstanceId",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=123
+ *         description="The ID of the game instance"
  *     ),
  *     @OA\Property(
- *         property="mode",
+ *         property="Mode",
  *         type="string",
- *         example="II"
+ *         description="The mode of the game",
+ *         enum={"II", "ID"}
  *     ),
  *     @OA\Property(
- *         property="pathImg1",
+ *         property="PathImg1",
  *         type="string",
- *         example="MancoCapac.png"
+ *         description="Path to the first image"
  *     ),
  *     @OA\Property(
- *         property="pathImg2",
+ *         property="PathImg2",
  *         type="string",
- *         example="MamaOcllo.png"
+ *         description="Path to the second image",
+ *         nullable=true
  *     ),
- *      @OA\Property(
- *          property="decriptionImg",
- *          property="string",
- *          property="Firt people to arrive at Macchu Pichu"
+ *     @OA\Property(
+ *         property="DescriptionImg",
+ *         type="string",
+ *         description="Description of the image",
+ *         nullable=true
  *     )
  * )
  */
-class MemoryGameDTO{
-    public function __construct(
-        public GameInstances $gameInstanceId,
-        public string $mode,
-        public string $pathImg1,
-        public string $pathImg2,
-        public string $descriptionImg,
-    ){}
+class MemoryGameDTO {
+    public int $GameInstanceId;
+    public Mode $Mode;
+    public string $PathImg1;
+    public ?string $PathImg2;
+    public ?string $DescriptionImg;
+
+    public function __construct(array $data) {
+        $this->GameInstanceId = $data["GameInstanceId"];
+        $this->Mode = Mode::from($data["Mode"]);
+        $this->PathImg1 = $data["PathImg1"];
+        $this->PathImg2 = $data["PathImg2"] ?? null;
+        $this->DescriptionImg = $data["DescriptionImg"] ?? null;
+    }
 }

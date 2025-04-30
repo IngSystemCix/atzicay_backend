@@ -9,48 +9,39 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="MemoryGame",
  *     type="object",
- *     required={"id", "game_instance_id", "mode", "path_img1", "path_img2", "description_img"},
+ *     title="MemoryGame",
+ *     description="MemoryGame entity schema",
  *     @OA\Property(
- *         property="id",
+ *         property="Id",
  *         type="integer",
- *         example=1
+ *         description="Primary key of the MemoryGame"
  *     ),
  *     @OA\Property(
- *         property="game_instance_id",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=101,
- *         description="The ID of the associated game instance"
+ *         description="Foreign key referencing GameInstances"
  *     ),
  *     @OA\Property(
- *         property="mode",
+ *         property="Mode",
  *         type="string",
- *         enum={"easy", "medium", "hard"},
- *         description="The mode of the MemoryGame",
- *         example="medium"
+ *         description="Mode of the memory game"
  *     ),
  *     @OA\Property(
- *         property="path_img1",
+ *         property="PathImg1",
  *         type="string",
- *         example="path/to/img1.jpg",
- *         description="The path to the first image"
+ *         description="Path to the first image"
  *     ),
  *     @OA\Property(
- *         property="path_img2",
+ *         property="PathImg2",
  *         type="string",
- *         example="path/to/img2.jpg",
- *         description="The path to the second image"
+ *         description="Path to the second image",
+ *         nullable=true
  *     ),
  *     @OA\Property(
- *         property="description_img",
+ *         property="DescriptionImg",
  *         type="string",
- *         example="A description of the images shown in the memory game",
- *         description="Description of the images used in the game"
- *     ),
- *     @OA\Property(
- *         property="game_instance",
- *         type="object",
- *         ref="#/components/schemas/GameInstances",
- *         description="The associated game instance for this MemoryGame"
+ *         description="Description of the images",
+ *         nullable=true
  *     )
  * )
  */
@@ -68,7 +59,7 @@ class MemoryGame extends Model
     ];
 
     protected $casts = [
-        'GameInstanceId' => GameInstances::class,
+        'GameInstanceId' => 'integer',
         'Mode' => Mode::class,
         'PathImg1' => 'string',
         'PathImg2' => 'string',

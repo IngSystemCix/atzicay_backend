@@ -2,8 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StorePuzzleRequest",
@@ -40,7 +38,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *         description="The number of columns in the puzzle grid"
  *     ),
  *     @OA\Property(
- *         property="automaticHelp",
+ *         property="AutomaticHelp",
  *         type="boolean",
  *         example=true,
  *         description="Whether automatic help is enabled"
@@ -54,7 +52,7 @@ class StorePuzzleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -70,7 +68,7 @@ class StorePuzzleRequest extends FormRequest
             'Clue' => ['required', 'string'],
             'Rows' => ['required', 'integer', 'min:1'],
             'Cols' => ['required', 'integer', 'min:1'],
-            'automaticHelp' => ['required', 'boolean'],
+            'AutomaticHelp' => ['required', 'boolean'],
         ];
     }
 
@@ -88,8 +86,8 @@ class StorePuzzleRequest extends FormRequest
             'Cols.required' => 'The Cols field is required.',
             'Cols.integer' => 'The Cols must be an integer.',
             'Cols.min' => 'The Cols must be at least 1.',
-            'automaticHelp.required' => 'The automaticHelp field is required.',
-            'automaticHelp.boolean' => 'The automaticHelp must be true or false.',
+            'AutomaticHelp.required' => 'The AutomaticHelp field is required.',
+            'AutomaticHelp.boolean' => 'The AutomaticHelp must be true or false.',
         ];
     }
 }

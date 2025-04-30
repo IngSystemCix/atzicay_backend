@@ -2,8 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StoreGameProgressRequest",
@@ -30,7 +28,7 @@ class StoreGameProgressRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**

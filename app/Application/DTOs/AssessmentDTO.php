@@ -8,29 +8,29 @@ use App\Domain\Entities\User;
  * @OA\Schema(
  *     schema="AssessmentDTO",
  *     type="object",
- *     required={"activated", "gameInstanceId", "userId", "value"},
+ *     required={"Activated", "GameInstanceId", "UserId", "Value"},
  *     @OA\Property(
- *         property="activated",
+ *         property="Activated",
  *         type="boolean",
  *         example=true
  *     ),
  *     @OA\Property(
- *         property="gameInstanceId",
+ *         property="GameInstanceId",
  *         type="integer",
  *         example=123
  *     ),
  *     @OA\Property(
- *         property="userId",
+ *         property="UserId",
  *         type="integer",
  *         example=456
  *     ),
  *     @OA\Property(
- *         property="value",
+ *         property="Value",
  *         type="integer",
  *         example=5
  *     ),
  *     @OA\Property(
- *         property="comments",
+ *         property="Comments",
  *         type="string",
  *         example="Excellent performance."
  *     )
@@ -38,11 +38,18 @@ use App\Domain\Entities\User;
  */
 class AssessmentDTO
 {
-    public function __construct(
-        public bool $activated,
-        public GameInstances $gameInstanceId,
-        public User $userId,
-        public int $value,
-        public string $comments = ''
-    ) {}
+    public bool $Activated;
+    public int $GameInstanceId;
+    public int $UserId;
+    public int $Value;
+    public string $Comments;
+
+    public function __construct(array $data)
+    {
+        $this->Activated = $data['Activated'];
+        $this->GameInstanceId = $data['GameInstanceId'];
+        $this->UserId = $data['UserId'];
+        $this->Value = $data['Value'];
+        $this->Comments = $data['Comments'] ?? '';
+    }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Infrastructure\Adapters;
 
 use App\Domain\Entities\Puzzle;
@@ -7,33 +6,38 @@ use App\Domain\Repositories\PuzzleRepository;
 
 class EloquentPuzzleRepository implements PuzzleRepository
 {
-    public function createPuzzle(array $data): Puzzle{
-        return Puzzle::Create($data);
+    public function createPuzzle(array $data): Puzzle {
+        return Puzzle::create([
+            'GameInstanceId' => $data['GameInstanceId'],
+            'PathImg'=> $data['PathImg'],
+            'Clue'=> $data['Clue'],
+            'Rows'=> $data['Rows'],
+            'Cols'=> $data['Cols'],
+            'AutomaticHelp'=> $data['AutomaticHelp'],
+        ]);
     }
 
-    public function getAllPuzzle(): array{
-        return array_map(function(Puzzle $puzzle){
-            return $puzzle->toArray();
-        },Puzzle::all()->toArray());
-    }
-
-    public function getPuzzleById(int $id): Puzzle{
-        return Puzzle::find($id);
-    }
-
-    public function updatePuzzle(int $id, int $data): Puzzle{
+    public function getPuzzleById(int $id): Puzzle {
         $puzzle = Puzzle::find($id);
-        if($puzzle){
-            return $puzzle->update($data);
+        if (!$puzzle) {
+            throw new \RuntimeException("Puzzle not found with ID: $id");
         }
         return $puzzle;
     }
-
-    public function deletePuzzle(int $id): Puzzle{
+    
+    public function updatePuzzle(int $id, array $data): Puzzle {
         $puzzle = Puzzle::find($id);
-        if($puzzle){
-            return $puzzle->delete();
+        if (!$puzzle) {
+            throw new \RuntimeException("Puzzle not found with ID: $id");
         }
+        $puzzle->update([
+            'GameInstanceId' => $data['GameInstanceId'],
+            'PathImg'=> $data['PathImg'],
+            'Clue'=> $data['Clue'],
+            'Rows'=> $data['Rows'],
+            'Cols'=> $data['Cols'],
+            'AutomaticHelp'=> $data['AutomaticHelp'],
+        ]);
         return $puzzle;
     }
 }

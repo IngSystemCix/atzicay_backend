@@ -1,36 +1,37 @@
 <?php
 namespace App\Application\DTOs;
 
-use App\Domain\Entities\GameInstances;
-
-
 /**
  * @OA\Schema(
- *     schema="SolveTheWordDTP",
+ *     schema="SolveTheWordDTO",
  *     type="object",
- *     required={"gameInstanceId", "Rows", "Cols"},
+ *     title="SolveTheWordDTO",
+ *     description="Data Transfer Object for solving the word game",
  *     @OA\Property(
- *         property="gameInstanceId",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=123
+ *         description="The ID of the game instance"
  *     ),
  *     @OA\Property(
  *         property="Rows",
  *         type="integer",
- *         example=7
+ *         description="The number of rows in the game"
  *     ),
  *     @OA\Property(
  *         property="Cols",
  *         type="integer",
- *         example=7
- *     ),
+ *         description="The number of columns in the game"
+ *     )
  * )
  */
+class SolveTheWordDTO {
+    public int $GameInstanceId;
+    public int $Rows;
+    public int $Cols;
 
- class SolveTheWordDTO{
-    public function __construct(
-        public GameInstances $gameInstanceId,
-        public int $rows,
-        public int $cols,
-    ){}
- }
+    public function __construct(array $data) {
+        $this->GameInstanceId = $data["GameInstanceId"];
+        $this->Rows = $data["Rows"];
+        $this->Cols = $data["Cols"];
+    }
+}

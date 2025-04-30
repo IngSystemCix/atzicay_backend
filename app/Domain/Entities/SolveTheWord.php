@@ -8,45 +8,22 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="SolveTheWord",
  *     type="object",
- *     required={"game_instance_id", "rows", "cols"},
+ *     title="SolveTheWord",
+ *     description="SolveTheWord entity schema",
  *     @OA\Property(
- *         property="game_instance_id",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=1001,
- *         description="The ID of the associated game instance"
+ *         description="The ID of the game instance"
  *     ),
  *     @OA\Property(
- *         property="rows",
+ *         property="Rows",
  *         type="integer",
- *         example=5,
- *         description="The number of rows in the puzzle"
+ *         description="Number of rows in the game"
  *     ),
  *     @OA\Property(
- *         property="cols",
+ *         property="Cols",
  *         type="integer",
- *         example=5,
- *         description="The number of columns in the puzzle"
- *     ),
- *     @OA\Property(
- *         property="game_instances",
- *         type="object",
- *         ref="#/components/schemas/GameInstances",
- *         description="The associated game instance for this puzzle"
- *     ),
- *     @OA\Property(
- *         property="words",
- *         type="array",
- *         items={
- *             "type": "object",
- *             "properties": {
- *                 "word": {
- *                     "type": "string",
- *                     "example": "HELLO",
- *                     "description": "A word in the word puzzle"
- *                 }
- *             }
- *         },
- *         description="The list of words in the puzzle"
+ *         description="Number of columns in the game"
  *     )
  * )
  */
@@ -62,7 +39,7 @@ class SolveTheWord extends Model
     ];
 
     protected $casts = [
-        'GameInstanceId' => GameInstances::class,
+        'GameInstanceId' => 'integer',
         'Rows' => 'integer',
         'Cols' => 'integer',
     ];

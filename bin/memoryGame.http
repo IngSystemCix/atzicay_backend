@@ -1,0 +1,27 @@
+### POST | create new memory game
+POST http://localhost:8000/api/atzicay/v1/memory-game
+Content-Type: application/json
+
+{
+  "GameInstanceId": 1,
+  "Mode": "II",
+  "PathImg1": "los_perros_hambrientos.png",
+  "PathImg2": "autor_ciro_alegría.png",
+  "DescriptionImg": null
+}
+
+### PUT | update memory game
+PUT http://localhost:8000/api/atzicay/v1/memory-game/1
+Content-Type: application/json
+
+{
+  "GameInstanceId": 1,
+  "Mode": "ID",
+  "PathImg1": "los_perros_hambrientos.png",
+  "PathImg2": null,
+  "DescriptionImg": "Relata el hambre, la sequía y la vida dura del campesino de la sierra norte del Perú."
+}
+
+### GET | get memory game by id
+GET http://localhost:8000/api/atzicay/v1/memory-game/1
+Content-Type: application/json

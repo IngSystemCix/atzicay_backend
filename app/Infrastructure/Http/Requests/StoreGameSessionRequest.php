@@ -2,8 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StoreGameSessionRequest",
@@ -49,7 +47,19 @@ class StoreGameSessionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'DateGame' => now()->format('Y-m-d H:i:s'),
+        ]);
     }
 
     /**
@@ -81,7 +91,6 @@ class StoreGameSessionRequest extends FormRequest
             'DateGame' => [
                 'required',
                 'date',
-                'before_or_equal:today',
             ],
         ];
     }
@@ -99,8 +108,7 @@ class StoreGameSessionRequest extends FormRequest
             'Won.required' => 'The Won field is required.',
             'Won.boolean' => 'The Won field must be true or false.',
             'DateGame.required' => 'The date of the game is required.',
-            'DateGame.date' => 'The date of the game must be a valid date.',
-            'DateGame.before_or_equal' => 'The date of the game must be today or earlier.',
+            'DateGame.date' => 'The date of the game must be a valid date.'
         ];
     }
 }

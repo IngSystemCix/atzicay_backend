@@ -5,9 +5,9 @@ namespace App\Application\DTOs;
  * @OA\Schema(
  *     schema="CountryDTO",
  *     type="object",
- *     required={"name"},
+ *     required={"Name"},
  *     @OA\Property(
- *         property="name",
+ *         property="Name",
  *         type="string",
  *         example="Peru"
  *     )
@@ -15,7 +15,11 @@ namespace App\Application\DTOs;
  */
 class CountryDTO
 {
-    public function __construct(
-        public string $name,
-    ) {}
+    public string $Name;
+
+    public function __construct(array $data)
+    {
+        // Mapea manualmente
+        $this->Name = $data['Name']; 
+    }
 }

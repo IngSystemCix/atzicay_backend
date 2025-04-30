@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Application\UseCase\Puzzle;
 
 use App\Domain\Entities\Puzzle;
@@ -10,11 +9,9 @@ class GetPuzzleByIdUseCase {
         private PuzzleRepository $repository
     ){}
 
-    public function execute(int $id): Puzzle{
-
+    public function execute(int $id): Puzzle {
         $puzzle = $this->repository->getPuzzleById($id);
-
-        if(!$puzzle){
+        if (!$puzzle) {
             throw new \RuntimeException("Puzzle not found for ID: $id");
         }
         return $puzzle;

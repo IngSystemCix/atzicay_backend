@@ -2,8 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StoreGameSettingRequest",
@@ -11,20 +9,20 @@ use Illuminate\Foundation\Http\FormRequest;
  *     required={"GameInstanceId", "ConfigKey", "ConfigValue"},
  *     @OA\Property(
  *         property="GameInstanceId",
- *         type="string",
+ *         type="integer",
  *         example="1",
  *         description="The ID of the game instance"
  *     ),
  *     @OA\Property(
  *         property="ConfigKey",
  *         type="string",
- *         example="difficulty",
+ *         example="background_color",
  *         description="The configuration key of the game setting"
  *     ),
  *     @OA\Property(
  *         property="ConfigValue",
  *         type="string",
- *         example="hard",
+ *         example="#FFFFFF",
  *         description="The configuration value of the game setting"
  *     )
  * )
@@ -36,7 +34,7 @@ class StoreGameSettingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -47,9 +45,9 @@ class StoreGameSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'GameInstanceId' => ['required','string','exists:GameInstances,Id'],
-            'ConfigKey' => ['required','string','exists:GameSettings,ConfigKey'],
-            'ConfigValue' => ['required','string','exists:GameSettings,ConfigValue']
+            'GameInstanceId' => ['required','integer','exists:GameInstances,Id'],
+            'ConfigKey' => ['required','string'],
+            'ConfigValue' => ['required','string']
         ];
     }
 
@@ -57,14 +55,12 @@ class StoreGameSettingRequest extends FormRequest
     {
         return [
             'GameInstanceId.required' => 'The GameInstanceId field is required.',
-            'GameInstanceId.string' => 'The GameInstanceId field must be a string.',
-            'GameInstanceId.exists' => 'The selected GameInstanceId is invalid.',
+            'GameInstanceId.integer' => 'The GameInstanceId field must be an integer.',
             'ConfigKey.required' => 'The ConfigKey field is required.',
             'ConfigKey.string' => 'The ConfigKey field must be a string.',
             'ConfigKey.exists' => 'The selected ConfigKey is invalid.',
             'ConfigValue.required' => 'The ConfigValue field is required.',
-            'ConfigValue.string' => 'The ConfigValue field must be a string.',
-            'ConfigValue.exists' => 'The selected ConfigValue is invalid.'
+            'ConfigValue.string' => 'The ConfigValue field must be a string.'
         ];
     }
 }

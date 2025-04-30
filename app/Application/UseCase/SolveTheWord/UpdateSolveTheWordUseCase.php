@@ -6,19 +6,17 @@ use App\Application\Mappers\SolveTheWordMapper;
 use App\Domain\Entities\SolveTheWord;
 use App\Domain\Repositories\SolveTheWordRepository;
 
-class UpdateSolveTheWordUseCase{
+class UpdateSolveTheWordUseCase {
     public function __construct(
         private SolveTheWordRepository $repository
-    ){}
+    ) {}
 
-    public function execute(int $id, SolveTheWordDTO $data): SolveTheWord {
+    public function execute($id, SolveTheWordDTO $dto): SolveTheWord {
         $solveTheWord = $this->repository->getSolveTheWordById($id);
-        if(! $solveTheWord){
-            throw new \Exception("Solve the word not found for ID: $id");
+        if (! $solveTheWord) {
+            throw new \RuntimeException("SolveTheWord not found for ID: $id");
         }
-
-        //Map de DTO to the entity
-        $updateSolveTheWord = SolveTheWordMapper::toEntity($data);
-        return $this->repository->updateSolveTheWord($id, $updateSolveTheWord->toArray());
+        $updateSolveTheWord = SolveTheWordMapper::toEntity($dto);
+        return $this->repository->updateSolveTheWord($id, SolveTheWordMapper::toArray($updateSolveTheWord));
     }
 }

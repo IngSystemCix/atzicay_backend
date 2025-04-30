@@ -3,6 +3,7 @@ namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\AssessmentDTO;
 use App\Application\UseCase\Assessment\CreateAssessmentUseCase;
+use App\Application\UseCase\Assessment\DeleteAssessmentUseCase;
 use App\Application\UseCase\Assessment\GetAllAssessmentsUseCase;
 use App\Application\UseCase\Assessment\GetAssessmentByIdUseCase;
 use App\Application\UseCase\Assessment\UpdateAssessmentUseCase;
@@ -21,17 +22,20 @@ class AssessmentController extends Controller
     private GetAllAssessmentsUseCase $getAllAssessmentsUseCase;
     private GetAssessmentByIdUseCase $getAssessmentByIdUseCase;
     private UpdateAssessmentUseCase $updateAssessmentUseCase;
+    private DeleteAssessmentUseCase $deleteAssessmentUseCase;
 
     public function __construct(
         CreateAssessmentUseCase $createAssessmentUseCase,
         GetAllAssessmentsUseCase $getAllAssessmentsUseCase,
         GetAssessmentByIdUseCase $getAssessmentByIdUseCase,
-        UpdateAssessmentUseCase $updateAssessmentUseCase
+        UpdateAssessmentUseCase $updateAssessmentUseCase,
+        DeleteAssessmentUseCase $deleteAssessmentUseCase
     ) {
         $this->createAssessmentUseCase = $createAssessmentUseCase;
         $this->getAllAssessmentsUseCase = $getAllAssessmentsUseCase;
         $this->getAssessmentByIdUseCase = $getAssessmentByIdUseCase;
         $this->updateAssessmentUseCase = $updateAssessmentUseCase;
+        $this->deleteAssessmentUseCase = $deleteAssessmentUseCase;
     }
 
     /**
@@ -68,7 +72,7 @@ class AssessmentController extends Controller
      *     summary="Get assessment by ID",
      *     description="Retrieves an assessment by its ID.",
      *     @OA\Parameter(
-     *         name="id",
+     *         name="Id",
      *         in="path",
      *         required=true,
      *         description="ID of the assessment to retrieve",
@@ -109,38 +113,24 @@ class AssessmentController extends Controller
      *         description="Assessment created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/Assessment")
      *      ),
-     *      @OA\Response(
-     *         response=400,
-     *         description="Invalid input"
-     *      ),
      * )
      */
     public function createAssessment(StoreAssessmentRequest $request)
     {
-        $data = $request->all();
-        $dto = new AssessmentDTO(
-            $data['Activated'],
-            $data['GameInstanceId'],
-            $data['UserId'],
-            $data['Value'],
-            $data['Comments'] ?? ''
-        );
-        try {
-            $assessment = $this->createAssessmentUseCase->execute($dto);
-            return response()->json($assessment, 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Invalid input'], 400);
-        }
+        $validatedData = $request->validated();
+        $assessmentDto = new AssessmentDTO($validatedData);
+        $assessment = $this->createAssessmentUseCase->execute($assessmentDto);
+        return response()->json($assessment, 201);
     }
 
     /**
      * @OA\Put(
      *     path="/assessments/{id}",
      *     tags={"Assessments"},
-     *     summary="Update an assessment",
+     *     summary="Update an existing assessment",
      *     description="Updates an existing assessment.",
      *     @OA\Parameter(
-     *         name="id",
+     *         name="Id",
      *         in="path",
      *         required=true,
      *         description="ID of the assessment to update",
@@ -161,21 +151,43 @@ class AssessmentController extends Controller
      *      ),
      * )
      */
-    public function updateAssessment(StoreAssessmentRequest $request, int $id)
+    public function updateAssessment(int $id, StoreAssessmentRequest $request)
     {
-        $data = $request->all();
-        $dto = new AssessmentDTO(
-            $data['Activated'],
-            $data['GameInstanceId'],
-            $data['UserId'],
-            $data['Value'],
-            $data['Comments'] ?? ''
-        );
-        try {
-            $assessment = $this->updateAssessmentUseCase->execute(id: $id, data: $dto);
-            return response()->json($assessment, 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Invalid input'], 400);
+        $validatedData = $request->validated();
+        $assessmentDto = new AssessmentDTO($validatedData);
+        $assessment = $this->updateAssessmentUseCase->execute($id, $assessmentDto);
+        return response()->json($assessment, 200);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/assessments/{id}",
+     *     tags={"Assessments"},
+     *     summary="Delete an assessment",
+     *     description="Deletes an assessment by its ID.",
+     *     @OA\Parameter(
+     *         name="Id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the assessment to delete",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Assessment deleted successfully"
+     *      ),
+     *      @OA\Response(
+     *         response=404,
+     *         description="Assessment not found"
+     *      ),
+     * )
+     */
+    public function deleteAssessment(int $id)
+    {
+        $assessment = $this->deleteAssessmentUseCase->execute($id);
+        if (!$assessment) {
+            return response()->json(['message' => 'Assessment not found'], 404);
         }
+        return response()->json(['message' => 'Assessment deleted successfully'], 200);
     }
 }

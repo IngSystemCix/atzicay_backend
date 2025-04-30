@@ -4,35 +4,34 @@ namespace App\Infrastructure\Adapters;
 use App\Domain\Entities\SolveTheWord;
 use App\Domain\Repositories\SolveTheWordRepository;
 
-class EloquentSolveTheWordRepository implements SolveTheWordRepository
-{
-    public function createSolveTheWord(array $data): SolveTheWord{
-        return SolveTheWord::create($data);
+class EloquentSolveTheWordRepository implements SolveTheWordRepository {
+
+    public function createSolveTheWord(array $data): SolveTheWord {
+        return SolveTheWord::create([
+            "GameInstanceId"=> $data["GameInstanceId"],
+            "Rows"=> $data["Rows"],
+            "Cols"=> $data["Cols"]
+        ]);
     }
 
-    public function getAllSolveTheWord(): array{
-        return arrap_map(function(SolveTheWord $solveTheWord){
-            return $solveTheWord->toArray();
-        },SolveTheWord::All()->toArray());
-    }
-
-    public function getSolveTheWordById(int $id): SolveTheWord{
-        return SolveTheWord::find($id);
-    }
-
-    public function updateSolveTheWord(int $id, array $data): SolveTheWord{
+    public function getSolveTheWordById(int $id): SolveTheWord {
         $solveTheWord = SolveTheWord::find($id);
-        if($solveTheWord){
-            return $solveTheWord->update($data);
+        if (!$solveTheWord) {
+            throw new \RuntimeException("SolveTheWord not found with ID: $id");
         }
         return $solveTheWord;
     }
 
-    public function deleteSolveTheWord(int $id): SolveTheWord{
+    public function updateSolveTheWord(int $id, array $data): SolveTheWord {
         $solveTheWord = SolveTheWord::find($id);
-        if($solveTheWord){
-            return $solveTheWord->delete();
+        if (!$solveTheWord) {
+            throw new \RuntimeException("SolveTheWord not found with ID: $id");
         }
+        $solveTheWord->update([
+            "GameInstanceId"=> $data["GameInstanceId"],
+            "Rows"=> $data["Rows"],
+            "Cols"=> $data["Cols"]
+        ]);
         return $solveTheWord;
     }
 }

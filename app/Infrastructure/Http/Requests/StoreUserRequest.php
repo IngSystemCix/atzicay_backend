@@ -2,8 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StoreUserRequest",
@@ -87,7 +85,19 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'CreatedAt' => now()->format('Y-m-d H:i:s'),
+        ]);
     }
 
     /**

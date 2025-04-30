@@ -8,48 +8,37 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="Puzzle",
  *     type="object",
- *     required={"game_instance_id", "path_img", "clue", "rows", "cols", "automatic_help"},
+ *     title="Puzzle",
+ *     description="Puzzle entity schema",
  *     @OA\Property(
- *         property="game_instance_id",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=1001,
- *         description="The ID of the associated game instance"
+ *         description="The ID of the game instance"
  *     ),
  *     @OA\Property(
- *         property="path_img",
+ *         property="PathImg",
  *         type="string",
- *         example="/images/puzzle.jpg",
- *         description="The path to the image for the puzzle"
+ *         description="Path to the puzzle image"
  *     ),
  *     @OA\Property(
- *         property="clue",
+ *         property="Clue",
  *         type="string",
- *         example="This is a famous landmark.",
- *         description="A clue to help solve the puzzle"
+ *         description="Clue for the puzzle"
  *     ),
  *     @OA\Property(
- *         property="rows",
+ *         property="Rows",
  *         type="integer",
- *         example=4,
- *         description="The number of rows in the puzzle grid"
+ *         description="Number of rows in the puzzle"
  *     ),
  *     @OA\Property(
- *         property="cols",
+ *         property="Cols",
  *         type="integer",
- *         example=4,
- *         description="The number of columns in the puzzle grid"
+ *         description="Number of columns in the puzzle"
  *     ),
  *     @OA\Property(
- *         property="automatic_help",
+ *         property="AutomaticHelp",
  *         type="boolean",
- *         example=true,
- *         description="Whether automatic help is enabled for the puzzle"
- *     ),
- *     @OA\Property(
- *         property="game_instances",
- *         type="object",
- *         ref="#/components/schemas/GameInstances",
- *         description="The associated game instance for this puzzle"
+ *         description="Indicates if automatic help is enabled"
  *     )
  * )
  */
@@ -65,16 +54,16 @@ class Puzzle extends Model
         'Clue',
         'Rows',
         'Cols',
-        'automaticHelp',
+        'AutomaticHelp',
     ];
 
     protected $casts = [
-        'GameInstanceId' => GameInstances::class,
+        'GameInstanceId' => 'integer',
         'PathImg' => 'string',
         'Clue' => 'string',
         'Rows' => 'integer',
         'Cols' => 'integer',
-        'automaticHelp' => 'boolean',
+        'AutomaticHelp' => 'boolean',
     ];
 
     /**

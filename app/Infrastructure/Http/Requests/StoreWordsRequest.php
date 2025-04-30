@@ -2,9 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-
 /**
  * @OA\Schema(
  *     schema="StoreWordsRequest",
@@ -39,7 +36,7 @@ class StoreWordsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -52,7 +49,7 @@ class StoreWordsRequest extends FormRequest
         return [
             'SolveTheWordId' => [
                 'required',
-                'exists:SolveTheWord,Id',
+                'exists:SolveTheWord,GameInstanceId',
             ],
             'Word' => [
                 'required',

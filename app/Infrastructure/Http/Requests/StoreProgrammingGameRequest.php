@@ -2,8 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StoreProgrammingGameRequest",
@@ -22,10 +20,16 @@ use Illuminate\Foundation\Http\FormRequest;
  *         description="The ID of the programmer"
  *     ),
  *     @OA\Property(
- *         property="name",
+ *         property="Name",
  *         type="string",
  *         example="Programming Challenge",
- *         description="The name of the programming game"
+ *         description="The Name of the programming game"
+ *     ),
+ *     @OA\Property(
+ *        property="Activated",
+ *        type="boolean",
+ *        example=true,
+ *        description="Whether the game is activated"
  *     ),
  *     @OA\Property(
  *         property="StartTime",
@@ -62,7 +66,7 @@ class StoreProgrammingGameRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -75,7 +79,8 @@ class StoreProgrammingGameRequest extends FormRequest
         return [
             'GameInstancesId' => ['required', 'integer', 'exists:GameInstances,Id'],
             'ProgrammerId' => ['required', 'integer', 'exists:Users,Id'],
-            'name' => ['required', 'string', 'max:50'],
+            'Name' => ['required', 'string', 'max:50'],
+            'Activated' => ['boolean', 'required'],
             'StartTime' => ['required', 'date'],
             'EndTime' => ['required', 'date', 'after:StartTime'],
             'Attempts' => ['required', 'integer', 'min:1'],
@@ -96,9 +101,11 @@ class StoreProgrammingGameRequest extends FormRequest
             'ProgrammerId.required' => 'The programmer ID is required.',
             'ProgrammerId.integer' => 'The programmer ID must be an integer.',
             'ProgrammerId.exists' => 'The selected programmer ID is invalid.',
-            'name.required' => 'The name is required.',
-            'name.string' => 'The name must be a string.',
-            'name.max' => 'The name may not be greater than 50 characters.',
+            'Name.required' => 'The Name is required.',
+            'Name.string' => 'The Name must be a string.',
+            'Name.max' => 'The Name may not be greater than 50 characters.',
+            'Activated.required' => 'The activated status is required.',
+            'Activated.boolean'=> 'The activated status must be true or false.',
             'StartTime.required' => 'The start time is required.',
             'StartTime.date' => 'The start time must be a valid date.',
             'EndTime.required' => 'The end time is required.',

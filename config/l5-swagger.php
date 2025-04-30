@@ -12,7 +12,7 @@ return [
                 /*
                  * Route for accessing api documentation interface
                  */
-                'api' => 'atzicay/v1/docs',
+                'api' => 'api/atzicay/v1/docs',
             ],
             'paths' => [
                 /*

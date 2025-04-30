@@ -61,7 +61,7 @@ class CountryController extends Controller {
      *     summary="Get country by ID",
      *     description="Retrieves a country by its ID.",
      *     @OA\Parameter(
-     *         name="id",
+     *         name="Id",
      *         in="path",
      *         required=true,
      *         description="Country ID",

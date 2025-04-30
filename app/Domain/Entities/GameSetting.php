@@ -8,42 +8,33 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="GameSetting",
  *     type="object",
- *     required={"id", "game_instance_id", "config_key", "config_value"},
+ *     required={"Id", "GameInstanceId", "ConfigKey", "ConfigValue"},
  *     @OA\Property(
- *         property="id",
+ *         property="Id",
  *         type="integer",
  *         example=1
  *     ),
  *     @OA\Property(
- *         property="game_instance_id",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=101,
- *         description="The ID of the game instance associated with this setting"
+ *         example=123
  *     ),
  *     @OA\Property(
- *         property="config_key",
+ *         property="ConfigKey",
  *         type="string",
- *         example="difficulty_level",
- *         description="The key representing the configuration setting"
+ *         example="background_color"
  *     ),
  *     @OA\Property(
- *         property="config_value",
+ *         property="ConfigValue",
  *         type="string",
- *         example="hard",
- *         description="The value for the configuration setting"
- *     ),
- *     @OA\Property(
- *         property="game_instance",
- *         type="object",
- *         ref="#/components/schemas/GameInstances",
- *         description="The associated game instance for this setting"
+ *         example="#FFFFFF"
  *     )
  * )
  */
 class GameSetting extends Model
 {
     protected $table = "GameSettings";
-    protected $primarykey = "Id";
+    protected $primaryKey = "Id";
     public $timestamps = false;
 
     protected $fillable = [
@@ -53,7 +44,7 @@ class GameSetting extends Model
     ];
 
     protected $casts = [
-        'GameInstanceId' => GameInstances::class,
+        'GameInstanceId' => 'integer',
         'ConfigKey' => 'string',
         'ConfigValue' => 'string'
     ];

@@ -10,32 +10,32 @@ use Illuminate\Database\Eloquent\Model;
  *     type="object",
  *     required={"id", "activated", "gameInstanceId", "userId", "value"},
  *     @OA\Property(
- *         property="id",
+ *         property="Id",
  *         type="integer",
  *         example=1
  *     ),
  *     @OA\Property(
- *         property="activated",
+ *         property="Activated",
  *         type="boolean",
  *         example=true
  *     ),
  *     @OA\Property(
- *         property="gameInstanceId",
+ *         property="GameInstanceId",
  *         type="integer",
  *         example=123
  *     ),
  *     @OA\Property(
- *         property="userId",
+ *         property="UserId",
  *         type="integer",
  *         example=456
  *     ),
  *     @OA\Property(
- *         property="value",
+ *         property="Value",
  *         type="integer",
  *         example=10
  *     ),
  *     @OA\Property(
- *         property="comments",
+ *         property="Comments",
  *         type="string",
  *         example="Great performance!"
  *     ),
@@ -56,8 +56,8 @@ class Assessment extends Model
 
     protected $casts = [
         'Activated' => 'boolean',
-        'GameInstanceId' => GameInstances::class,
-        'UserId' => User::class,
+        'GameInstanceId' => 'integer',
+        'UserId' => 'integer',
         'Value' => 'integer',
         'Comments' => 'string',
     ];

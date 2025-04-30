@@ -1,0 +1,29 @@
+### POST | create a new puzzle
+POST http://localhost:8000/api/atzicay/v1/puzzles
+Content-Type: application/json
+
+{
+  "GameInstanceId": 1,
+  "PathImg": "sistema_planetario.png",
+  "Clue": "El cuarto planeta, rojo y polvoriento, guarda cráteres y un cañón que es el más grande de todos.",
+  "Rows": 10,
+  "Cols": 10,
+  "AutomaticHelp": true
+}
+
+### PUT | update a puzzle
+PUT http://localhost:8000/api/atzicay/v1/puzzles/1
+Content-Type: application/json
+
+{
+  "GameInstanceId": 1,
+  "PathImg": "sistema_planetario.png",
+  "Clue": "El cuarto planeta, rojo y polvoriento, guarda cráteres y un cañón que es el más grande de todos.",
+  "Rows": 12,
+  "Cols": 12,
+  "AutomaticHelp": true
+}
+
+### GET | get puzzle by id
+GET http://localhost:8000/api/atzicay/v1/puzzles/1
+Content-Type: application/json

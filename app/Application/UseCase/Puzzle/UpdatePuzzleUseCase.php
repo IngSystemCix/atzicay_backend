@@ -8,18 +8,15 @@ use App\Domain\Repositories\PuzzleRepository;
 
 class UpdatePuzzleUseCase {
     public function __construct(
-        private PuzzleRepository $repository
-    ) {}
-    
-    public function execute(int $id, PuzzleDTO $data): Puzzle {
-        $puzzle = $this->repository->getPuzzleById($id);
+        private PuzzleRepository $puzzleRepository,
+    ){}
+
+    public function execute(int $id, PuzzleDTO $dto): Puzzle {
+        $puzzle = $this->puzzleRepository->getPuzzleById($id);
         if (!$puzzle) {
             throw new \RuntimeException("Puzzle not found for ID: $id");
         }
-
-        // Map the DTO to the entity
-        $updatePuzzle = PuzzleMapper::toEntity($data);
-        return $this->repository->updatePuzzle($id, $updatePuzzle->toArray());
+        $updatedPuzzle = PuzzleMapper::toEntity($dto);
+        return $this->puzzleRepository->updatePuzzle($id, PuzzleMapper::toArray($updatedPuzzle));
     }
 }
-

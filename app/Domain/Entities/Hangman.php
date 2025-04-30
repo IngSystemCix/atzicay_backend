@@ -9,42 +9,28 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="Hangman",
  *     type="object",
- *     required={"id", "game_instance_id", "word", "clue", "presentation"},
+ *     title="Hangman",
+ *     description="Hangman entity schema",
  *     @OA\Property(
- *         property="id",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=1
+ *         description="The ID of the related game instance"
  *     ),
  *     @OA\Property(
- *         property="game_instance_id",
- *         type="integer",
- *         example=101,
- *         description="The ID of the game instance associated with this Hangman game"
- *     ),
- *     @OA\Property(
- *         property="word",
+ *         property="Word",
  *         type="string",
- *         example="programming",
- *         description="The word to be guessed in the Hangman game"
+ *         description="The word to guess in the hangman game"
  *     ),
  *     @OA\Property(
- *         property="clue",
+ *         property="Clue",
  *         type="string",
- *         example="A computer science activity",
- *         description="A clue related to the word"
+ *         description="The clue for the word"
  *     ),
  *     @OA\Property(
- *         property="presentation",
+ *         property="Presentation",
  *         type="string",
- *         enum={"image", "text", "audio"},
- *         description="The presentation type for the Hangman game",
- *         example="image"
- *     ),
- *     @OA\Property(
- *         property="game_instance",
- *         type="object",
- *         ref="#/components/schemas/GameInstances",
- *         description="The associated game instance for this Hangman game"
+ *         enum={"A", "F"},
+ *         description="The presentation type of the hangman game"
  *     )
  * )
  */
@@ -54,34 +40,26 @@ class Hangman extends Model
     protected $primaryKey = "Id";
     public $timestamps = false;
     protected $fillable = [
-        'InstanceID',
+        'GameInstanceId',
         'Word',
         'Clue',
         'Presentation'
     ];
 
     protected $casts = [
-        'GameInstanceId' => GameInstances::class,
+        'GameInstanceId' => 'integer',
         'Word' => 'string',
         'Clue' => 'string',
         'Presentation' => Presentation::class,
     ];
 
     /**
-     * Summary of gameInstance
+     * Relationship with the GameInstances entity.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<GameInstances,Hangman>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function gameInstances()
     {
         return $this->belongsTo(GameInstances::class, 'GameInstanceId', 'Id');
-    }
-
-    /**
-     * Summary of user
-     * @return \Illuminate\Database\Eloquent\Relatins\BelongsTo<User,Hangman>
-     */
-    public function user(): mixed{
-        return $this->belongsTo(User::class, 'User', 'Id');
     }
 }

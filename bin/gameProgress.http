@@ -1,0 +1,21 @@
+### POST | create game progress
+POST http://localhost:8000/api/atzicay/v1/game-progress
+Content-Type: application/json
+
+{
+  "GameSessionId": 1,
+  "Progress": "{\"level\": 2, \"score\": 1500}"
+}
+
+### PUT | update game progress by id
+PUT http://localhost:8000/api/atzicay/v1/game-progress/1
+Content-Type: application/json
+
+{
+  "GameSessionId": 1,
+  "Progress": "{\"level\": 3, \"score\": 2000}"
+}
+
+### GET | get game progress by id
+GET http://localhost:8000/api/atzicay/v1/game-progress/1
+Content-Type: application/json

@@ -9,82 +9,26 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="User",
  *     type="object",
- *     required={"id", "email", "name", "last_name", "gender", "country", "city", "birthdate", "created_at"},
- *     @OA\Property(
- *         property="id",
- *         type="integer",
- *         example=1,
- *         description="Unique identifier for the user"
- *     ),
- *     @OA\Property(
- *         property="activated",
- *         type="boolean",
- *         example=true,
- *         description="Indicates if the user account is activated"
- *     ),
- *     @OA\Property(
- *         property="google_id",
- *         type="string",
- *         example="abc123googleid",
- *         description="Google ID associated with the user (if applicable)"
- *     ),
- *     @OA\Property(
- *         property="email",
- *         type="string",
- *         example="user@example.com",
- *         description="Email address of the user"
- *     ),
- *     @OA\Property(
- *         property="name",
- *         type="string",
- *         example="John",
- *         description="First name of the user"
- *     ),
- *     @OA\Property(
- *         property="last_name",
- *         type="string",
- *         example="Doe",
- *         description="Last name of the user"
- *     ),
- *     @OA\Property(
- *         property="gender",
- *         type="string",
- *         enum={"Male", "Female", "Other"},
- *         example="Male",
- *         description="Gender of the user"
- *     ),
- *     @OA\Property(
- *         property="country",
- *         type="object",
- *         ref="#/components/schemas/Country",
- *         description="The country of the user"
- *     ),
- *     @OA\Property(
- *         property="city",
- *         type="string",
- *         example="New York",
- *         description="City of the user"
- *     ),
- *     @OA\Property(
- *         property="birthdate",
- *         type="string",
- *         format="date",
- *         example="1990-01-01",
- *         description="Birthdate of the user"
- *     ),
- *     @OA\Property(
- *         property="created_at",
- *         type="string",
- *         format="datetime",
- *         example="2025-04-26T12:00:00",
- *         description="The timestamp when the user account was created"
- *     )
+ *     title="User",
+ *     description="User entity schema",
+ *     required={"Email", "Name", "LastName", "Gender", "Country", "City", "Birthdate"},
+ *     @OA\Property(property="Id", type="integer", description="Unique identifier for the user"),
+ *     @OA\Property(property="Activated", type="boolean", description="Indicates if the user is activated"),
+ *     @OA\Property(property="GoogleId", type="string", nullable=true, description="Google ID of the user"),
+ *     @OA\Property(property="Email", type="string", format="email", description="Email address of the user"),
+ *     @OA\Property(property="Name", type="string", description="First name of the user"),
+ *     @OA\Property(property="LastName", type="string", description="Last name of the user"),
+ *     @OA\Property(property="Gender", type="string", enum={"M", "F", "O"}, description="Gender of the user"),
+ *     @OA\Property(property="Country", type="integer", description="Country of the user"),
+ *     @OA\Property(property="City", type="string", description="City of the user"),
+ *     @OA\Property(property="Birthdate", type="string", format="date", description="Birthdate of the user"),
+ *     @OA\Property(property="CreatedAt", type="string", format="date-time", description="Creation timestamp of the user"),
  * )
  */
 class User extends Model
 {
     protected $table = "Users";
-    protected $primarykey = "Id";
+    protected $primaryKey = "Id";
     public $timestamps = false;
     protected $fillable = [
         'Activated',
@@ -106,7 +50,7 @@ class User extends Model
         'Name' => 'string',
         'LastName' => 'string',
         'Gender' => Gender::class,
-        'Country' => Country::class,
+        'Country' => 'integer',
         'City' => 'string',
         'Birthdate' => 'date',
         'CreatedAt' => 'datetime',

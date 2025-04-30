@@ -1,42 +1,50 @@
 <?php
-
 namespace App\Application\DTOs;
 
-use App\Domain\Entities\GameInstances;
+use App\Domain\Enums\Presentation;
 
 /**
  * @OA\Schema(
  *     schema="HangmanDTO",
  *     type="object",
- *     required={"gameInstanceId", "word", "clue", "presentation"},
+ *     title="Hangman Data Transfer Object",
+ *     description="DTO for Hangman game data",
+ *     required={"GameInstanceId", "Word", "Clue", "Presentation"},
  *     @OA\Property(
- *         property="gameInstanceId",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=123
+ *         description="The unique identifier for the game instance"
  *     ),
  *     @OA\Property(
- *         property="word",
+ *         property="Word",
  *         type="string",
- *         example="Apple"
+ *         description="The word to guess in the hangman game"
  *     ),
  *     @OA\Property(
- *         property="clue",
+ *         property="Clue",
  *         type="string",
- *         example="Green fruit"
+ *         description="A clue for the word to guess"
  *     ),
  *     @OA\Property(
- *         property="presentation",
+ *         property="Presentation",
  *         type="string",
- *         example="A"
+ *         enum={"A", "F"},
+ *         description="The presentation of the word with guessed letters revealed"
  *     )
  * )
  */
 class HangmanDTO
 {
-    public function __construct(
-        public GameInstances $gameInstanceId,
-        public string $word,
-        public string $clue,
-        public string $presentation,
-    ){}
+    public int $GameInstanceId;
+    public string $Word;
+    public string $Clue;
+    public Presentation $Presentation;
+
+    public function __construct(array $data)
+    {
+        $this->GameInstanceId = $data['GameInstanceId'];
+        $this->Word = $data['Word'];
+        $this->Clue = $data['Clue'];
+        $this->Presentation = Presentation::from($data['Presentation']);
+    }
 }

@@ -6,14 +6,14 @@ use App\Application\Mappers\SolveTheWordMapper;
 use App\Domain\Entities\SolveTheWord;
 use App\Domain\Repositories\SolveTheWordRepository;
 
-class CreateSolveTheWordUseCase{
+class CreateSolveTheWordUseCase {
     public function __construct(
-        private SolveTheWordRepository $respository
-    ){}
+        private SolveTheWordRepository $repository,
+    ) {}
 
-    public function execute(SolveTheWordDTO $dto): SolveTheWord
-    {
+    public function execute(SolveTheWordDTO $dto): SolveTheWord {
         $solveTheWord = SolveTheWordMapper::toEntity($dto);
-        return $this->respository->createSolveTheWord(data: $solveTheWord->toArray());
+        $this->repository->createSolveTheWord(SolveTheWordMapper::toArray($solveTheWord));
+        return $solveTheWord;
     }
 }

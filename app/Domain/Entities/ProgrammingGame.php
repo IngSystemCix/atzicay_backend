@@ -8,68 +8,17 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="ProgrammingGame",
  *     type="object",
- *     required={"id", "game_instances_id", "programmer_id", "name", "start_time", "end_time", "attempts", "maximum_time"},
- *     @OA\Property(
- *         property="id",
- *         type="integer",
- *         example=1
- *     ),
- *     @OA\Property(
- *         property="game_instances_id",
- *         type="integer",
- *         example=1001,
- *         description="The ID of the associated game instance"
- *     ),
- *     @OA\Property(
- *         property="programmer_id",
- *         type="integer",
- *         example=101,
- *         description="The ID of the programmer who is playing the game"
- *     ),
- *     @OA\Property(
- *         property="name",
- *         type="string",
- *         example="Basic Programming Challenge",
- *         description="The name of the programming game"
- *     ),
- *     @OA\Property(
- *         property="start_time",
- *         type="string",
- *         format="date",
- *         example="2025-04-25",
- *         description="The start time of the game"
- *     ),
- *     @OA\Property(
- *         property="end_time",
- *         type="string",
- *         format="date",
- *         example="2025-04-25",
- *         description="The end time of the game"
- *     ),
- *     @OA\Property(
- *         property="attempts",
- *         type="integer",
- *         example=3,
- *         description="The number of attempts made by the programmer"
- *     ),
- *     @OA\Property(
- *         property="maximum_time",
- *         type="integer",
- *         example=60,
- *         description="The maximum time allowed for completing the game in seconds"
- *     ),
- *     @OA\Property(
- *         property="user",
- *         type="object",
- *         ref="#/components/schemas/User",
- *         description="The programmer (user) associated with this programming game"
- *     ),
- *     @OA\Property(
- *         property="game_instances",
- *         type="object",
- *         ref="#/components/schemas/GameInstances",
- *         description="The associated game instance for this programming game"
- *     )
+ *     title="ProgrammingGame",
+ *     description="Programming Game entity",
+ *     @OA\Property(property="Id", type="integer", description="Primary key of the ProgrammingGame"),
+ *     @OA\Property(property="GameInstancesId", type="integer", description="Foreign key to GameInstances"),
+ *     @OA\Property(property="ProgrammerId", type="integer", description="Foreign key to User"),
+ *     @OA\Property(property="Name", type="string", description="Name of the programming game"),
+ *    @OA\Property(property="Activated", type="boolean", description="Whether the game is activated"),
+ *     @OA\Property(property="StartTime", type="string", description="Start time of the game in 'Y/m/d H:i' format", example="2025/10/01 12:00"),
+ *     @OA\Property(property="EndTime", type="string", description="End time of the game in 'Y/m/d H:i' format", example="2025/10/01 14:00"),
+ *     @OA\Property(property="Attempts", type="integer", description="Number of attempts allowed"),
+ *     @OA\Property(property="MaximumTime", type="integer", description="Maximum time allowed for the game")
  * )
  */
 class ProgrammingGame extends Model
@@ -80,7 +29,8 @@ class ProgrammingGame extends Model
     protected $fillable = [
         'GameInstancesId',
         'ProgrammerId',
-        'name',
+        'Name',
+        'Activated',
         'StartTime',
         'EndTime',
         'Attempts',
@@ -88,11 +38,12 @@ class ProgrammingGame extends Model
     ];
 
     protected $casts = [
-        'GameInstancesId' => GameInstances::class,
-        'ProgrammerId' => User::class,
-        'name' => 'string',
-        'StartTime' => 'date',
-        'EndTime' => 'date',
+        'GameInstancesId' => 'integer',
+        'ProgrammerId' => 'integer',
+        'Name' => 'string',
+        'Activated' => 'boolean',
+        'StartTime' => 'datetime:Y/m/d H:i',
+        'EndTime' => 'datetime:Y/m/d H:i',
         'Attempts' => 'integer',
         'MaximumTime' => 'integer'
     ];

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Infrastructure\Adapters;
 
 use App\Domain\Entities\Hangman;
@@ -8,28 +7,40 @@ use App\Domain\Repositories\HangmanRepository;
 class EloquentHangmanRepository implements HangmanRepository
 {
     public function createHangman(array $data): Hangman {
-        return Hangman::create($data);
+        return Hangman::create([
+            "GameInstanceId"=> $data["GameInstanceId"],
+            "Word"=> $data["Word"],
+            "Clue"=> $data["Clue"],
+            "Presentation"=> $data["Presentation"],
+        ]);
     }
+    
+    public function getAllHangman(): array {
+        return Hangman::all()->toArray();
+    }
+    
     public function getHangmanById(int $id): Hangman {
-        return Hangman::find($id);
-    }
-    public function getAllHangman(): Array {
-        return array_map(function (Hangman $hangman) {
-            return $hangman->toArray();
-        }, Hangman::all()->toArray());
-    }
-    public function updateHangman(int $id, array $data): Hangman{
-        $hagman = Hangman::find($id);
-        if($hagman){
-            $hagman->update($data);
+        $hangman = Hangman::find($id);
+
+        if (!$hangman) {
+            throw new \RuntimeException("Hangman not found with ID: $id");
         }
-        return $hagman;
+
+        return $hangman;
     }
-    public function deleteHangman(int $id): Hangman {
-        $hagman = Hangman::find($id);
-        if($hagman){
-            $hagman->delete();
+    
+    public function updateHangman(int $id, array $data): Hangman {
+        $hangman = Hangman::find($id);
+
+        if (!$hangman) {
+            throw new \RuntimeException("Hangman not found with ID: $id");
         }
-        return $hagman;
-    }    
+        $hangman->update([
+            "GameInstanceId"=> $data["GameInstanceId"],
+            "Word"=> $data["Word"],
+            "Clue"=> $data["Clue"],
+            "Presentation"=> $data["Presentation"],
+        ]);
+        return $hangman;
+    }
 }

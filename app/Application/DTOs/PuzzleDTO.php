@@ -1,53 +1,58 @@
 <?php
-
 namespace App\Application\DTOs;
-
-use App\Domain\Entities\GameInstances;
 
 /**
  * @OA\Schema(
- *     schema="MemoryGameDTO",
+ *     schema="PuzzleDTO",
  *     type="object",
- *     required={"gameInstanceId", "pathImg", "clue", "rows", "cols", "automaticHelp"},
+ *     title="PuzzleDTO",
+ *     description="Data Transfer Object for Puzzle",
  *     @OA\Property(
- *         property="gameInstanceId",
+ *         property="GameInstanceId",
  *         type="integer",
- *         example=123
+ *         description="The ID of the game instance"
  *     ),
  *     @OA\Property(
- *         property="pathImg",
+ *         property="PathImg",
  *         type="string",
- *         example="MacchuPicchu.png"
+ *         description="The path to the puzzle image"
  *     ),
  *     @OA\Property(
- *         property="clue",
+ *         property="Clue",
  *         type="string",
- *         example="Wonder of the world"
+ *         description="The clue for the puzzle"
  *     ),
  *     @OA\Property(
- *         property="rows",
+ *         property="Rows",
  *         type="integer",
- *         example=6
+ *         description="The number of rows in the puzzle"
  *     ),
- *      @OA\Property(
- *          property="cols",
- *          property="integer",
- *          property=7
- *     )
- *      @OA\Property(
- *          property="automaticHelp",
- *          property="integer",
- *          property=0
+ *     @OA\Property(
+ *         property="Cols",
+ *         type="integer",
+ *         description="The number of columns in the puzzle"
+ *     ),
+ *     @OA\Property(
+ *         property="AutomaticHelp",
+ *         type="boolean",
+ *         description="Indicates if automatic help is enabled"
  *     )
  * )
  */
-class PuzzleDTO{
-    public function __construct(
-        public GameInstances $gameInstanceId,
-        public string $pathImg,
-        public string $clue,
-        public string $rows,
-        public string $cols,
-        public string $automaticHelp,
-    ){}
+class PuzzleDTO {
+    public int $GameInstanceId;
+    public string $PathImg;
+    public string $Clue;
+    public int $Rows;
+    public int $Cols;
+    public bool $AutomaticHelp;
+
+    public function __construct(array $data) {
+        $this->GameInstanceId = $data["GameInstanceId"];
+        $this->PathImg = $data["PathImg"];
+        $this->Clue = $data["Clue"];
+        $this->Rows = $data["Rows"];
+        $this->Cols = $data["Cols"];
+        $this->AutomaticHelp = $data["AutomaticHelp"];
+    }
 }

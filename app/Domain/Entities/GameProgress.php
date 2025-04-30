@@ -8,31 +8,23 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="GameProgress",
  *     type="object",
- *     required={"id", "game_session_id", "progress"},
+ *     required={"id", "gameSessionId", "progress"},
  *     @OA\Property(
- *         property="id",
+ *         property="Id",
  *         type="integer",
  *         example=1
  *     ),
  *     @OA\Property(
- *         property="game_session_id",
+ *         property="GameSessionId",
  *         type="integer",
- *         example=101,
- *         description="The ID of the game session associated with this progress"
+ *         example=123
  *     ),
  *     @OA\Property(
- *         property="progress",
+ *         property="Progress",
  *         type="string",
- *         example="50%",
- *         description="The progress made in the game session"
- *     ),
- *     @OA\Property(
- *         property="game_session",
- *         type="object",
- *         ref="#/components/schemas/GameSession",
- *         description="The associated game session for this progress"
+ *         example="Level 1 completed"
  *     )
- * )
+ *)
  */
 class GameProgress extends Model
 {
@@ -45,7 +37,7 @@ class GameProgress extends Model
     ];
 
     protected $casts = [
-        'GameSessionId' => GameSession::class,
+        'GameSessionId' => 'integer',
         'Progress' => 'string'
     ];
 

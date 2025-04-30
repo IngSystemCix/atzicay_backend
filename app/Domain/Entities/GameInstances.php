@@ -10,101 +10,50 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="GameInstances",
  *     type="object",
- *     required={"id", "name", "description", "professor_id", "activated", "difficulty", "visibility"},
+ *     required={"id", "name", "description", "professorId", "activated", "difficulty", "visibility"},
  *     @OA\Property(
- *         property="id",
+ *         property="Id",
  *         type="integer",
  *         example=1
  *     ),
  *     @OA\Property(
- *         property="name",
+ *         property="Name",
  *         type="string",
- *         example="Math Game"
+ *         example="Game Instance 1"
  *     ),
  *     @OA\Property(
- *         property="description",
+ *         property="Description",
  *         type="string",
- *         example="A challenging math game for students."
+ *         example="This is a description of the game instance."
  *     ),
  *     @OA\Property(
- *         property="professor_id",
+ *         property="ProfessorId",
  *         type="integer",
- *         example=101,
- *         description="The ID of the professor who created the game"
+ *         example=123
  *     ),
  *     @OA\Property(
- *         property="activated",
+ *         property="Activated",
  *         type="boolean",
  *         example=true
  *     ),
  *     @OA\Property(
- *         property="difficulty",
+ *         property="Difficulty",
  *         type="string",
- *         enum={"easy", "medium", "hard"},
- *         example="medium",
- *         description="The difficulty level of the game"
+ *         enum={"E", "M", "H"},
+ *         example="medium"
  *     ),
  *     @OA\Property(
- *         property="visibility",
+ *         property="Visibility",
  *         type="string",
- *         enum={"public", "private"},
- *         example="public",
- *         description="The visibility of the game instance"
- *     ),
- *     @OA\Property(
- *         property="user",
- *         type="object",
- *         ref="#/components/schemas/User",
- *         description="The professor associated with this game instance"
- *     ),
- *     @OA\Property(
- *         property="programming_game",
- *         type="array",
- *         @OA\Items(ref="#/components/schemas/ProgrammingGame"),
- *         description="Programming games related to this game instance"
- *     ),
- *     @OA\Property(
- *         property="game_setting",
- *         type="array",
- *         @OA\Items(ref="#/components/schemas/GameSetting"),
- *         description="Game settings related to this game instance"
- *     ),
- *     @OA\Property(
- *         property="memory_game",
- *         type="array",
- *         @OA\Items(ref="#/components/schemas/MemoryGame"),
- *         description="Memory games related to this game instance"
- *     ),
- *     @OA\Property(
- *         property="hangman",
- *         type="object",
- *         ref="#/components/schemas/Hangman",
- *         description="Hangman game related to this game instance"
- *     ),
- *     @OA\Property(
- *         property="puzzle",
- *         type="object",
- *         ref="#/components/schemas/Puzzle",
- *         description="Puzzle game related to this game instance"
- *     ),
- *     @OA\Property(
- *         property="solve_the_word",
- *         type="object",
- *         ref="#/components/schemas/SolveTheWord",
- *         description="SolveTheWord game related to this game instance"
- *     ),
- *     @OA\Property(
- *         property="assessment",
- *         type="array",
- *         @OA\Items(ref="#/components/schemas/Assessment"),
- *         description="Assessments related to this game instance"
+ *         enum={"P", "R"},
+ *         example="public"
  *     )
- * )
+ *)
  */
 class GameInstances extends Model
 {
     protected $table = "GameInstances";
-    protected $primarykey = "Id";
+    protected $primaryKey = "Id";
     public $timestamps = false;
     protected $fillable = [
         'Name',
@@ -118,7 +67,7 @@ class GameInstances extends Model
     protected $casts = [
         'Name' => 'string',
         'Description' => 'string',
-        'ProfessorId' => User::class,
+        'ProfessorId' => 'integer',
         'Activated' => 'boolean',
         'Difficulty' => Difficulty::class,
         'Visibility' => Visibility::class

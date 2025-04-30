@@ -1,0 +1,43 @@
+### POST | create user
+POST http://localhost:8000/api/atzicay/v1/users
+Content-Type: application/json
+
+{
+  "Activated": true,
+  "GoogleId": "108947365432189023456",
+  "Email": "juanromerocollazos@gmail.com",
+  "Name": "Juan",
+  "LastName": "Romero Collazos",
+  "Gender": "M",
+  "Country": 1,
+  "City": "Chiclayo",
+  "Birthdate": "2002-03-05"
+}
+
+### UPDATE | update user by id
+PUT http://localhost:8000/api/atzicay/v1/users/1
+Content-Type: application/json
+
+{
+  "Activated": true,
+  "GoogleId": "108937365432182023456",
+  "Email": "juanromerocollazos@gmail.com",
+  "Name": "Juan",
+  "LastName": "Romero Collazos",
+  "Gender": "M",
+  "Country": 1,
+  "City": "Chiclayo",
+  "Birthdate": "2002-03-05"
+}
+
+### GET | get all users
+GET http://localhost:8000/api/atzicay/v1/users
+Content-Type: application/json
+
+### GET | get user by id
+GET http://localhost:8000/api/atzicay/v1/users/1
+Content-Type: application/json
+
+### DELETE | delete user by id
+DELETE http://localhost:8000/api/atzicay/v1/users/1
+Content-Type: application/json

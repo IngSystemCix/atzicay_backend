@@ -2,8 +2,6 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StoreHangmanRequest",
@@ -43,7 +41,7 @@ class StoreHangmanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -54,27 +52,13 @@ class StoreHangmanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'GameInstanceId' => [
-                'required', 
-                'exists:GameInstances,Id'
-            ],
-            'Word' => [
-                'required', 
-                'string', 
-                'max:60'
-            ],
-            'Clue' => [
-                'nullable', 
-                'string', 
-                'max:100'
-            ],
-            'Presentation' => [
-                'required', 
-                'in:A,F'
-            ],
+            'GameInstanceId' => ['required', 'exists:GameInstances,Id'],
+            'Word' => ['required', 'string', 'max:60'],
+            'Clue' => ['nullable', 'string', 'max:100'],
+            'Presentation' => ['required', 'in:A,F'],
         ];
     }
-    
+
     public function messages(): array
     {
         return [

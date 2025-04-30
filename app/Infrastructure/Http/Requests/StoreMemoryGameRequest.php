@@ -2,13 +2,11 @@
 
 namespace App\Infrastructure\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @OA\Schema(
  *     schema="StoreMemoryGameRequest",
  *     type="object",
- *     required={"GameInstanceId", "Mode", "PathImg1", "PathImg2", "DescriptionImg"},
+ *     required={"GameInstanceId", "Mode", "PathImg1"},
  *     @OA\Property(
  *         property="GameInstanceId",
  *         type="integer",
@@ -49,7 +47,7 @@ class StoreMemoryGameRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -63,8 +61,8 @@ class StoreMemoryGameRequest extends FormRequest
             'GameInstanceId' => ['required', 'exists:GameInstances,Id'],
             'Mode' => ['required', 'in:II,ID'],
             'PathImg1' => ['required', 'string', 'max:50'],
-            'PathImg2' => ['required', 'string', 'max:50'],
-            'DescriptionImg' => ['required', 'string', 'max:100'],
+            'PathImg2' => ['nullable', 'string', 'max:50'],
+            'DescriptionImg' => ['nullable', 'string', 'max:100'],
         ];
     }
 
@@ -82,10 +80,8 @@ class StoreMemoryGameRequest extends FormRequest
             'PathImg1.required' => 'The PathImg1 field is required.',
             'PathImg1.string' => 'The PathImg1 must be a string.',
             'PathImg1.max' => 'The PathImg1 may not be greater than 50 characters.',
-            'PathImg2.required' => 'The PathImg2 field is required.',
             'PathImg2.string' => 'The PathImg2 must be a string.',
             'PathImg2.max' => 'The PathImg2 may not be greater than 50 characters.',
-            'DescriptionImg.required' => 'The DescriptionImg field is required.',
             'DescriptionImg.string' => 'The DescriptionImg must be a string.',
             'DescriptionImg.max' => 'The DescriptionImg may not be greater than 100 characters.',
         ];

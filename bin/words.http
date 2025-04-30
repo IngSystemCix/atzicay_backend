@@ -1,0 +1,23 @@
+### POST | create a word
+POST http://localhost:8000/api/atzicay/v1/words
+Content-Type: application/json
+
+{
+  "SolveTheWordId": 1,
+  "Word": "COCODRILO",
+  "Orientation": "HL"
+}
+
+### PUT | update a word
+PUT http://localhost:8000/api/atzicay/v1/words/1
+Content-Type: application/json
+
+{
+  "SolveTheWordId": 1,
+  "Word": "COCODRILO",
+  "Orientation": "DD"
+}
+
+### GET | get word by id
+GET http://localhost:8000/api/atzicay/v1/words/1
+Content-Type: application/json

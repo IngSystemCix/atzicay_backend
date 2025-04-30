@@ -1,26 +1,36 @@
 <?php
-
 namespace App\Application\Mappers;
 
 use App\Application\DTOs\HangmanDTO;
 use App\Domain\Entities\Hangman;
 
 class HangmanMapper {
-    public static function toEntity (HangmanDTO $dto): Hangman {
+    
+    public static function toEntity(HangmanDTO $dto): Hangman {
         return new Hangman([
-            'GameInstanceId' => $dto->gameInstanceId,
-            'Worl' => $dto->word,
-            'Clue' => $dto->clue,
-            'Presentation' => $dto->presentation,
+            'GameInstanceId' => $dto->GameInstanceId,
+            'Word' => $dto->Word,
+            'Clue' => $dto->Clue,
+            'Presentation' => $dto->Presentation,
         ]);
     }
 
-    public static function toDTO (Hangman $hangman): HangmanDTO {
-        return new HangmanDTO(
-            gameInstanceId: $hangman->GameInstanceId,
-            word: $hangman->word,
-            clue: $hangman->clue,
-            presentation: $hangman->presentation,
-        );
+    public static function toDTO(Hangman $hangman): HangmanDTO {
+        return new HangmanDTO([
+            'GameInstanceId' => $hangman->GameInstanceId,
+            'Word' => $hangman->Word,
+            'Clue' => $hangman->Clue,
+            'Presentation' => $hangman->Presentation,
+        ]);
+    }
+
+    public static function toArray(Hangman $hangman): array {
+        return [
+            'Id' => $hangman->Id,
+            'GameInstanceId' => $hangman->GameInstanceId,
+            'Word' => $hangman->Word,
+            'Clue' => $hangman->Clue,
+            'Presentation' => $hangman->Presentation,
+        ];
     }
 }

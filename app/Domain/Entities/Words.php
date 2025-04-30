@@ -9,31 +9,28 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="Words",
  *     type="object",
- *     required={"id", "solve_the_word_id", "word", "orientation"},
+ *     title="Words",
+ *     description="Words entity schema",
  *     @OA\Property(
- *         property="id",
+ *         property="Id",
  *         type="integer",
- *         example=1,
- *         description="Unique identifier for the word"
+ *         description="Primary key of the Words entity"
  *     ),
  *     @OA\Property(
- *         property="solve_the_word_id",
+ *         property="SolveTheWordId",
  *         type="integer",
- *         example=1,
- *         description="ID of the SolveTheWord game instance that this word belongs to"
+ *         description="Foreign key referencing SolveTheWord entity"
  *     ),
  *     @OA\Property(
- *         property="word",
+ *         property="Word",
  *         type="string",
- *         example="example",
- *         description="The word for the game"
+ *         description="The word itself"
  *     ),
  *     @OA\Property(
- *         property="orientation",
+ *         property="Orientation",
  *         type="string",
- *         enum={"Horizontal", "Vertical"},
- *         example="Horizontal",
- *         description="The orientation of the word (Horizontal or Vertical)"
+ *         enum={"HL", "HR", "VU", "VD", "DU", "DD"},
+ *         description="Orientation of the word"
  *     )
  * )
  */
@@ -49,7 +46,7 @@ class Words extends Model
     ];
 
     protected $casts = [
-        'SolveTheWordId' => SolveTheWord::class,
+        'SolveTheWordId' => 'integer',
         'Word' => 'string',
         'Orientation' => Orientation::class,
     ];
@@ -60,6 +57,6 @@ class Words extends Model
      */
     public function solveTheWord()
     {
-        return $this->belongsTo(SolveTheWord::class, 'SolveTheWordId', 'Id');
+        return $this->belongsTo(SolveTheWord::class, 'SolveTheWordId', 'GameInstanceId');
     }
 }

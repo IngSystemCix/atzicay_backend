@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="Country",
  *     type="object",
- *     required={"id", "name"},
+ *     required={"Id", "Name"},
  *     @OA\Property(
- *         property="id",
+ *         property="Id",
  *         type="integer",
  *         example=1
  *     ),
  *     @OA\Property(
- *         property="name",
+ *         property="Name",
  *         type="string",
  *         example="Peru"
  *     ),
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 class Country extends Model
 {
     protected $table = "Country";
-    protected $primarykey = "Id";
+    protected $primaryKey = "Id";
     public $timestamps = false;
 
     protected $fillable = [
