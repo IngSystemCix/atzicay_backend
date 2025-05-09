@@ -3,7 +3,7 @@ POST http://localhost:8000/api/atzicay/v1/countries
 Content-Type: application/json
 
 {
-    "Name": "Panamá"
+    "Name": "Japón"
 }
 
 ### GET | Get all countries
@@ -11,5 +11,5 @@ GET http://localhost:8000/api/atzicay/v1/countries
 Content-Type: application/json
 
 ### GET | Get a country by ID
-GET http://localhost:8000/api/atzicay/v1/countries/1
+GET http://localhost:8000/api/atzicay/v1/countries/2
 Content-Type: application/json

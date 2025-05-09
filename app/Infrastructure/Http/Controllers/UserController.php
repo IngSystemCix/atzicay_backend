@@ -2,11 +2,14 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\UserDto;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\User\CreateUserUseCase;
 use App\Application\UseCase\User\DeleteUserUseCase;
+use App\Application\UseCase\User\FindUserByEmailUseCase;
 use App\Application\UseCase\User\GetAllUsersUseCase;
 use App\Application\UseCase\User\GetUserByIdUseCase;
 use App\Application\UseCase\User\UpdateUserUseCase;
+use App\Infrastructure\Http\Requests\StoreUserFindRequest;
 use App\Infrastructure\Http\Requests\StoreUserRequest;
 use Illuminate\Routing\Controller;
 
@@ -17,24 +20,28 @@ use Illuminate\Routing\Controller;
  * )
  */
 class UserController extends Controller {
+    use ApiResponse;
     private CreateUserUseCase $createUserUseCase;
     private GetAllUsersUseCase $getAllUsersUseCase;
     private GetUserByIdUseCase $getUserByIdUseCase;
     private UpdateUserUseCase $updateUserUseCase;
     private DeleteUserUseCase $deleteUserUseCase;
+    private FindUserByEmailUseCase $findUserByEmailUseCase;
 
     public function __construct(
         CreateUserUseCase $createUserUseCase,
         GetAllUsersUseCase $getAllUsersUseCase,
         GetUserByIdUseCase $getUserByIdUseCase,
         UpdateUserUseCase $updateUserUseCase,
-        DeleteUserUseCase $deleteUserUseCase
+        DeleteUserUseCase $deleteUserUseCase,
+        FindUserByEmailUseCase $findUserByEmailUseCase
     ) {
         $this->createUserUseCase = $createUserUseCase;
         $this->getAllUsersUseCase = $getAllUsersUseCase;
         $this->getUserByIdUseCase = $getUserByIdUseCase;
         $this->updateUserUseCase = $updateUserUseCase;
         $this->deleteUserUseCase = $deleteUserUseCase;
+        $this->findUserByEmailUseCase = $findUserByEmailUseCase;
     }
 
     /**
@@ -57,9 +64,9 @@ class UserController extends Controller {
     public function getAllUsers() {
         $users = $this->getAllUsersUseCase->execute();
         if (empty($users)) {
-            return response()->json(['message' => 'No users found'], 404);
+            return $this->errorResponse(2100);
         }
-        return response()->json($users, 200);
+        return $this->successResponse($users, 2101);
     }
 
     /**
@@ -89,9 +96,9 @@ class UserController extends Controller {
     public function getUserById($id) {
         $user = $this->getUserByIdUseCase->execute($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return $this->errorResponse(2102);
         }
-        return response()->json($user, 200);
+        return $this->successResponse($user, 2103);
     }
 
     /**
@@ -115,7 +122,7 @@ class UserController extends Controller {
         $validatedData = $request->validated();
         $userDto = new UserDto($validatedData);
         $user = $this->createUserUseCase->execute($userDto);
-        return response()->json($user, 201);
+        return $this->successResponse($user, 2105);
     }
 
     /**
@@ -146,7 +153,7 @@ class UserController extends Controller {
         $validatedData = $request->validated();
         $userDto = new UserDto($validatedData);
         $user = $this->updateUserUseCase->execute($id, $userDto);
-        return response()->json($user, 200);
+        return $this->successResponse($user, 2108);
     }
 
     /**
@@ -175,8 +182,44 @@ class UserController extends Controller {
     public function deleteUser($id) {
         $user = $this->deleteUserUseCase->execute($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return $this->errorResponse(2109);
         }
-        return response()->json(['message' => 'User deleted successfully'], 200);
+        return $this->successResponse($user, 2110);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/users/findByEmail",
+     *     tags={"Users"},
+     *     summary="Find user by email",
+     *     description="Finds a user by their email address.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/StoreUserFindRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User found",
+    *         @OA\JsonContent(
+    *             type="object",
+    *             @OA\Property(property="Id", type="integer"),
+    *             @OA\Property(property="Name", type="string"),
+    *             @OA\Property(property="LastName", type="string")
+    *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function findUserByEmail(StoreUserFindRequest $request) {
+        $validatedData = $request->only(['Email']);
+        $email = $validatedData['Email'];
+        $user = $this->findUserByEmailUseCase->execute($email);
+        if (!$user) {
+            return $this->errorResponse(2111);
+        }
+        return $this->successResponse($user, 2112);
     }
 }

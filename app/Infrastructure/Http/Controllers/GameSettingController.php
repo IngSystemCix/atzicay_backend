@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\GameSettingDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\GameSetting\CreateGameSettingUseCase;
 use App\Application\UseCase\GameSetting\GetGameSettingByIdUseCase;
 use App\Application\UseCase\GameSetting\UpdateGameSettingUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class GameSettingController extends Controller {
+    use ApiResponse;
     private CreateGameSettingUseCase $createGameSettingUseCase;
     private GetGameSettingByIdUseCase $getGameSettingByIdUseCase;
     private UpdateGameSettingUseCase $updateGameSettingUseCase;
@@ -52,9 +54,9 @@ class GameSettingController extends Controller {
     public function getGameSettingById(int $id) {
         $gameSetting = $this->getGameSettingByIdUseCase->execute($id);
         if (!$gameSetting) {
-            return response()->json(['message' => 'GameSetting not found'], 404);
+            return $this->errorResponse(2501);
         }
-        return response()->json($gameSetting, 200);
+        return $this->successResponse($gameSetting, 2500);
     }
 
     /**
@@ -78,7 +80,7 @@ class GameSettingController extends Controller {
         $validatedData = $request->validated();
         $gameSettingDTO = new GameSettingDTO($validatedData);
         $gameSetting = $this->createGameSettingUseCase->execute($gameSettingDTO);
-        return response()->json($gameSetting, 201);
+        return $this->successResponse($gameSetting, 2503);
     }
 
     /**
@@ -109,6 +111,6 @@ class GameSettingController extends Controller {
         $validatedData = $request->validated();
         $gameSettingDTO = new GameSettingDTO($validatedData);
         $gameSetting = $this->updateGameSettingUseCase->execute($id, $gameSettingDTO);
-        return response()->json($gameSetting, 200);
+        return $this->successResponse($gameSetting, 2506);
     }
 }

@@ -1550,6 +1550,52 @@
                 }
             }
         },
+        "/users/findByEmail": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Find user by email",
+                "description": "Finds a user by their email address.",
+                "operationId": "85c7a3e15495865cc6d191223ccd2782",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserFindRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Id": {
+                                            "type": "integer"
+                                        },
+                                        "Name": {
+                                            "type": "string"
+                                        },
+                                        "LastName": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
         "/words/{id}": {
             "get": {
                 "tags": [
@@ -1997,7 +2043,7 @@
                             "O"
                         ]
                     },
-                    "Country": {
+                    "CountryId": {
                         "description": "ID of the country",
                         "type": "integer"
                     },
@@ -2439,7 +2485,7 @@
                             "O"
                         ]
                     },
-                    "Country": {
+                    "CountryId": {
                         "description": "Country of the user",
                         "type": "integer"
                     },
@@ -2876,6 +2922,21 @@
                 },
                 "type": "object"
             },
+            "StoreUserFindRequest": {
+                "required": [
+                    "Email"
+                ],
+                "properties": {
+                    "Email": {
+                        "description": "The email of the user",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "user@example.com"
+                    }
+                },
+                "type": "object"
+            },
             "StoreUserRequest": {
                 "required": [
                     "Activated",
@@ -2930,8 +2991,8 @@
                         ],
                         "example": "M"
                     },
-                    "Country": {
-                        "description": "The ID of the user's country (must exist in the Country table)",
+                    "CountryId": {
+                        "description": "The ID of the user's CountryId (must exist in the Country table)",
                         "type": "integer",
                         "example": 1
                     },

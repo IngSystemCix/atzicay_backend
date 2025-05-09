@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\AssessmentDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\Assessment\CreateAssessmentUseCase;
 use App\Application\UseCase\Assessment\DeleteAssessmentUseCase;
 use App\Application\UseCase\Assessment\GetAllAssessmentsUseCase;
@@ -18,6 +19,7 @@ use Illuminate\Routing\Controller;
  */
 class AssessmentController extends Controller
 {
+    use ApiResponse;
     private CreateAssessmentUseCase $createAssessmentUseCase;
     private GetAllAssessmentsUseCase $getAllAssessmentsUseCase;
     private GetAssessmentByIdUseCase $getAssessmentByIdUseCase;
@@ -59,9 +61,9 @@ class AssessmentController extends Controller
     {
         $assessments = $this->getAllAssessmentsUseCase->execute();
         if (empty($assessments)) {
-            return response()->json(['message' => 'No assessments found'], 404);
+            return $this->errorResponse(2400);
         }
-        return response()->json($assessments, 200);
+        return $this->successResponse($assessments, 2401);
     }
 
 
@@ -93,9 +95,9 @@ class AssessmentController extends Controller
     {
         $assessment = $this->getAssessmentByIdUseCase->execute($id);
         if (!$assessment) {
-            return response()->json(['message' => 'Assessment not found'], 404);
+            return $this->errorResponse(2402);
         }
-        return response()->json($assessment, 200);
+        return $this->successResponse($assessment, 2403);
     }
 
     /**
@@ -120,7 +122,7 @@ class AssessmentController extends Controller
         $validatedData = $request->validated();
         $assessmentDto = new AssessmentDTO($validatedData);
         $assessment = $this->createAssessmentUseCase->execute($assessmentDto);
-        return response()->json($assessment, 201);
+        return $this->successResponse($assessment, 2404);
     }
 
     /**
@@ -156,7 +158,7 @@ class AssessmentController extends Controller
         $validatedData = $request->validated();
         $assessmentDto = new AssessmentDTO($validatedData);
         $assessment = $this->updateAssessmentUseCase->execute($id, $assessmentDto);
-        return response()->json($assessment, 200);
+        return $this->successResponse($assessment, 2406);
     }
 
     /**
@@ -186,8 +188,8 @@ class AssessmentController extends Controller
     {
         $assessment = $this->deleteAssessmentUseCase->execute($id);
         if (!$assessment) {
-            return response()->json(['message' => 'Assessment not found'], 404);
+            return $this->errorResponse(2410);
         }
-        return response()->json(['message' => 'Assessment deleted successfully'], 200);
+        return $this->successResponse($assessment, 2409);
     }
 }

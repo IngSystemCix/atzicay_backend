@@ -14,7 +14,7 @@ class EloquentUserRepository implements UserRepository {
             'Name' => $data['Name'],
             'LastName' => $data['LastName'],
             'Gender'=> $data['Gender'],
-            'Country'=> $data['Country'],
+            'CountryId'=> $data['CountryId'],
             'City'=> $data['City'],
             'Birthdate'=> $data['Birthdate'],
             'CreatedAt' => now(),
@@ -47,7 +47,7 @@ class EloquentUserRepository implements UserRepository {
             'Name' => $data['Name'],
             'LastName' => $data['LastName'],
             'Gender'=> $data['Gender'],
-            'Country'=> $data['Country'],
+            'CountryId'=> $data['CountryId'],
             'City'=> $data['City'],
             'Birthdate'=> $data['Birthdate'],
             'CreatedAt' => now(),
@@ -62,5 +62,15 @@ class EloquentUserRepository implements UserRepository {
         $user->save();
 
         return $user;
+    }
+    
+    public function findUserByEmail(string $email): array {
+        $user = User::where('Email', $email)->first(['Id', 'Name', 'LastName']);
+
+        if (!$user) {
+            throw new \RuntimeException("User not found with email: $email");
+        }
+
+        return $user->toArray();
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\MemoryGameDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\MemoryGame\createMemoryGameUseCase;
 use App\Application\UseCase\MemoryGame\GetMemoryGameByIdUseCase;
 use App\Application\UseCase\MemoryGame\UpdateMemoryGameUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class MemoryGameController extends Controller {
+    use ApiResponse;
     private createMemoryGameUseCase $createMemoryGameUseCase;
     private GetMemoryGameByIdUseCase $getMemoryGameByIdUseCase;
     private UpdateMemoryGameUseCase $updateMemoryGameUseCase;
@@ -56,9 +58,9 @@ class MemoryGameController extends Controller {
     public function getMemoryGameById(int $id) {
         $memoryGame = $this->getMemoryGameByIdUseCase->execute($id);
         if (!$memoryGame) {
-            return response()->json(['message' => 'Memory game not found'], 404);
+            return $this->errorResponse(2801);
         }
-        return response()->json($memoryGame, 200);
+        return $this->successResponse($memoryGame, 2800);
     }
 
     /**
@@ -82,7 +84,7 @@ class MemoryGameController extends Controller {
         $validatedData = $request->validated();
         $memoryGameDTO = new MemoryGameDTO($validatedData);
         $memoryGame = $this->createMemoryGameUseCase->execute($memoryGameDTO);
-        return response()->json($memoryGame, 201);
+        return $this->successResponse($memoryGame, 2803);
     }
 
     /**
@@ -113,6 +115,6 @@ class MemoryGameController extends Controller {
         $validatedData = $request->validated();
         $memoryGameDTO = new MemoryGameDTO($validatedData);
         $memoryGame = $this->updateMemoryGameUseCase->execute($id, $memoryGameDTO);
-        return response()->json($memoryGame, 200);
+        return $this->successResponse($memoryGame, 2806);
     }
 }

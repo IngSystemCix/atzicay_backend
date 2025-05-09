@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\GameProgressDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\GameProgress\CreateGameProgressUseCase;
 use App\Application\UseCase\GameProgress\GetGameProgressByIdUseCase;
 use App\Application\UseCase\GameProgress\UpdateGameProgressUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class GameProgressController extends Controller {
+    use ApiResponse;
     private CreateGameProgressUseCase $createGameProgressUseCase;
     private GetGameProgressByIdUseCase $getGameProgressByIdUseCase;
     private UpdateGameProgressUseCase $updateGameProgressUseCase;
@@ -56,9 +58,9 @@ class GameProgressController extends Controller {
     public function getGameProgressById($id) {
         $gameProgress = $this->getGameProgressByIdUseCase->execute($id);
         if (!$gameProgress) {
-            return response()->json(['message' => 'Game progress not found'], 404);
+            return $this->errorResponse(3201);
         }
-        return response()->json($gameProgress, 200);
+        return $this->successResponse($gameProgress, 3200);
     }
 
     /**
@@ -82,7 +84,7 @@ class GameProgressController extends Controller {
         $validatedData = $request->validated();
         $gameProgressDTO = new GameProgressDTO($validatedData);
         $gameProgress = $this->createGameProgressUseCase->execute($gameProgressDTO);
-        return response()->json($gameProgress, 201);
+        return $this->successResponse($gameProgress, 3203);
     }
 
     /**
@@ -113,6 +115,6 @@ class GameProgressController extends Controller {
         $validatedData = $request->validated();
         $gameProgressDTO = new GameProgressDTO($validatedData);
         $gameProgress = $this->updateGameProgressUseCase->execute($id, $gameProgressDTO);
-        return response()->json($gameProgress, 200);
+        return $this->successResponse($gameProgress, 3206);
     }
 }

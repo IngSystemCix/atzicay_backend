@@ -50,10 +50,10 @@ namespace App\Infrastructure\Http\Requests;
  *         description="The gender of the user (M=Male, F=Female, O=Other)"
  *     ),
  *     @OA\Property(
- *         property="Country",
+ *         property="CountryId",
  *         type="integer",
  *         example=1,
- *         description="The ID of the user's country (must exist in the Country table)"
+ *         description="The ID of the user's CountryId (must exist in the Country table)"
  *     ),
  *     @OA\Property(
  *         property="City",
@@ -138,7 +138,7 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'in:M,F,O',
             ],
-            'Country' => [
+            'CountryId' => [
                 'required',
                 'exists:Country,Id',
             ],
@@ -183,8 +183,8 @@ class StoreUserRequest extends FormRequest
             'Gender.required' => 'The gender is required.',
             'Gender.string' => 'The gender must be a string.',
             'Gender.in' => 'The gender must be one of the following values: M, F, O.',
-            'Country.required' => 'The country is required.',
-            'Country.exists' => 'The selected country is invalid.',
+            'CountryId.required' => 'The CountryId is required.',
+            'CountryId.exists' => 'The selected CountryId is invalid.',
             'City.required' => 'The city is required.',
             'City.string' => 'The city must be a string.',
             'City.max' => 'The city may not be greater than 40 characters.',

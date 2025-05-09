@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\ProgrammingGameDto;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\ProgrammingGame\CreateProgrammingGameUseCase;
 use App\Application\UseCase\ProgrammingGame\DeleteProgrammingGameUseCase;
 use App\Application\UseCase\ProgrammingGame\GetAllProgrammingGamesUseCase;
@@ -17,6 +18,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class ProgrammingGameController extends Controller {
+    use ApiResponse;
     private CreateProgrammingGameUseCase $createProgrammingGameUseCase;
     private GetAllProgrammingGamesUseCase $getAllProgrammingGamesUseCase;
     private GetProgrammingGameByIdUseCase $getProgrammingGameByIdUseCase;
@@ -57,9 +59,9 @@ class ProgrammingGameController extends Controller {
     public function getAllProgrammingGames() {
         $programmingGames = $this->getAllProgrammingGamesUseCase->execute();
         if (empty($programmingGames)) {
-            return response()->json(['message' => 'No programming games found'], 404);
+            return $this->errorResponse(2300);
         }
-        return response()->json($programmingGames, 200);
+        return $this->successResponse($programmingGames, 2301);
     }
 
     /**
@@ -89,9 +91,9 @@ class ProgrammingGameController extends Controller {
     public function getProgrammingGameById(int $id) {
         $programmingGame = $this->getProgrammingGameByIdUseCase->execute($id);
         if (empty($programmingGame)) {
-            return response()->json(['message' => 'Programming game not found'], 404);
+            return $this->errorResponse(2302);
         }
-        return response()->json($programmingGame, 200);
+        return $this->successResponse($programmingGame, 2303);
     }
     
     /**
@@ -115,7 +117,7 @@ class ProgrammingGameController extends Controller {
         $validatedData = $request->validated();
         $programmingGameDto = new ProgrammingGameDto($validatedData);
         $programmingGame = $this->createProgrammingGameUseCase->execute($programmingGameDto);
-        return response()->json($programmingGame, 201);
+        return $this->successResponse($programmingGame, 2305);
     }
 
     /**
@@ -146,7 +148,7 @@ class ProgrammingGameController extends Controller {
         $validatedData = $request->validated();
         $programmingGameDto = new ProgrammingGameDto($validatedData);
         $programmingGame = $this->updateProgrammingGameUseCase->execute($id, $programmingGameDto);
-        return response()->json($programmingGame, 200);
+        return $this->successResponse($programmingGame, 2308);
     }
 
     /**
@@ -171,8 +173,8 @@ class ProgrammingGameController extends Controller {
     public function deleteProgrammingGame($id) {
         $programmingGame = $this->deleteProgrammingGameUseCase->execute($id);
         if (empty($programmingGame)) {
-            return response()->json(['message' => 'Programming game not found'], 404);
+            return $this->errorResponse(2309);
         }
-        return response()->json(['message' => 'Programming game deleted successfully'], 200);
+        return $this->successResponse($programmingGame, 2310);
     }
 }

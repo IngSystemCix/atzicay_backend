@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\HangmanDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\Hangman\CreateHangmanUseCase;
 use App\Application\UseCase\Hangman\GetAllHangmanUseCase;
 use App\Application\UseCase\Hangman\GetHangmanByIdUseCase;
@@ -16,6 +17,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class HangmanController extends Controller {
+    use ApiResponse;
     private CreateHangmanUseCase $createHangmanUseCase;
     private GetAllHangmanUseCase $getAllHangmanUseCase;
     private GetHangmanByIdUseCase $getHangmanByIdUseCase;
@@ -53,9 +55,9 @@ class HangmanController extends Controller {
     public function getAllHangman() {
         $hangman = $this->getAllHangmanUseCase->execute();
         if (empty($hangman)) {
-            return response()->json(['message' => 'No hangman found'], 404);
+            return $this->errorResponse(2601);
         }
-        return response()->json($hangman, 200);
+        return $this->successResponse($hangman, 2600);
     }
 
     /**
@@ -85,9 +87,9 @@ class HangmanController extends Controller {
     public function getHangmanById($id) {
         $hangman = $this->getHangmanByIdUseCase->execute($id);
         if (empty($hangman)) {
-            return response()->json(['message' => 'Hangman not found'], 404);
+            return $this->errorResponse(2604);
         }
-        return response()->json($hangman, 200);
+        return $this->successResponse($hangman, 2603);
     }
 
     /**
@@ -111,7 +113,7 @@ class HangmanController extends Controller {
         $validatedData = $request->validated();
         $hangmanDto = new HangmanDTO($validatedData);
         $hangman = $this->createHangmanUseCase->execute($hangmanDto);
-        return response()->json($hangman, 201);
+        return $this->successResponse($hangman, 2606);
     }
 
     /**
@@ -142,6 +144,6 @@ class HangmanController extends Controller {
         $validatedData = $request->validated();
         $hangmanDto = new HangmanDTO($validatedData);
         $hangman = $this->updateHangmanUseCase->execute($id, $hangmanDto);
-        return response()->json($hangman, 200);
+        return $this->successResponse($hangman, 2609);
     }
 }

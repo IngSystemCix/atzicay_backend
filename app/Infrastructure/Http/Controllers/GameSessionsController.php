@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\GameSessionsDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\GameSessions\CreateGameSessionUseCase;
 use App\Application\UseCase\GameSessions\GetGameSessionByIdUseCase;
 use App\Application\UseCase\GameSessions\UpdateGameSessionUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class GameSessionsController extends Controller {
+    use ApiResponse;
     private CreateGameSessionUseCase $createGameSessionUseCase;
     private GetGameSessionByIdUseCase $getGameSessionByIdUseCase;
     private UpdateGameSessionUseCase $updateGameSessionUseCase;
@@ -56,9 +58,9 @@ class GameSessionsController extends Controller {
     public function getGameSessionById($id) {
         $gameSession = $this->getGameSessionByIdUseCase->execute($id);
         if (empty($gameSession)) {
-            return response()->json(['message' => 'Game session not found'], 404);
+            return $this->errorResponse(3001);
         }
-        return response()->json($gameSession, 200);
+        return $this->successResponse($gameSession, 3000);
     }
 
     /**
@@ -82,7 +84,7 @@ class GameSessionsController extends Controller {
         $validatedData = $request->validated();
         $gameSessionDTO = new GameSessionsDTO($validatedData);
         $gameSession = $this->createGameSessionUseCase->execute($gameSessionDTO);
-        return response()->json($gameSession, 201);
+        return $this->successResponse($gameSession, 3003);
     }
 
     /**
@@ -113,6 +115,6 @@ class GameSessionsController extends Controller {
         $validatedData = $request->validated();
         $gameSessionDTO = new GameSessionsDTO($validatedData);
         $gameSession = $this->updateGameSessionUseCase->execute($id, $gameSessionDTO);
-        return response()->json($gameSession, 200);
+        return $this->successResponse($gameSession, 3006);
     }
 }

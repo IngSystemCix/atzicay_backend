@@ -14,7 +14,7 @@ use App\Domain\Enums\Gender;
  *     @OA\Property(property="Name", type="string"),
  *     @OA\Property(property="LastName", type="string"),
  *     @OA\Property(property="Gender", type="string", enum={"M", "F", "O"}),
- *     @OA\Property(property="Country", type="integer", description="ID of the country"),
+ *     @OA\Property(property="CountryId", type="integer", description="ID of the country"),
  *     @OA\Property(property="City", type="string", description="City of the user"),
  *     @OA\Property(property="Birthdate", type="string", format="date", description="Birthdate of the user"),
  * )
@@ -26,7 +26,7 @@ class UserDto {
     public string $Name;
     public string $LastName;
     public Gender $Gender;
-    public int $Country;
+    public int $CountryId;
     public string $City;
     public string $Birthdate;
 
@@ -37,7 +37,7 @@ class UserDto {
         $this->Name = $data['Name'];
         $this->LastName = $data['LastName'];
         $this->Gender = Gender::from($data['Gender']);
-        $this->Country = $data['Country'];
+        $this->CountryId = $data['CountryId'];
         $this->City = $data['City'];
         $this->Birthdate = $data['Birthdate'];
     }

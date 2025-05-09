@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\PuzzleDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\Puzzle\CreatePuzzleUseCase;
 use App\Application\UseCase\Puzzle\GetPuzzleByIdUseCase;
 use App\Application\UseCase\Puzzle\UpdatePuzzleUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class PuzzleController extends Controller {
+    use ApiResponse;
     private CreatePuzzleUseCase $createPuzzleUseCase;
     private GetPuzzleByIdUseCase $getPuzzleByIdUseCase;
     private UpdatePuzzleUseCase $updatePuzzleUseCase;
@@ -56,9 +58,9 @@ class PuzzleController extends Controller {
     public function getPuzzleById(int $id) {
         $puzzle = $this->getPuzzleByIdUseCase->execute($id);
         if (!$puzzle) {
-            return response()->json(['message' => 'Puzzle not found'], 404);
+            return $this->errorResponse(2901);
         }
-        return response()->json($puzzle, 200);
+        return $this->successResponse($puzzle, 2900);
     }
 
     /**
@@ -82,7 +84,7 @@ class PuzzleController extends Controller {
         $validatedData = $request->validated();
         $puzzleDTO = new PuzzleDTO($validatedData);
         $puzzle = $this->createPuzzleUseCase->execute($puzzleDTO);
-        return response()->json($puzzle, 201);
+        return $this->successResponse($puzzle, 2903);
     }
 
     /**
@@ -113,6 +115,6 @@ class PuzzleController extends Controller {
         $validatedData = $request->validated();
         $puzzleDTO = new PuzzleDTO($validatedData);
         $puzzle = $this->updatePuzzleUseCase->execute($id, $puzzleDTO);
-        return response()->json($puzzle, 200);
+        return $this->successResponse($puzzle, 2906);
     }
 }

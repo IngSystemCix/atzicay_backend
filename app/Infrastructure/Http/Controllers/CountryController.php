@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\CountryDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\Country\CreateCountryUseCase;
 use App\Application\UseCase\Country\GetAllCountriesUseCase;
 use App\Application\UseCase\Country\GetCountryByIdUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class CountryController extends Controller {
+    use ApiResponse;
     private CreateCountryUseCase $createCountryUseCase;
     private GetAllCountriesUseCase $getAllCountriesUseCase;
     private GetCountryByIdUseCase $getCountryByIdUseCase;
@@ -49,9 +51,9 @@ class CountryController extends Controller {
     public function getAllCountries() {
         $countries = $this->getAllCountriesUseCase->execute();
         if (empty($countries)) {
-            return response()->json(['message' => 'No countries found'], 404);
+            return $this->errorResponse(2000);
         }
-        return response()->json($countries, 200);
+        return $this->successResponse($countries, 2001);
     }
 
     /**
@@ -81,9 +83,9 @@ class CountryController extends Controller {
     public function getCountryById($id) {
         try {
             $country = $this->getCountryByIdUseCase->execute($id);
-            return response()->json($country, 200);
+            return $this->successResponse($country, 2003);
         } catch (\RuntimeException $e) {
-            return response()->json(['message' => $e->getMessage()], 404);
+            return $this->errorResponse(2002, ['Id' => $id]);
         }
     }
 
@@ -108,6 +110,6 @@ class CountryController extends Controller {
         $validatedData = $request->validated();
         $countryDTO = new CountryDTO($validatedData);
         $country = $this->createCountryUseCase->execute($countryDTO);
-        return response()->json($country, 201);
+        return $this->successResponse($country, 2004);
     }
 }

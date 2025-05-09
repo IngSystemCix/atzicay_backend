@@ -9,7 +9,7 @@ Content-Type: application/json
   "Name": "Juan",
   "LastName": "Romero Collazos",
   "Gender": "M",
-  "Country": 1,
+  "CountryId": 1,
   "City": "Chiclayo",
   "Birthdate": "2002-03-05"
 }
@@ -20,12 +20,12 @@ Content-Type: application/json
 
 {
   "Activated": true,
-  "GoogleId": "108937365432182023456",
+  "GoogleId": "108937365432182023256",
   "Email": "juanromerocollazos@gmail.com",
   "Name": "Juan",
   "LastName": "Romero Collazos",
   "Gender": "M",
-  "Country": 1,
+  "CountryId": 1,
   "City": "Chiclayo",
   "Birthdate": "2002-03-05"
 }
@@ -41,3 +41,11 @@ Content-Type: application/json
 ### DELETE | delete user by id
 DELETE http://localhost:8000/api/atzicay/v1/users/1
 Content-Type: application/json
+
+### POST | find user by email
+POST http://localhost:8000/api/atzicay/v1/users/find
+Content-Type: application/json
+
+{
+  "Email": "juanromerocollazos@gmail.com"
+}

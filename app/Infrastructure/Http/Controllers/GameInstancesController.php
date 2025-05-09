@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\GameInstancesDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\GameInstances\CreateGameInstanceUseCase;
 use App\Application\UseCase\GameInstances\DeleteGameInstanceUseCase;
 use App\Application\UseCase\GameInstances\GetAllGameInstancesUseCase;
@@ -17,6 +18,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class GameInstancesController extends Controller {
+    use ApiResponse;
     private CreateGameInstanceUseCase $createGameInstanceUseCase;
     private GetAllGameInstancesUseCase $getAllGameInstancesUseCase;
     private GetGameInstanceByIdUseCase $getGameInstanceByIdUseCase;
@@ -57,9 +59,9 @@ class GameInstancesController extends Controller {
     public function getAllGameInstances() {
         $gameInstances = $this->getAllGameInstancesUseCase->execute();
         if (empty($gameInstances)) {
-            return response()->json(['message' => 'No game instances found'], 404);
+            return $this->errorResponse(2200);
         }
-        return response()->json($gameInstances, 200);
+        return $this->successResponse($gameInstances, 2201);
     }
 
     /**
@@ -89,9 +91,9 @@ class GameInstancesController extends Controller {
     public function getGameInstanceById($id) {
         $gameInstance = $this->getGameInstanceByIdUseCase->execute($id);
         if (empty($gameInstance)) {
-            return response()->json(['message' => 'Game instance not found'], 404);
+            return $this->errorResponse(2202);
         }
-        return response()->json($gameInstance, 200);
+        return $this->successResponse($gameInstance, 2203);
     }
 
     /**
@@ -115,7 +117,7 @@ class GameInstancesController extends Controller {
         $validatedData = $request->validated();
         $gameInstanceDto = new GameInstancesDTO($validatedData);
         $gameInstance = $this->createGameInstanceUseCase->execute($gameInstanceDto);
-        return response()->json($gameInstance, 201);
+        return $this->successResponse($gameInstance, 2205);
     }
 
     /**
@@ -146,7 +148,7 @@ class GameInstancesController extends Controller {
         $validatedData = $request->validated();
         $gameInstanceDto = new GameInstancesDTO($validatedData);
         $gameInstance = $this->updateGameInstanceUseCase->execute($id, $gameInstanceDto);
-        return response()->json($gameInstance, 200);
+        return $this->successResponse($gameInstance, 2207);
     }
 
     /**
@@ -171,6 +173,9 @@ class GameInstancesController extends Controller {
      */
     public function deleteGameInstance($id) {
         $gameInstance = $this->deleteGameInstanceUseCase->execute($id);
-        return response()->json($gameInstance, 200);
+        if (empty($gameInstance)) {
+            return $this->errorResponse(2208);
+        }
+        return $this->successResponse($gameInstance, 2209);
     }
 }

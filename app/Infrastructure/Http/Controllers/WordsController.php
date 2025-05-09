@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\WordsDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\Words\CreateWordUseCase;
 use App\Application\UseCase\Words\GetWordByIdUseCase;
 use App\Application\UseCase\Words\UpdateWordUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class WordsController extends Controller {
+    use ApiResponse;
     private CreateWordUseCase $createWordUseCase;
     private GetWordByIdUseCase $getWordByIdUseCase;
     private UpdateWordUseCase $updateWordUseCase;
@@ -56,9 +58,9 @@ class WordsController extends Controller {
     public function getWordById($id) {
         $word = $this->getWordByIdUseCase->execute($id);
         if (!$word) {
-            return response()->json(['message' => 'Word not found'], 404);
+            return $this->errorResponse(3101);
         }
-        return response()->json($word, 200);
+        return $this->successResponse($word, 3100);
     }
 
     /**
@@ -82,7 +84,7 @@ class WordsController extends Controller {
         $validatedData = $request->validated();
         $dto = new WordsDTO($validatedData);
         $word = $this->createWordUseCase->execute($dto);
-        return response()->json($word, 201);
+        return $this->successResponse($word, 3103);
     }
 
     /**
@@ -113,6 +115,6 @@ class WordsController extends Controller {
         $validatedData = $request->validated();
         $dto = new WordsDTO($validatedData);
         $word = $this->updateWordUseCase->execute($id, $dto);
-        return response()->json($word, 200);
+        return $this->successResponse($word, 3106);
     }
 }

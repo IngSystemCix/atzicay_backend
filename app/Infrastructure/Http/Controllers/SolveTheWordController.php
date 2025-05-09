@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\SolveTheWordDTO;
+use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\SolveTheWord\CreateSolveTheWordUseCase;
 use App\Application\UseCase\SolveTheWord\GetSolveTheWordByIdUseCase;
 use App\Application\UseCase\SolveTheWord\UpdateSolveTheWordUseCase;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controller;
  * )
  */
 class SolveTheWordController extends Controller {
+    use ApiResponse;
     private CreateSolveTheWordUseCase $createSolveTheWordUseCase;
     private GetSolveTheWordByIdUseCase $getSolveTheWordByIdUseCase;
     private UpdateSolveTheWordUseCase $updateSolveTheWordUseCase;
@@ -56,9 +58,9 @@ class SolveTheWordController extends Controller {
     public function getSolveTheWordById($id) {
         $solveTheWord = $this->getSolveTheWordByIdUseCase->execute($id);
         if (!$solveTheWord) {
-            return response()->json(['message' => 'SolveTheWord not found'], 404);
+            return $this->errorResponse(2701);
         }
-        return response()->json($solveTheWord, 200);
+        return $this->successResponse($solveTheWord, 2700);
     }
 
     /**
@@ -82,7 +84,7 @@ class SolveTheWordController extends Controller {
         $validatedData = $request->validated();
         $solveTheWordDTO = new SolveTheWordDTO($validatedData);
         $solveTheWord = $this->createSolveTheWordUseCase->execute($solveTheWordDTO);
-        return response()->json($solveTheWord, 201);
+        return $this->successResponse($solveTheWord, 2703);
     }
 
     /**
@@ -113,6 +115,6 @@ class SolveTheWordController extends Controller {
         $validatedData = $request->validated();
         $solveTheWordDTO = new SolveTheWordDTO($validatedData);
         $solveTheWord = $this->updateSolveTheWordUseCase->execute($id, $solveTheWordDTO);
-        return response()->json($solveTheWord, 200);
+        return $this->successResponse($solveTheWord, 2706);
     }
 }
