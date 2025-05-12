@@ -78,7 +78,7 @@ class GameInstances extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function gameInstances()
+    public function professor()
     {
         return $this->belongsTo(User::class, 'ProfessorId', 'Id');
     }
@@ -148,7 +148,7 @@ class GameInstances extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function assessment()
+    public function assessments()
     {
         return $this->hasMany(Assessment::class, 'GameInstanceId', 'Id');
     }

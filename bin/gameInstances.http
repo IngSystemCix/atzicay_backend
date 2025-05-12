@@ -28,6 +28,10 @@ Content-Type: application/json
 DELETE http://localhost:8000/api/atzicay/v1/game-instances/1
 Content-Type: application/json
 
+### GET | get all game
+GET http://localhost:8000/api/atzicay/v1/game-instances/all
+Content-Type: application/json
+
 ### GET | get all game instances
 GET http://localhost:8000/api/atzicay/v1/game-instances
 Content-Type: application/json

@@ -581,4 +581,12 @@ return [
         'message' => 'Internal error while updating the game progress.',
         'http_code' => 500,
     ],
+    2210 => [
+        'message' => 'The games you are trying to retrieve were not found.',
+        'http_code' => 404,
+    ],
+    2211 => [
+        'message' => 'The games were successfully retrieved.',
+        'http_code' => 200,
+    ],
 ];

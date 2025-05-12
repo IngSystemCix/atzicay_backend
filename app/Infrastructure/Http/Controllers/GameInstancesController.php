@@ -6,6 +6,7 @@ use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\GameInstances\CreateGameInstanceUseCase;
 use App\Application\UseCase\GameInstances\DeleteGameInstanceUseCase;
 use App\Application\UseCase\GameInstances\GetAllGameInstancesUseCase;
+use App\Application\UseCase\GameInstances\GetAllGameUseCase;
 use App\Application\UseCase\GameInstances\GetGameInstanceByIdUseCase;
 use App\Application\UseCase\GameInstances\UpdateGameInstanceUseCase;
 use App\Infrastructure\Http\Requests\StoreGameInstancesRequest;
@@ -24,16 +25,19 @@ class GameInstancesController extends Controller {
     private GetGameInstanceByIdUseCase $getGameInstanceByIdUseCase;
     private UpdateGameInstanceUseCase $updateGameInstanceUseCase;
     private DeleteGameInstanceUseCase $deleteGameInstanceUseCase;
+    private GetAllGameUseCase $getAllGameUseCase;
 
     public function __construct(
         CreateGameInstanceUseCase $createGameInstanceUseCase,
         GetAllGameInstancesUseCase $getAllGameInstancesUseCase,
+        GetAllGameUseCase $getAllGameUseCase,
         GetGameInstanceByIdUseCase $getGameInstanceByIdUseCase,
         UpdateGameInstanceUseCase $updateGameInstanceUseCase,
         DeleteGameInstanceUseCase $deleteGameInstanceUseCase
     ) {
         $this->createGameInstanceUseCase = $createGameInstanceUseCase;
         $this->getAllGameInstancesUseCase = $getAllGameInstancesUseCase;
+        $this->getAllGameUseCase = $getAllGameUseCase;
         $this->getGameInstanceByIdUseCase = $getGameInstanceByIdUseCase;
         $this->updateGameInstanceUseCase = $updateGameInstanceUseCase;
         $this->deleteGameInstanceUseCase = $deleteGameInstanceUseCase;
@@ -62,6 +66,38 @@ class GameInstancesController extends Controller {
             return $this->errorResponse(2200);
         }
         return $this->successResponse($gameInstances, 2201);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/games",
+     *     tags={"GameInstances"},
+     *     summary="Get all games",
+     *     description="Retrieves all games.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of games",
+     *         @OA\JsonContent(type="array", @OA\Items(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="level", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="rating", type="integer"),
+     *             @OA\Property(property="author", type="string")
+     *         ))
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No games found"
+     *     ),
+     * )
+     */
+    public function getAllGame() {
+        $games = $this->getAllGameUseCase->execute();
+        if (empty($games)) {
+            return $this->errorResponse(2210);
+        }
+        return $this->successResponse($games, 2211);
     }
 
     /**

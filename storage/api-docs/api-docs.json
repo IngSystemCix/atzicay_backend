@@ -335,6 +335,54 @@
                 }
             }
         },
+        "/games": {
+            "get": {
+                "tags": [
+                    "GameInstances"
+                ],
+                "summary": "Get all games",
+                "description": "Retrieves all games.",
+                "operationId": "4ef134a57736794d7cded95056da32dc",
+                "responses": {
+                    "200": {
+                        "description": "List of games",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "level": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "rating": {
+                                                "type": "integer"
+                                            },
+                                            "author": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No games found"
+                    }
+                }
+            }
+        },
         "/game-instances/{id}": {
             "get": {
                 "tags": [
