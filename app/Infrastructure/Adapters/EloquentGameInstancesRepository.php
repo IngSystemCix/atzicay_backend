@@ -67,6 +67,24 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
             ->where('Activated', true)
             ->get()
             ->map(function ($game) {
+                $typeGame = null;
+                switch ($typeGame) {
+                    case $game->hangman:
+                        $typeGame = 'Hangman';
+                        break;
+                    case $game->memory:
+                        $typeGame = 'Memory';
+                        break;
+                    case $game->puzzle:
+                        $typeGame = 'Puzzle';
+                        break;
+                    case $game->solveTheWord:
+                        $typeGame = 'Solve the Word';
+                        break;
+                    default:
+                        $typeGame = 'Unknown';
+                        break;
+                }
                 return [
                     'id' => $game->Id,
                     'title' => $game->Name,
@@ -74,6 +92,7 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
                     'description' => $game->Description,
                     'rating' => $game->assessments ? $game->assessments->avg('Value') : 0, // Asegurarse de que 'assessments' esté cargado
                     'author' => $game->professor ? $game->professor->Name . ' ' . $game->professor->LastName : 'Unknown', // Manejar casos donde 'professor' sea null
+                    'type' => $typeGame,
                 ];
             })->toArray();
 
