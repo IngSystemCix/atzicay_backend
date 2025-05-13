@@ -63,36 +63,42 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
 
     public function getAllGame(): array
     {
-        $games = GameInstances::with('professor', 'assessments') // Cargar las relaciones correctamente
+        $games = GameInstances::with([
+            'professor',
+            'assessments',
+            'hangman',
+            'memoryGame',
+            'puzzle',
+            'solveTheWord'
+        ])
             ->where('Activated', true)
             ->get()
             ->map(function ($game) {
-                $typeGame = null;
-                switch ($typeGame) {
-                    case $game->hangman:
-                        $typeGame = 'Hangman';
-                        break;
-                    case $game->memory:
-                        $typeGame = 'Memory';
-                        break;
-                    case $game->puzzle:
-                        $typeGame = 'Puzzle';
-                        break;
-                    case $game->solveTheWord:
-                        $typeGame = 'Solve the Word';
-                        break;
-                    default:
-                        $typeGame = 'Unknown';
-                        break;
+                $type = 'Unknown';
+
+                if ($game->hangman()->exists()) {
+                    $type = 'Hangman';
                 }
+                elseif ($game->memoryGame()->exists()) {
+                    $type = 'Memory';
+                }
+                elseif ($game->puzzle()->exists()) {
+                    $type = 'Puzzle';
+                }
+                elseif ($game->solveTheWord()->exists()) {
+                    $type = 'Solve the Word';
+                }
+
                 return [
                     'id' => $game->Id,
                     'title' => $game->Name,
-                    'level' => $game->Difficulty, // "E", "M", "H"
+                    'level' => $game->Difficulty,
                     'description' => $game->Description,
-                    'rating' => $game->assessments ? $game->assessments->avg('Value') : 0, // Asegurarse de que 'assessments' esté cargado
-                    'author' => $game->professor ? $game->professor->Name . ' ' . $game->professor->LastName : 'Unknown', // Manejar casos donde 'professor' sea null
-                    'type' => $typeGame,
+                    'rating' => $game->assessments->avg('Value') ?? 0,
+                    'author' => $game->professor
+                        ? $game->professor->Name . ' ' . $game->professor->LastName
+                        : 'Unknown',
+                    'type' => $type,
                 ];
             })->toArray();
 

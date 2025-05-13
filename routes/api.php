@@ -18,7 +18,7 @@ Route::prefix('atzicay/v1')->group(function () {
     Route::get('/countries', [CountryController::class, 'getAllCountries']);
     Route::get('/countries/{id}', [CountryController::class, 'getCountryById']);
     Route::post('/countries', [CountryController::class, 'createCountry']);
-    // Route for users
+        // Route for users
     Route::get('/users', [UserController::class, 'getAllUsers']);
     Route::get('/users/{id}', [UserController::class, 'getUserById']);
     Route::post('/users', [UserController::class, 'createUser']);
