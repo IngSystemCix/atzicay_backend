@@ -34,4 +34,8 @@ class EloquentSolveTheWordRepository implements SolveTheWordRepository {
         ]);
         return $solveTheWord;
     }
+
+    public function getAllSolveTheWords(): array {
+        return SolveTheWord::all()->toArray();
+    }
 }

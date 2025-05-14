@@ -589,4 +589,28 @@ return [
         'message' => 'The games were successfully retrieved.',
         'http_code' => 200,
     ],
+    2710 => [
+        'message' => 'word search games retrieved successfully',
+        'http_code' => 200,
+    ],
+    2711 => [
+        'message' => 'word search games not found',
+        'http_code' => 404,
+    ],
+    2810 => [
+        'message' => 'memory games retrieved successfully',
+        'http_code' => 200,
+    ],
+    2811 => [
+        'message' => 'memory games not found',
+        'http_code' => 404,
+    ],
+    2910 => [
+        'message' => 'puzzle games retrieved successfully',
+        'http_code' => 200,
+    ],
+    2911 => [
+        'message' => 'puzzle games not found',
+        'http_code' => 404,
+    ],
 ];

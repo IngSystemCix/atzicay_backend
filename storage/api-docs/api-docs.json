@@ -950,6 +950,61 @@
                 }
             }
         },
+        "/memory-game": {
+            "get": {
+                "tags": [
+                    "MemoryGame"
+                ],
+                "summary": "Get all Memory Games",
+                "description": "Retrieves all memory games.",
+                "operationId": "762d184f173d6072ca1e0728fed065d0",
+                "responses": {
+                    "200": {
+                        "description": "List of memory games",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MemoryGame"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "MemoryGame"
+                ],
+                "summary": "Create a new Memory Game",
+                "description": "Creates a new memory game.",
+                "operationId": "3d7a6d17a492749c6dabf088cf1348fa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MemoryGameDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Memory game created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemoryGame"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/memory-game/{id}": {
             "get": {
                 "tags": [
@@ -1016,38 +1071,6 @@
                 "responses": {
                     "200": {
                         "description": "Memory game updated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/MemoryGame"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/memory-game": {
-            "post": {
-                "tags": [
-                    "MemoryGame"
-                ],
-                "summary": "Create a new Memory Game",
-                "description": "Creates a new memory game.",
-                "operationId": "3d7a6d17a492749c6dabf088cf1348fa",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/MemoryGameDTO"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Memory game created",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1218,6 +1241,61 @@
                 }
             }
         },
+        "/puzzles": {
+            "get": {
+                "tags": [
+                    "Puzzles"
+                ],
+                "summary": "Get all puzzles",
+                "description": "Retrieves all puzzles.",
+                "operationId": "876951d87a85bfe84888cb31ded2cce2",
+                "responses": {
+                    "200": {
+                        "description": "List of puzzles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Puzzle"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Puzzles"
+                ],
+                "summary": "Create a new puzzle",
+                "description": "Creates a new puzzle.",
+                "operationId": "a430863b6deff991365c5d9d85476c21",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PuzzleDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Puzzle created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Puzzle"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/puzzles/{id}": {
             "get": {
                 "tags": [
@@ -1295,31 +1373,54 @@
                 }
             }
         },
-        "/puzzles": {
+        "/solve-the-word": {
+            "get": {
+                "tags": [
+                    "SolveTheWord"
+                ],
+                "summary": "Get all SolveTheWords",
+                "description": "Retrieves all SolveTheWords.",
+                "operationId": "7134baf07bc3a9b5e62fa2463ce9f757",
+                "responses": {
+                    "200": {
+                        "description": "List of SolveTheWords",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SolveTheWord"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "Puzzles"
+                    "SolveTheWord"
                 ],
-                "summary": "Create a new puzzle",
-                "description": "Creates a new puzzle.",
-                "operationId": "a430863b6deff991365c5d9d85476c21",
+                "summary": "Create a new SolveTheWord",
+                "description": "Creates a new SolveTheWord.",
+                "operationId": "1d0a2b5b5a0a14a319c10b420c685f50",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PuzzleDTO"
+                                "$ref": "#/components/schemas/SolveTheWordDTO"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Puzzle created",
+                        "description": "SolveTheWord created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Puzzle"
+                                    "$ref": "#/components/schemas/SolveTheWord"
                                 }
                             }
                         }
@@ -1393,38 +1494,6 @@
                 "responses": {
                     "200": {
                         "description": "SolveTheWord updated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/SolveTheWord"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/solve-the-word": {
-            "post": {
-                "tags": [
-                    "SolveTheWord"
-                ],
-                "summary": "Create a new SolveTheWord",
-                "description": "Creates a new SolveTheWord.",
-                "operationId": "1d0a2b5b5a0a14a319c10b420c685f50",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/SolveTheWordDTO"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "SolveTheWord created",
                         "content": {
                             "application/json": {
                                 "schema": {

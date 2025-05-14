@@ -40,4 +40,8 @@ class EloquentPuzzleRepository implements PuzzleRepository
         ]);
         return $puzzle;
     }
+
+    public function getAllPuzzles(): array {
+        return Puzzle::all()->toArray();
+    }
 }

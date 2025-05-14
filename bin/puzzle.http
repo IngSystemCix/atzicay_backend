@@ -27,3 +27,7 @@ Content-Type: application/json
 ### GET | get puzzle by id
 GET http://localhost:8000/api/atzicay/v1/puzzles/1
 Content-Type: application/json
+
+### GET | get all puzzles
+GET http://localhost:8000/api/atzicay/v1/puzzles
+Content-Type: application/json

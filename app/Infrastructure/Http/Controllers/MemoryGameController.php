@@ -4,6 +4,7 @@ namespace App\Infrastructure\Http\Controllers;
 use App\Application\DTOs\MemoryGameDTO;
 use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\MemoryGame\createMemoryGameUseCase;
+use App\Application\UseCase\MemoryGame\GetAllMemoryGamesUseCase;
 use App\Application\UseCase\MemoryGame\GetMemoryGameByIdUseCase;
 use App\Application\UseCase\MemoryGame\UpdateMemoryGameUseCase;
 use App\Infrastructure\Http\Requests\StoreMemoryGameRequest;
@@ -20,15 +21,39 @@ class MemoryGameController extends Controller {
     private createMemoryGameUseCase $createMemoryGameUseCase;
     private GetMemoryGameByIdUseCase $getMemoryGameByIdUseCase;
     private UpdateMemoryGameUseCase $updateMemoryGameUseCase;
+    private GetAllMemoryGamesUseCase $getAllMemoryGamesUseCase;
 
     public function __construct(
         createMemoryGameUseCase $createMemoryGameUseCase,
         GetMemoryGameByIdUseCase $getMemoryGameByIdUseCase,
-        UpdateMemoryGameUseCase $updateMemoryGameUseCase
+        UpdateMemoryGameUseCase $updateMemoryGameUseCase,
+        GetAllMemoryGamesUseCase $getAllMemoryGamesUseCase
     ) {
         $this->createMemoryGameUseCase = $createMemoryGameUseCase;
         $this->getMemoryGameByIdUseCase = $getMemoryGameByIdUseCase;
         $this->updateMemoryGameUseCase = $updateMemoryGameUseCase;
+        $this->getAllMemoryGamesUseCase = $getAllMemoryGamesUseCase;
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/memory-game",
+     *     tags={"MemoryGame"},
+     *     summary="Get all Memory Games",
+     *     description="Retrieves all memory games.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of memory games",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/MemoryGame"))
+     *     )
+     * )
+     */
+    public function getAllMemoryGames() {
+        $memoryGames = $this->getAllMemoryGamesUseCase->execute();
+        if (!$memoryGames) {
+            return $this->errorResponse(281);
+        }
+        return $this->successResponse($memoryGames, 2810);
     }
 
     /**

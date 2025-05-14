@@ -21,3 +21,7 @@ Content-Type: application/json
 ### GET | get solve the word by id
 GET http://localhost:8000/api/atzicay/v1/solve-the-word/1
 Content-Type: application/json
+
+### GET | get all solve the word
+GET http://localhost:8000/api/atzicay/v1/solve-the-word
+Content-Type: application/json

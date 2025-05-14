@@ -54,14 +54,17 @@ Route::prefix('atzicay/v1')->group(function () {
     Route::post('/hangman', [HangmanController::class, 'createHangman']);
     Route::put('/hangman/{id}', [HangmanController::class, 'updateHangman']);
     // Route for solve the word game
+    Route::get('/solve-the-word', [SolveTheWordController::class, 'getAllSolveTheWords']);
     Route::get('/solve-the-word/{id}', [SolveTheWordController::class, 'getSolveTheWordById']);
     Route::post('/solve-the-word', [SolveTheWordController::class, 'createSolveTheWord']);
     Route::put('/solve-the-word/{id}', [SolveTheWordController::class, 'updateSolveTheWord']);
     // Route for memory game
+    Route::get('/memory-game', [MemoryGameController::class, 'getAllMemoryGames']);
     Route::get('/memory-game/{id}', [MemoryGameController::class, 'getMemoryGameById']);
     Route::post('/memory-game', [MemoryGameController::class, 'createMemoryGame']);
     Route::put('/memory-game/{id}', [MemoryGameController::class, 'updateMemoryGame']);
     // Route for puzzles
+    Route::get('/puzzles', [PuzzleController::class, 'getAllPuzzles']);
     Route::get('/puzzles/{id}', [PuzzleController::class, 'getPuzzleById']);
     Route::post('/puzzles', [PuzzleController::class, 'createPuzzle']);
     Route::put('/puzzles/{id}', [PuzzleController::class, 'updatePuzzle']);

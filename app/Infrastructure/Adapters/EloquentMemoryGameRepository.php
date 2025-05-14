@@ -37,4 +37,8 @@ class EloquentMemoryGameRepository implements MemoryGameRepository {
         ]);
         return $memoryGame;
     }
+
+    public function getAllMemoryGames(): array {
+        return MemoryGame::all()->toArray();
+    }
 }

@@ -25,3 +25,7 @@ Content-Type: application/json
 ### GET | get memory game by id
 GET http://localhost:8000/api/atzicay/v1/memory-game/1
 Content-Type: application/json
+
+### GET | get all memory game
+GET http://localhost:8000/api/atzicay/v1/memory-game
+Content-Type: application/json
