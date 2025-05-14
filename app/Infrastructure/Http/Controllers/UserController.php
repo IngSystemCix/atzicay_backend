@@ -118,6 +118,7 @@ class UserController extends Controller {
      *     ),
      * )
      */
+    // UserController.php
     public function createUser(StoreUserRequest $request) {
         $validatedData = $request->validated();
         $userDto = new UserDto($validatedData);
@@ -213,13 +214,28 @@ class UserController extends Controller {
      *     )
      * )
      */
+    // En el método findUserByEmail
     public function findUserByEmail(StoreUserFindRequest $request) {
         $validatedData = $request->only(['Email']);
         $email = $validatedData['Email'];
         $user = $this->findUserByEmailUseCase->execute($email);
+
         if (!$user) {
             return $this->errorResponse(2111);
         }
-        return $this->successResponse($user, 2112);
+
+        // Devuelve más datos del usuario
+        return $this->successResponse([
+            'Id' => $user->Id,
+            'Name' => $user->Name,
+            'LastName' => $user->LastName,
+            'Email' => $user->Email,
+            'Gender' => $user->Gender->value,
+            'CountryId' => $user->CountryId,
+            'City' => $user->City,
+            'Birthdate' => $user->Birthdate,
+            'CreatedAt' => $user->CreatedAt,
+            'gamesCount' => $user->user()->count()
+        ], 2112);
     }
 }
