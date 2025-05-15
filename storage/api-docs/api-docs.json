@@ -335,6 +335,101 @@
                 }
             }
         },
+        "/game-instances/search": {
+            "get": {
+                "tags": [
+                    "GameInstances"
+                ],
+                "summary": "Buscar game instances",
+                "operationId": "searchGameInstances",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Nombre del game instance",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 40
+                        }
+                    },
+                    {
+                        "name": "author",
+                        "in": "query",
+                        "description": "ID del autor (professor_id)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Tipo de juego (MEMORY_GAME, HANGMAN, PUZZLE, SOLVE_THE_WORD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "MEMORY_GAME",
+                                "HANGMAN",
+                                "PUZZLE",
+                                "SOLVE_THE_WORD"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "difficulty",
+                        "in": "query",
+                        "description": "Dificultad (E=Easy, M=Medium, D=Difficult)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "E",
+                                "M",
+                                "D"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de game instances filtradas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GameInstances"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontraron resultados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 2212
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No se encontraron game instances"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/games": {
             "get": {
                 "tags": [

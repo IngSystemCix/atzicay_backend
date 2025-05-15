@@ -78,27 +78,53 @@ class GameInstancesController extends Controller
     /**
      * @OA\Get(
      *     path="/game-instances/search",
-     *    tags={"GameInstances"},
-     *    summary="Search for game instances",
-     *    description="Search for game instances based on criteria.",
-     *    @OA\RequestBody(
-     *        required=true,
-     *       @OA\JsonContent(
-     *           @OA\Property(property="name", type="string"),
-     *          @OA\Property(property="author", type="string"),
-     *          @OA\Property(property="type", type="string"),
-     *         @OA\Property(property="difficulty", type="string")
-     *        )
-     *    ),
-     *   @OA\Response(
-     *       response=200,
-     *      description="List of game instances matching the search criteria",
-     *      @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/GameInstances"))
-     *    ),
-     *   @OA\Response(
-     *      response=404,
-     *     description="No game instances found matching the search criteria"
-     *    )
+     *     summary="Buscar game instances",
+     *     operationId="searchGameInstances",
+     *     tags={"GameInstances"},
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Nombre del game instance",
+     *         required=false,
+     *         @OA\Schema(type="string", maxLength=40)
+     *     ),
+     *     @OA\Parameter(
+     *         name="author",
+     *         in="query",
+     *         description="ID del autor (professor_id)",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=5)
+     *     ),
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="Tipo de juego (MEMORY_GAME, HANGMAN, PUZZLE, SOLVE_THE_WORD)",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"MEMORY_GAME", "HANGMAN", "PUZZLE", "SOLVE_THE_WORD"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="difficulty",
+     *         in="query",
+     *         description="Dificultad (E=Easy, M=Medium, D=Difficult)",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"E", "M", "D"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de game instances filtradas",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/GameInstances")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron resultados",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=2212),
+     *             @OA\Property(property="message", type="string", example="No se encontraron game instances")
+     *         )
+     *     )
      * )
      */
     public function searchGameInstances(Request $request)
