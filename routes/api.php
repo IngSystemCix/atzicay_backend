@@ -26,6 +26,7 @@ Route::prefix('atzicay/v1')->group(function () {
     Route::put('/users/{id}', [UserController::class, 'updateUser']);
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     // Route for game instances
+    Route::get('/game-instances/search', [GameInstancesController::class, 'searchGameInstances']);
     Route::get('/game-instances', [GameInstancesController::class, 'getAllGameInstances']);
     Route::get('/game-instances/all', [GameInstancesController::class, 'getAllGame']);
     Route::get('/game-instances/{id}', [GameInstancesController::class, 'getGameInstanceById']);

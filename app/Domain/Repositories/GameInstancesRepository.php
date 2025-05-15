@@ -11,4 +11,5 @@ interface GameInstancesRepository
     public function updateGameInstance(int $id, array $data): GameInstances;
     public function deleteGameInstance(int $id): GameInstances;
     public function getAllGame(): array;
+    public function search(array $filters): array;
 }

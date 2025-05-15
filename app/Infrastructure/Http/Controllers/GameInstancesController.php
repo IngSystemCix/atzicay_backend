@@ -8,9 +8,11 @@ use App\Application\UseCase\GameInstances\DeleteGameInstanceUseCase;
 use App\Application\UseCase\GameInstances\GetAllGameInstancesUseCase;
 use App\Application\UseCase\GameInstances\GetAllGameUseCase;
 use App\Application\UseCase\GameInstances\GetGameInstanceByIdUseCase;
+use App\Application\UseCase\GameInstances\SearchUseCase;
 use App\Application\UseCase\GameInstances\UpdateGameInstanceUseCase;
 use App\Infrastructure\Http\Requests\StoreGameInstancesRequest;
 use Illuminate\Routing\Controller;
+use Illuminate\Http\Request;
 
 /**
  * @OA\Tag(
@@ -18,7 +20,8 @@ use Illuminate\Routing\Controller;
  *     description="Operations related to game instances"
  * )
  */
-class GameInstancesController extends Controller {
+class GameInstancesController extends Controller
+{
     use ApiResponse;
     private CreateGameInstanceUseCase $createGameInstanceUseCase;
     private GetAllGameInstancesUseCase $getAllGameInstancesUseCase;
@@ -26,6 +29,7 @@ class GameInstancesController extends Controller {
     private UpdateGameInstanceUseCase $updateGameInstanceUseCase;
     private DeleteGameInstanceUseCase $deleteGameInstanceUseCase;
     private GetAllGameUseCase $getAllGameUseCase;
+    private SearchUseCase $searchUseCase;
 
     public function __construct(
         CreateGameInstanceUseCase $createGameInstanceUseCase,
@@ -33,7 +37,8 @@ class GameInstancesController extends Controller {
         GetAllGameUseCase $getAllGameUseCase,
         GetGameInstanceByIdUseCase $getGameInstanceByIdUseCase,
         UpdateGameInstanceUseCase $updateGameInstanceUseCase,
-        DeleteGameInstanceUseCase $deleteGameInstanceUseCase
+        DeleteGameInstanceUseCase $deleteGameInstanceUseCase,
+        SearchUseCase $searchUseCase
     ) {
         $this->createGameInstanceUseCase = $createGameInstanceUseCase;
         $this->getAllGameInstancesUseCase = $getAllGameInstancesUseCase;
@@ -41,6 +46,7 @@ class GameInstancesController extends Controller {
         $this->getGameInstanceByIdUseCase = $getGameInstanceByIdUseCase;
         $this->updateGameInstanceUseCase = $updateGameInstanceUseCase;
         $this->deleteGameInstanceUseCase = $deleteGameInstanceUseCase;
+        $this->searchUseCase = $searchUseCase;
     }
 
     /**
@@ -60,13 +66,59 @@ class GameInstancesController extends Controller {
      *     ),
      * )
      */
-    public function getAllGameInstances() {
+    public function getAllGameInstances()
+    {
         $gameInstances = $this->getAllGameInstancesUseCase->execute();
         if (empty($gameInstances)) {
             return $this->errorResponse(2200);
         }
         return $this->successResponse($gameInstances, 2201);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/game-instances/search",
+     *    tags={"GameInstances"},
+     *    summary="Search for game instances",
+     *    description="Search for game instances based on criteria.",
+     *    @OA\RequestBody(
+     *        required=true,
+     *       @OA\JsonContent(
+     *           @OA\Property(property="name", type="string"),
+     *          @OA\Property(property="author", type="string"),
+     *          @OA\Property(property="type", type="string"),
+     *         @OA\Property(property="difficulty", type="string")
+     *        )
+     *    ),
+     *   @OA\Response(
+     *       response=200,
+     *      description="List of game instances matching the search criteria",
+     *      @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/GameInstances"))
+     *    ),
+     *   @OA\Response(
+     *      response=404,
+     *     description="No game instances found matching the search criteria"
+     *    )
+     * )
+     */
+    public function searchGameInstances(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'nullable|string|max:40',
+            'author' => 'nullable|integer|exists:users,id',
+            'type' => 'nullable|string|in:MEMORY_GAME,HANGMAN,PUZZLE,SOLVE_THE_WORD',
+            'difficulty' => 'nullable|in:E,M,D',
+        ]);
+
+        $gameInstances = $this->searchUseCase->execute($request);
+
+        if (empty($gameInstances)) {
+            return $this->errorResponse(2212);
+        }
+
+        return $this->successResponse($gameInstances, 2213);
+    }
+
 
     /**
      * @OA\Get(
@@ -92,7 +144,8 @@ class GameInstancesController extends Controller {
      *     ),
      * )
      */
-    public function getAllGame() {
+    public function getAllGame()
+    {
         $games = $this->getAllGameUseCase->execute();
         if (empty($games)) {
             return $this->errorResponse(2210);
@@ -124,7 +177,8 @@ class GameInstancesController extends Controller {
      *     ),
      * )
      */
-    public function getGameInstanceById($id) {
+    public function getGameInstanceById($id)
+    {
         $gameInstance = $this->getGameInstanceByIdUseCase->execute($id);
         if (empty($gameInstance)) {
             return $this->errorResponse(2202);
@@ -149,7 +203,8 @@ class GameInstancesController extends Controller {
      *     ),
      * )
      */
-    public function createGameInstance(StoreGameInstancesRequest $request) {
+    public function createGameInstance(StoreGameInstancesRequest $request)
+    {
         $validatedData = $request->validated();
         $gameInstanceDto = new GameInstancesDTO($validatedData);
         $gameInstance = $this->createGameInstanceUseCase->execute($gameInstanceDto);
@@ -180,7 +235,8 @@ class GameInstancesController extends Controller {
      *     ),
      * )
      */
-    public function updateGameInstance($id, StoreGameInstancesRequest $request) {
+    public function updateGameInstance($id, StoreGameInstancesRequest $request)
+    {
         $validatedData = $request->validated();
         $gameInstanceDto = new GameInstancesDTO($validatedData);
         $gameInstance = $this->updateGameInstanceUseCase->execute($id, $gameInstanceDto);
@@ -207,7 +263,8 @@ class GameInstancesController extends Controller {
      *     ),
      * )
      */
-    public function deleteGameInstance($id) {
+    public function deleteGameInstance($id)
+    {
         $gameInstance = $this->deleteGameInstanceUseCase->execute($id);
         if (empty($gameInstance)) {
             return $this->errorResponse(2208);

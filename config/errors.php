@@ -613,4 +613,12 @@ return [
         'message' => 'puzzle games not found',
         'http_code' => 404,
     ],
+    2212 => [
+        'message' => 'The search by filter was found.',
+        'http_code' => 200,
+    ],
+    2213 => [
+        'message' => 'There are no results to display for the search.',
+        'http_code' => 404,
+    ],
 ];

@@ -105,4 +105,26 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         return $games;
     }
 
+    public function search(array $filters): array {
+        $query = GameInstances::query()->with('professor');
+        if (!empty($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+
+        if (!empty($filters['author'])) {
+            $query->whereHas('professor', function ($q) use ($filters) {
+                $q->where('name', 'like', '%' . $filters['author'] . '%')
+                  ->orWhere('lastName', 'like', '%' . $filters['author'] . '%');
+            });
+        }
+
+        if (!empty($filters['type'])) {
+            $query->where('name', $filters['type']);
+        }
+
+        if (!empty($filters['difficulty'])) {
+            $query->where('difficulty', $filters['difficulty']);
+        }
+        return $query->get()->toArray();
+    }
 }
