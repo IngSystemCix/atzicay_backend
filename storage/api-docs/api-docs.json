@@ -430,14 +430,14 @@
                 }
             }
         },
-        "/games": {
+        "/game-instances/all": {
             "get": {
                 "tags": [
                     "GameInstances"
                 ],
                 "summary": "Get all games",
                 "description": "Retrieves all games.",
-                "operationId": "4ef134a57736794d7cded95056da32dc",
+                "operationId": "66d4253644c9ac11af44e5eb783c3d00",
                 "responses": {
                     "200": {
                         "description": "List of games",

@@ -148,7 +148,7 @@ class GameInstancesController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/games",
+     *     path="/game-instances/all",
      *     tags={"GameInstances"},
      *     summary="Get all games",
      *     description="Retrieves all games.",
