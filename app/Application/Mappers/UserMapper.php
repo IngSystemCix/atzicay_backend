@@ -9,7 +9,6 @@ class UserMapper {
     public static function toEntity(UserDto $dto): User {
         return new User([
             'Activated' => $dto->Activated,
-            'GoogleId' => $dto->GoogleId,
             'Email'=> $dto->Email,
             'Name' => $dto->Name,
             'LastName' => $dto->LastName,
@@ -23,7 +22,6 @@ class UserMapper {
     public static function toDTO(User $user): UserDto {
         return new UserDto([
             'Activated' => $user->Activated,
-            'GoogleId' => $user->GoogleId,
             'Email'=> $user->Email,
             'Name' => $user->Name,
             'LastName' => $user->LastName,
@@ -39,7 +37,6 @@ class UserMapper {
         return [
             'Id' => $user->Id,
             'Activated' => $user->Activated,
-            'GoogleId' => $user->GoogleId,
             'Email'=> $user->Email,
             'Name' => $user->Name,
             'LastName' => $user->LastName,

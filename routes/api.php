@@ -1,5 +1,6 @@
 <?php
 use App\Infrastructure\Http\Controllers\AssessmentController;
+use App\Infrastructure\Http\Controllers\AuthController;
 use App\Infrastructure\Http\Controllers\CountryController;
 use App\Infrastructure\Http\Controllers\GameInstancesController;
 use App\Infrastructure\Http\Controllers\GameProgressController;
@@ -12,8 +13,18 @@ use App\Infrastructure\Http\Controllers\PuzzleController;
 use App\Infrastructure\Http\Controllers\SolveTheWordController;
 use App\Infrastructure\Http\Controllers\UserController;
 use App\Infrastructure\Http\Controllers\WordsController;
+use App\Infrastructure\Http\Middleware\AuthenticateAtzicay;
 
 Route::prefix('atzicay/v1')->group(function () {
+    // Route for authentication
+    Route::post('/auth/login', [AuthController::class, 'login']);
+});
+
+Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
+    // Route for authentication
+    Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::post('/auth/refresh', [AuthController::class, 'refresh']);
     // Route for countries
     Route::get('/countries', [CountryController::class, 'getAllCountries']);
     Route::get('/countries/{id}', [CountryController::class, 'getCountryById']);

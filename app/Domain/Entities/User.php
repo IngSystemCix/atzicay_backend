@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  *     required={"Email", "Name", "LastName", "Gender", "Country", "City", "Birthdate"},
  *     @OA\Property(property="Id", type="integer", description="Unique identifier for the user"),
  *     @OA\Property(property="Activated", type="boolean", description="Indicates if the user is activated"),
- *     @OA\Property(property="GoogleId", type="string", nullable=true, description="Google ID of the user"),
  *     @OA\Property(property="Email", type="string", format="email", description="Email address of the user"),
  *     @OA\Property(property="Name", type="string", description="First name of the user"),
  *     @OA\Property(property="LastName", type="string", description="Last name of the user"),
@@ -32,7 +31,6 @@ class User extends Model
     public $timestamps = false;
     protected $fillable = [
         'Activated',
-        'GoogleId',
         'Email',
         'Name',
         'LastName',
@@ -45,7 +43,6 @@ class User extends Model
 
     protected $casts = [
         'Activated' => 'boolean',
-        'GoogleId' => 'string',
         'Email' => 'string',
         'Name' => 'string',
         'LastName' => 'string',

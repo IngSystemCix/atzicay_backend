@@ -14,13 +14,6 @@ namespace App\Infrastructure\Http\Requests;
  *         description="Indicates if the user is activated"
  *     ),
  *     @OA\Property(
- *         property="GoogleId",
- *         type="string",
- *         maxLength=255,
- *         example="google-id-123456",
- *         description="The Google ID of the user"
- *     ),
- *     @OA\Property(
  *         property="Email",
  *         type="string",
  *         format="email",
@@ -112,12 +105,6 @@ class StoreUserRequest extends FormRequest
                 'required',
                 'boolean',
             ],
-            'GoogleId' => [
-                'required',
-                'string',
-                'max:255',
-                'unique:Users,GoogleId'
-            ],
             'Email' => [
                 'required',
                 'email',
@@ -167,10 +154,6 @@ class StoreUserRequest extends FormRequest
         return [
             'Activated.required' => 'The activated field is required.',
             'Activated.boolean' => 'The activated field must be true or false.',
-            'GoogleId.required' => 'The Google ID is required.',
-            'GoogleId.string' => 'The Google ID must be a string.',
-            'GoogleId.max' => 'The Google ID may not be greater than 255 characters.',
-            'GoogleId.unique' => 'The Google ID has already been taken.',
             'Email.required' => 'The email is required.',
             'Email.email' => 'The email must be a valid email address.',
             'Email.max' => 'The email may not be greater than 255 characters.',

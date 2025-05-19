@@ -4,7 +4,6 @@ Content-Type: application/json
 
 {
   "Activated": true,
-  "GoogleId": "108947365432189023456",
   "Email": "juanromerocollazos@gmail.com",
   "Name": "Juan",
   "LastName": "Romero Collazos",
@@ -20,7 +19,6 @@ Content-Type: application/json
 
 {
   "Activated": true,
-  "GoogleId": "108937365432182023256",
   "Email": "juanromerocollazos@gmail.com",
   "Name": "Juan",
   "LastName": "Romero Collazos",

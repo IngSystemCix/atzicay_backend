@@ -7,9 +7,8 @@ use App\Domain\Enums\Gender;
  * @OA\Schema(
  *     schema="UserDTO",
  *     type="object",
- *     required={"Activated", "GoogleId", "Email", "Name", "LastName", "Gender", "Country", "City", "Birthdate", "CreatedAt"},
+ *     required={"Activated", "Email", "Name", "LastName", "Gender", "Country", "City", "Birthdate", "CreatedAt"},
  *     @OA\Property(property="Activated", type="boolean"),
- *     @OA\Property(property="GoogleId", type="string"),
  *     @OA\Property(property="Email", type="string", format="email"),
  *     @OA\Property(property="Name", type="string"),
  *     @OA\Property(property="LastName", type="string"),
@@ -21,7 +20,6 @@ use App\Domain\Enums\Gender;
  */
 class UserDto {
     public bool $Activated;
-    public string $GoogleId;
     public string $Email;
     public string $Name;
     public string $LastName;
@@ -32,7 +30,6 @@ class UserDto {
 
     public function __construct(array $data) {
         $this->Activated = $data['Activated'];
-        $this->GoogleId = $data['GoogleId'];
         $this->Email = $data['Email'];
         $this->Name = $data['Name'];
         $this->LastName = $data['LastName'];

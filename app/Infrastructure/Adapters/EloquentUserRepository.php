@@ -9,7 +9,6 @@ class EloquentUserRepository implements UserRepository {
     public function createUser(array $data): User {
         return User::create([
             'Activated' => $data['Activated'],
-            'GoogleId' => $data['GoogleId'],
             'Email'=> $data['Email'],
             'Name' => $data['Name'],
             'LastName' => $data['LastName'],
@@ -42,7 +41,6 @@ class EloquentUserRepository implements UserRepository {
         }
         $user->update([
             'Activated' => $data['Activated'],
-            'GoogleId' => $data['GoogleId'],
             'Email'=> $data['Email'],
             'Name' => $data['Name'],
             'LastName' => $data['LastName'],

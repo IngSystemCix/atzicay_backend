@@ -2220,7 +2220,6 @@
             "UserDTO": {
                 "required": [
                     "Activated",
-                    "GoogleId",
                     "Email",
                     "Name",
                     "LastName",
@@ -2233,9 +2232,6 @@
                 "properties": {
                     "Activated": {
                         "type": "boolean"
-                    },
-                    "GoogleId": {
-                        "type": "string"
                     },
                     "Email": {
                         "type": "string",
@@ -2669,11 +2665,6 @@
                     "Activated": {
                         "description": "Indicates if the user is activated",
                         "type": "boolean"
-                    },
-                    "GoogleId": {
-                        "description": "Google ID of the user",
-                        "type": "string",
-                        "nullable": true
                     },
                     "Email": {
                         "description": "Email address of the user",
@@ -3167,12 +3158,6 @@
                         "description": "Indicates if the user is activated",
                         "type": "boolean",
                         "example": true
-                    },
-                    "GoogleId": {
-                        "description": "The Google ID of the user",
-                        "type": "string",
-                        "maxLength": 255,
-                        "example": "google-id-123456"
                     },
                     "Email": {
                         "description": "The email of the user",
