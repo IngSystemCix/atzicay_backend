@@ -225,17 +225,6 @@ class UserController extends Controller {
         }
 
         // Devuelve más datos del usuario
-        return $this->successResponse([
-            'Id' => $user->Id,
-            'Name' => $user->Name,
-            'LastName' => $user->LastName,
-            'Email' => $user->Email,
-            'Gender' => $user->Gender->value,
-            'CountryId' => $user->CountryId,
-            'City' => $user->City,
-            'Birthdate' => $user->Birthdate,
-            'CreatedAt' => $user->CreatedAt,
-            'gamesCount' => $user->user()->count()
-        ], 2112);
+        return $this->successResponse($user, 2112);
     }
 }

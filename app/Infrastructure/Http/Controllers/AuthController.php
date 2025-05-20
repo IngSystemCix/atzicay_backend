@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Http\Controllers;
 
+use App\Domain\Enums\Gender;
 use App\Infrastructure\Models\AuthUser;
 use Auth0\SDK\Auth0;
 use Illuminate\Http\Request;
@@ -54,7 +55,17 @@ class AuthController extends Controller
 
             $user = AuthUser::firstOrCreate(
                 ['email' => $email],
-                ['name' => $name]
+                [
+                    'Activated' => true,
+                    'Name' => $name,
+                    'Email' => $email,
+                    'LastName' => '',
+                    'Gender' => Gender::OTHER,
+                    'CountryId' => 1,
+                    'City' => '',
+                    'Birthdate' => '2000-01-01',
+                    'CreatedAt' => now(),
+                ]
             );
 
             // Generar token JWT interno
