@@ -59,10 +59,10 @@ class AuthController extends Controller
                     'Activated' => true,
                     'Name' => $name,
                     'Email' => $email,
-                    'LastName' => '',
-                    'Gender' => Gender::OTHER,
+                    'LastName' => 'N/A',
+                    'Gender' => Gender::OTHER->value,
                     'CountryId' => 1,
-                    'City' => '',
+                    'City' => 'N/A',
                     'Birthdate' => '2000-01-01',
                     'CreatedAt' => now(),
                 ]
