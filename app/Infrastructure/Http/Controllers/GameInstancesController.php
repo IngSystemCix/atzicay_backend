@@ -10,6 +10,7 @@ use App\Application\UseCase\GameInstances\GetAllGameUseCase;
 use App\Application\UseCase\GameInstances\GetGameInstanceByIdUseCase;
 use App\Application\UseCase\GameInstances\SearchUseCase;
 use App\Application\UseCase\GameInstances\UpdateGameInstanceUseCase;
+use App\Domain\Services\GameService;
 use App\Infrastructure\Http\Requests\StoreGameInstancesRequest;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -18,11 +19,12 @@ use Illuminate\Http\Request;
  * @OA\Tag(
  *     name="GameInstances",
  *     description="Operations related to game instances"
- * )
+ * ),
  */
 class GameInstancesController extends Controller
 {
     use ApiResponse;
+    private GameService $gameService;
     private CreateGameInstanceUseCase $createGameInstanceUseCase;
     private GetAllGameInstancesUseCase $getAllGameInstancesUseCase;
     private GetGameInstanceByIdUseCase $getGameInstanceByIdUseCase;
@@ -32,6 +34,7 @@ class GameInstancesController extends Controller
     private SearchUseCase $searchUseCase;
 
     public function __construct(
+        GameService $gameService,
         CreateGameInstanceUseCase $createGameInstanceUseCase,
         GetAllGameInstancesUseCase $getAllGameInstancesUseCase,
         GetAllGameUseCase $getAllGameUseCase,
@@ -40,6 +43,7 @@ class GameInstancesController extends Controller
         DeleteGameInstanceUseCase $deleteGameInstanceUseCase,
         SearchUseCase $searchUseCase
     ) {
+        $this->gameService = $gameService;
         $this->createGameInstanceUseCase = $createGameInstanceUseCase;
         $this->getAllGameInstancesUseCase = $getAllGameInstancesUseCase;
         $this->getAllGameUseCase = $getAllGameUseCase;
@@ -64,6 +68,7 @@ class GameInstancesController extends Controller
      *         response=404,
      *         description="No game instances found"
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function getAllGameInstances()
@@ -124,7 +129,8 @@ class GameInstancesController extends Controller
      *             @OA\Property(property="code", type="integer", example=2212),
      *             @OA\Property(property="message", type="string", example="No se encontraron game instances")
      *         )
-     *     )
+     *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function searchGameInstances(Request $request)
@@ -168,6 +174,7 @@ class GameInstancesController extends Controller
      *         response=404,
      *         description="No games found"
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function getAllGame()
@@ -201,6 +208,7 @@ class GameInstancesController extends Controller
      *         response=404,
      *         description="Game instance not found"
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function getGameInstanceById($id)
@@ -227,6 +235,7 @@ class GameInstancesController extends Controller
      *         description="Game instance created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/GameInstances")
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function createGameInstance(StoreGameInstancesRequest $request)
@@ -259,6 +268,7 @@ class GameInstancesController extends Controller
      *         description="Game instance updated successfully",
      *         @OA\JsonContent(ref="#/components/schemas/GameInstances")
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function updateGameInstance($id, StoreGameInstancesRequest $request)
@@ -287,6 +297,7 @@ class GameInstancesController extends Controller
      *         description="Game instance deleted successfully",
      *         @OA\JsonContent(ref="#/components/schemas/GameInstances")
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function deleteGameInstance($id)
@@ -296,5 +307,75 @@ class GameInstancesController extends Controller
             return $this->errorResponse(2208);
         }
         return $this->successResponse($gameInstance, 2209);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/game-instances/game",
+     *     operationId="createGame",
+     *     tags={"Games"},
+     *     summary="Crear una nueva instancia de juego",
+     *     description="Crea un nuevo juego con sus configuraciones, tipo específico (programming, hangman, puzzle, etc.), evaluación inicial y settings.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"Name", "Description", "ProfessorId", "Activated", "Difficulty", "Visibility", "game_type"},
+     *             @OA\Property(property="Name", type="string", example="Juego de Prueba"),
+     *             @OA\Property(property="Description", type="string", example="Juego para evaluar lógica básica."),
+     *             @OA\Property(property="ProfessorId", type="integer", example=1),
+     *             @OA\Property(property="Activated", type="boolean", example=true),
+     *             @OA\Property(property="Difficulty", type="string", example="Fácil"),
+     *             @OA\Property(property="Visibility", type="string", example="Público"),
+     *             @OA\Property(
+     *                 property="settings",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="ConfigKey", type="string", example="TiempoLimite"),
+     *                     @OA\Property(property="ConfigValue", type="string", example="30")
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="assessment",
+     *                 type="object",
+     *                 @OA\Property(property="value", type="number", format="float", example=8.5),
+     *                 @OA\Property(property="comments", type="string", example="Buen desempeño")
+     *             ),
+     *             @OA\Property(
+     *                 property="programming_game",
+     *                 type="object",
+     *                 @OA\Property(property="name", type="string", example="Algoritmos Básicos"),
+     *                 @OA\Property(property="start_time", type="string", format="date-time", example="2025-06-01T09:00:00Z"),
+     *                 @OA\Property(property="end_time", type="string", format="date-time", example="2025-06-01T10:00:00Z"),
+     *                 @OA\Property(property="attempts", type="integer", example=3),
+     *                 @OA\Property(property="maximum_time", type="integer", example=60)
+     *             ),
+     *             @OA\Property(property="game_type", type="string", example="hangman"),
+     *             @OA\Property(
+     *                 property="hangman",
+     *                 type="object",
+     *                 @OA\Property(property="word", type="string", example="programacion"),
+     *                 @OA\Property(property="max_attempts", type="integer", example=5)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Instancia de juego creada exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos o faltantes"
+     *     ),
+     *     security={{"bearerAuth": {}}}
+     * )
+     */
+    public function createGame(Request $request)
+    {
+        $gameInstance = $this->gameService->createGame($request);
+        return response()->json($gameInstance); // o el retorno según tu `ApiResponse`
     }
 }

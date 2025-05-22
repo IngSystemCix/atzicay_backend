@@ -100,7 +100,7 @@ class GameInstances extends Model
      */
     public function gameSetting()
     {
-        return $this->hasMany(GameSetting::class, 'InstanceId', 'Id');
+        return $this->hasMany(GameSetting::class, 'GameInstanceId', 'Id');
     }
 
     /**

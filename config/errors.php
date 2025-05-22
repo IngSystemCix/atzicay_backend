@@ -621,4 +621,12 @@ return [
         'message' => 'There are no results to display for the search.',
         'http_code' => 404,
     ],
+    2214 => [
+        'message' => 'Game instance created successfully',
+        'http_code' => 201,
+    ],
+    2215 => [
+        'message' => 'Failed to create game instance.',
+        'http_code' => 500,
+    ],
 ];

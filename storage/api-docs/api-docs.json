@@ -302,7 +302,12 @@
                     "404": {
                         "description": "No game instances found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -332,7 +337,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/game-instances/search": {
@@ -427,7 +437,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/game-instances/all": {
@@ -475,7 +490,12 @@
                     "404": {
                         "description": "No games found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/game-instances/{id}": {
@@ -511,7 +531,12 @@
                     "404": {
                         "description": "Game instance not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -552,7 +577,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -583,7 +613,170 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/game-instances/game": {
+            "post": {
+                "tags": [
+                    "Games"
+                ],
+                "summary": "Crear una nueva instancia de juego",
+                "description": "Crea un nuevo juego con sus configuraciones, tipo específico (programming, hangman, puzzle, etc.), evaluación inicial y settings.",
+                "operationId": "createGame",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Name",
+                                    "Description",
+                                    "ProfessorId",
+                                    "Activated",
+                                    "Difficulty",
+                                    "Visibility",
+                                    "game_type"
+                                ],
+                                "properties": {
+                                    "Name": {
+                                        "type": "string",
+                                        "example": "Juego de Prueba"
+                                    },
+                                    "Description": {
+                                        "type": "string",
+                                        "example": "Juego para evaluar lógica básica."
+                                    },
+                                    "ProfessorId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "Activated": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "Difficulty": {
+                                        "type": "string",
+                                        "example": "Fácil"
+                                    },
+                                    "Visibility": {
+                                        "type": "string",
+                                        "example": "Público"
+                                    },
+                                    "settings": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "ConfigKey": {
+                                                    "type": "string",
+                                                    "example": "TiempoLimite"
+                                                },
+                                                "ConfigValue": {
+                                                    "type": "string",
+                                                    "example": "30"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "assessment": {
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 8.5
+                                            },
+                                            "comments": {
+                                                "type": "string",
+                                                "example": "Buen desempeño"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "programming_game": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Algoritmos Básicos"
+                                            },
+                                            "start_time": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-06-01T09:00:00Z"
+                                            },
+                                            "end_time": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-06-01T10:00:00Z"
+                                            },
+                                            "attempts": {
+                                                "type": "integer",
+                                                "example": 3
+                                            },
+                                            "maximum_time": {
+                                                "type": "integer",
+                                                "example": 60
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "game_type": {
+                                        "type": "string",
+                                        "example": "hangman"
+                                    },
+                                    "hangman": {
+                                        "properties": {
+                                            "word": {
+                                                "type": "string",
+                                                "example": "programacion"
+                                            },
+                                            "max_attempts": {
+                                                "type": "integer",
+                                                "example": 5
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Instancia de juego creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Datos inválidos o faltantes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/game-progress/{id}": {
@@ -3302,6 +3495,10 @@
         {
             "name": "Words",
             "description": "Words operations"
+        },
+        {
+            "name": "Games",
+            "description": "Games"
         }
     ]
 }

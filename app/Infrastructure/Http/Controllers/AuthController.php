@@ -46,7 +46,8 @@ class AuthController extends Controller
             }
 
             $email = $payload['email'] ?? null;
-            $name = $payload['name'] ?? '';
+            $name = $payload['given_name'] ?? '';
+            $familyName = $payload['family_name'] ?? '';
 
             if (!$email) {
                 \Log::error('No se encontró correo electrónico en el token', ['payload' => $payload]);
@@ -59,7 +60,7 @@ class AuthController extends Controller
                     'Activated' => true,
                     'Name' => $name,
                     'Email' => $email,
-                    'LastName' => 'N/A',
+                    'LastName' => $familyName,
                     'Gender' => Gender::OTHER->value,
                     'CountryId' => 1,
                     'City' => 'N/A',
@@ -78,14 +79,10 @@ class AuthController extends Controller
             return response()->json(['error' => 'Error interno al verificar token'], 500);
         }
     }
-
-
-
     public function me()
     {
         return response()->json(auth()->user());
     }
-
     public function logout()
     {
         try {

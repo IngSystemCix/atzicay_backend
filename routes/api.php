@@ -13,11 +13,11 @@ use App\Infrastructure\Http\Controllers\PuzzleController;
 use App\Infrastructure\Http\Controllers\SolveTheWordController;
 use App\Infrastructure\Http\Controllers\UserController;
 use App\Infrastructure\Http\Controllers\WordsController;
-use App\Infrastructure\Http\Middleware\AuthenticateAtzicay;
 
 Route::prefix('atzicay/v1')->group(function () {
     // Route for authentication
     Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/game-instances/game', [GameInstancesController::class, 'createGame']);
 });
 
 Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
@@ -29,7 +29,7 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::get('/countries', [CountryController::class, 'getAllCountries']);
     Route::get('/countries/{id}', [CountryController::class, 'getCountryById']);
     Route::post('/countries', [CountryController::class, 'createCountry']);
-        // Route for users
+    // Route for users
     Route::get('/users', [UserController::class, 'getAllUsers']);
     Route::get('/users/{id}', [UserController::class, 'getUserById']);
     Route::post('/users', [UserController::class, 'createUser']);

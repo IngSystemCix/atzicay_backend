@@ -45,3 +45,43 @@ GET http://localhost:8000/api/atzicay/v1/game-instances/search?name=Encuentro
 
 ### GET | search game instances by name and difficulty
 GET http://localhost:8000/api/atzicay/v1/game-instances/search?name=Encuentro&difficulty=M
+
+### POST | create a new game
+POST http://localhost:8000/api/atzicay/v1/game-instances/game
+Content-Type: application/json
+
+{
+  "Name": "Juego de Lógica",
+  "Description": "Juego introductorio para medir capacidades lógicas.",
+  "ProfessorId": 1,
+  "Activated": true,
+  "Difficulty": "M",
+  "Visibility": "P",
+  "settings": [
+    {
+      "ConfigKey": "Fuente",
+      "ConfigValue": "Arial"
+    },
+    {
+      "ConfigKey": "Color",
+      "ConfigValue": "#FF5733"
+    }
+  ],
+  "assessment": {
+    "value": 1.0,
+    "comments": "Buen inicio, demuestra lógica sólida."
+  },
+  "programming_game": {
+    "name": "Ciclo For",
+    "start_time": "2025-06-01 08:00:00",
+    "end_time": "2025-06-01 09:00:00",
+    "attempts": 3,
+    "maximum_time": 45
+  },
+  "game_type": "hangman",
+  "hangman": {
+    "word": "variable",
+    "clue": "Es un espacio de memoria que almacena datos.",
+    "presentation": "A"
+  }
+}
