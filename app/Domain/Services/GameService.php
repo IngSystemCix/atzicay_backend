@@ -38,17 +38,6 @@ class GameService
                 'GameInstanceId' => $gameInstance->Id
             ]);
 
-            $gameInstance->programmingGame()->create([
-                'Name' => $request->input('programming_game.name'),
-                'Activated' => true,
-                'ProgrammerId' => $gameInstance->ProfessorId,
-                'StartTime' => $request->input('programming_game.start_time'),
-                'EndTime' => $request->input('programming_game.end_time'),
-                'Attempts' => $request->input('programming_game.attempts'),
-                'MaximumTime' => $request->input('programming_game.maximum_time'),
-                'GameInstancesId' => $gameInstance->Id
-            ]);
-
             // Aquí se verifica qué tipo de juego se debe crear adicionalmente
             switch ($request->input('game_type')) {
                 case 'hangman':
