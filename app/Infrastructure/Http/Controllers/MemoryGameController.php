@@ -3,7 +3,7 @@ namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\MemoryGameDTO;
 use App\Application\Traits\ApiResponse;
-use App\Application\UseCase\MemoryGame\createMemoryGameUseCase;
+use App\Application\UseCase\MemoryGame\CreateMemoryGameUseCase;
 use App\Application\UseCase\MemoryGame\GetAllMemoryGamesUseCase;
 use App\Application\UseCase\MemoryGame\GetMemoryGameByIdUseCase;
 use App\Application\UseCase\MemoryGame\UpdateMemoryGameUseCase;
@@ -18,13 +18,13 @@ use Illuminate\Routing\Controller;
  */
 class MemoryGameController extends Controller {
     use ApiResponse;
-    private createMemoryGameUseCase $createMemoryGameUseCase;
+    private CreateMemoryGameUseCase $createMemoryGameUseCase;
     private GetMemoryGameByIdUseCase $getMemoryGameByIdUseCase;
     private UpdateMemoryGameUseCase $updateMemoryGameUseCase;
     private GetAllMemoryGamesUseCase $getAllMemoryGamesUseCase;
 
     public function __construct(
-        createMemoryGameUseCase $createMemoryGameUseCase,
+        CreateMemoryGameUseCase $createMemoryGameUseCase,
         GetMemoryGameByIdUseCase $getMemoryGameByIdUseCase,
         UpdateMemoryGameUseCase $updateMemoryGameUseCase,
         GetAllMemoryGamesUseCase $getAllMemoryGamesUseCase

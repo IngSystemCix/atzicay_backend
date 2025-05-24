@@ -6,7 +6,7 @@ use App\Application\Mappers\MemoryGameMapper;
 use App\Domain\Entities\MemoryGame;
 use App\Domain\Repositories\MemoryGameRepository;
 
-class createMemoryGameUseCase
+class CreateMemoryGameUseCase
 {
     public function __construct(
         private MemoryGameRepository $repository,
