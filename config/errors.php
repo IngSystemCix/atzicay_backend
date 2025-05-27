@@ -629,4 +629,12 @@ return [
         'message' => 'Failed to create game instance.',
         'http_code' => 500,
     ],
+    2216 => [
+        'message' => 'Game get configuration successfully',
+        'http_code' => 200,
+    ],
+    2217 => [
+        'message' => 'Failed get configuration game',
+        'http_code' => 404,
+    ],
 ];

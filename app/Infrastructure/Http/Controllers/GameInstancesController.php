@@ -154,21 +154,24 @@ class GameInstancesController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/game-instances/all",
-     *     tags={"GameInstances"},
+     *     path="/game-instances/all/{limit}",
+     *     tags={"Games"},
      *     summary="Get all games",
      *     description="Retrieves all games.",
      *     @OA\Response(
      *         response=200,
      *         description="List of games",
-     *         @OA\JsonContent(type="array", @OA\Items(
-     *             @OA\Property(property="id", type="integer"),
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="level", type="string"),
-     *             @OA\Property(property="description", type="string"),
-     *             @OA\Property(property="rating", type="integer"),
-     *             @OA\Property(property="author", type="string")
-     *         ))
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="title", type="string"),
+     *                 @OA\Property(property="level", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="rating", type="integer"),
+     *                 @OA\Property(property="author", type="string")
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -177,9 +180,9 @@ class GameInstancesController extends Controller
      *     security={{"bearerAuth": {}}}
      * )
      */
-    public function getAllGame()
+    public function getAllGame($limit = 6)
     {
-        $games = $this->getAllGameUseCase->execute();
+        $games = $this->getAllGameUseCase->execute($limit);
         if (empty($games)) {
             return $this->errorResponse(2210);
         }
@@ -376,6 +379,106 @@ class GameInstancesController extends Controller
     public function createGame(Request $request)
     {
         $gameInstance = $this->gameService->createGame($request);
-        return response()->json($gameInstance); // o el retorno según tu `ApiResponse`
+        return $this->successResponse($gameInstance, 2214); // o el retorno según tu `ApiResponse`
     }
+
+    /**
+     * @OA\Get(
+     *     path="/game-instances/configuration/{id}",
+     *     summary="Obtener configuración de una instancia de juego por ID",
+     *     tags={"Game Instances"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la instancia del juego",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Datos de la instancia de juego",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="title", type="string", example="Ahorcado Nivel 1"),
+     *             @OA\Property(property="description", type="string", example="Juego básico para niños"),
+     *             @OA\Property(property="difficulty", type="string", example="Fácil"),
+     *             @OA\Property(property="visibility", type="boolean", example=true),
+     *             @OA\Property(property="activated", type="boolean", example=true),
+     *             @OA\Property(property="rating", type="number", format="float", example=4.5),
+     *             @OA\Property(
+     *                 property="assessment",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="value", type="number", example=4),
+     *                     @OA\Property(property="comments", type="string", example="Muy bueno")
+     *                 )
+     *             ),
+     *             @OA\Property(property="author", type="string", example="Juan Pérez"),
+     *             @OA\Property(property="type", type="string", example="Hangman"),
+     *             @OA\Property(
+     *                 property="settings",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="key", type="string", example="time_limit"),
+     *                     @OA\Property(property="value", type="string", example="60")
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="game_data",
+     *                 type="object",
+     *                 oneOf={
+     *                     @OA\Schema(
+     *                         @OA\Property(property="word", type="string", example="Sol"),
+     *                         @OA\Property(property="clue", type="string", example="Brilla en el cielo"),
+     *                         @OA\Property(property="presentation", type="string", example="Imagen del sol")
+     *                     ),
+     *                     @OA\Schema(
+     *                         @OA\Property(property="pieces", type="integer", example=16),
+     *                         @OA\Property(property="image_url", type="string", example="https://cdn.ejemplo.com/puzzle1.jpg")
+     *                     ),
+     *                     @OA\Schema(
+     *                         @OA\Property(property="mode", type="string", example="parejas"),
+     *                         @OA\Property(property="path_img1", type="string", example="img1.png"),
+     *                         @OA\Property(property="path_img2", type="string", example="img2.png"),
+     *                         @OA\Property(property="description_img", type="string", example="Animales")
+     *                     ),
+     *                     @OA\Schema(
+     *                         @OA\Property(property="rows", type="integer", example=5),
+     *                         @OA\Property(property="columns", type="integer", example=5),
+     *                         @OA\Property(
+     *                             property="words",
+     *                             type="array",
+     *                             @OA\Items(
+     *                                 @OA\Property(property="word", type="string", example="PERRO"),
+     *                                 @OA\Property(property="orientation", type="string", example="horizontal")
+     *                             )
+     *                         )
+     *                     )
+     *                 }
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Instancia no encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Game not found")
+     *         )
+     *     )
+     * )
+     */
+    public function getConfigurations(int $id)
+    {
+        $gameInstances = $this->gameService->getGameById($id);
+
+        if (!$gameInstances) {
+            return $this->errorResponse(2216);
+        }
+
+        return $this->successResponse($gameInstances, 2217);
+    }
+
 }

@@ -445,14 +445,14 @@
                 ]
             }
         },
-        "/game-instances/all": {
+        "/game-instances/all/{limit}": {
             "get": {
                 "tags": [
-                    "GameInstances"
+                    "Games"
                 ],
                 "summary": "Get all games",
                 "description": "Retrieves all games.",
-                "operationId": "66d4253644c9ac11af44e5eb783c3d00",
+                "operationId": "4a4b0227fcc8e3588bf1b03d87ce9d8d",
                 "responses": {
                     "200": {
                         "description": "List of games",
@@ -777,6 +777,211 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/game-instances/configuration/{id}": {
+            "get": {
+                "tags": [
+                    "Game Instances"
+                ],
+                "summary": "Obtener configuración de una instancia de juego por ID",
+                "operationId": "c77ed189e84db2408587bd81771157be",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la instancia del juego",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Datos de la instancia de juego",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Ahorcado Nivel 1"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Juego básico para niños"
+                                        },
+                                        "difficulty": {
+                                            "type": "string",
+                                            "example": "Fácil"
+                                        },
+                                        "visibility": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "activated": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "rating": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 4.5
+                                        },
+                                        "assessment": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "number",
+                                                        "example": 4
+                                                    },
+                                                    "comments": {
+                                                        "type": "string",
+                                                        "example": "Muy bueno"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "author": {
+                                            "type": "string",
+                                            "example": "Juan Pérez"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "Hangman"
+                                        },
+                                        "settings": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "key": {
+                                                        "type": "string",
+                                                        "example": "time_limit"
+                                                    },
+                                                    "value": {
+                                                        "type": "string",
+                                                        "example": "60"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "game_data": {
+                                            "type": "object",
+                                            "oneOf": [
+                                                {
+                                                    "properties": {
+                                                        "word": {
+                                                            "type": "string",
+                                                            "example": "Sol"
+                                                        },
+                                                        "clue": {
+                                                            "type": "string",
+                                                            "example": "Brilla en el cielo"
+                                                        },
+                                                        "presentation": {
+                                                            "type": "string",
+                                                            "example": "Imagen del sol"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "pieces": {
+                                                            "type": "integer",
+                                                            "example": 16
+                                                        },
+                                                        "image_url": {
+                                                            "type": "string",
+                                                            "example": "https://cdn.ejemplo.com/puzzle1.jpg"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "mode": {
+                                                            "type": "string",
+                                                            "example": "parejas"
+                                                        },
+                                                        "path_img1": {
+                                                            "type": "string",
+                                                            "example": "img1.png"
+                                                        },
+                                                        "path_img2": {
+                                                            "type": "string",
+                                                            "example": "img2.png"
+                                                        },
+                                                        "description_img": {
+                                                            "type": "string",
+                                                            "example": "Animales"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "rows": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "columns": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "words": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "word": {
+                                                                        "type": "string",
+                                                                        "example": "PERRO"
+                                                                    },
+                                                                    "orientation": {
+                                                                        "type": "string",
+                                                                        "example": "horizontal"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Instancia no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Game not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/game-progress/{id}": {
@@ -3499,6 +3704,10 @@
         {
             "name": "Games",
             "description": "Games"
+        },
+        {
+            "name": "Game Instances",
+            "description": "Game Instances"
         }
     ]
 }

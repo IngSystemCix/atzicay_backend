@@ -61,7 +61,7 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         return $gameInstance;
     }
 
-    public function getAllGame(): array
+    public function getAllGame(int $limit = 6): array
     {
         $games = GameInstances::with([
             'professor',
@@ -72,20 +72,18 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
             'solveTheWord'
         ])
             ->where('Activated', true)
+            ->take($limit)
             ->get()
             ->map(function ($game) {
                 $type = 'Unknown';
 
                 if ($game->hangman()->exists()) {
                     $type = 'Hangman';
-                }
-                elseif ($game->memoryGame()->exists()) {
+                } elseif ($game->memoryGame()->exists()) {
                     $type = 'Memory';
-                }
-                elseif ($game->puzzle()->exists()) {
+                } elseif ($game->puzzle()->exists()) {
                     $type = 'Puzzle';
-                }
-                elseif ($game->solveTheWord()->exists()) {
+                } elseif ($game->solveTheWord()->exists()) {
                     $type = 'Solve the Word';
                 }
 
@@ -105,7 +103,9 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         return $games;
     }
 
-    public function search(array $filters): array {
+
+    public function search(array $filters): array
+    {
         $query = GameInstances::query()->with('professor');
         if (!empty($filters['name'])) {
             $query->where('name', 'like', '%' . $filters['name'] . '%');
@@ -114,7 +114,7 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         if (!empty($filters['author'])) {
             $query->whereHas('professor', function ($q) use ($filters) {
                 $q->where('name', 'like', '%' . $filters['author'] . '%')
-                  ->orWhere('lastName', 'like', '%' . $filters['author'] . '%');
+                    ->orWhere('lastName', 'like', '%' . $filters['author'] . '%');
             });
         }
 
