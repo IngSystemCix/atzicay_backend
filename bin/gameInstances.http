@@ -73,8 +73,20 @@ Content-Type: application/json
   },
   "game_type": "hangman",
   "hangman": {
-    "word": "variable",
-    "clue": "Es un espacio de memoria que almacena datos.",
-    "presentation": "A"
+    "presentation": "A",
+    "words": [
+      {
+        "word": "variable",
+        "clue": "Es un espacio de memoria que almacena datos."
+      },
+      {
+        "word": "funcion",
+        "clue": "Bloque reutilizable de código que realiza una tarea."
+      },
+      {
+        "word": "algoritmo",
+        "clue": "Conjunto de pasos lógicos para resolver un problema."
+      }
+    ]
   }
 }

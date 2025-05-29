@@ -41,13 +41,19 @@ class GameService
             // Aquí se verifica qué tipo de juego se debe crear adicionalmente
             switch ($request->input('game_type')) {
                 case 'hangman':
-                    $gameInstance->hangman()->create([
-                        'Word' => $request->input('hangman.word'),
-                        'Clue' => $request->input('hangman.clue'),
+                    $hangman = $gameInstance->hangman()->create([
                         'Presentation' => $request->input('hangman.presentation'),
                         'GameInstanceId' => $gameInstance->Id
                     ]);
+
+                    foreach ($request->input('hangman.words', []) as $wordData) {
+                        $hangman->words()->create([
+                            'Word' => $wordData['word'],
+                            'Clue' => $wordData['clue']
+                        ]);
+                    }
                     break;
+
 
                 case 'memory':
                     $gameInstance->memoryGame()->create([
