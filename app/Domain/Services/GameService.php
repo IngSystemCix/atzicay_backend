@@ -53,38 +53,49 @@ class GameService
 
 
                 case 'memory':
-                    $gameInstance->memoryGame()->create([
-                        'Mode' => $request->input('memory.mode'),
-                        'PathImg1' => $request->input('memory.path_img1'),
-                        'PathImg2' => $request->input('memory.path_img2'),
-                        'DescriptionImg' => $request->input('memory.description_img'),
-                        'GameInstanceId' => $gameInstance->Id
-                    ]);
+                    $mode = $request->input('memory.mode');
+                    $memoryItems = $request->input('memory.items', []);
+
+                    foreach ($memoryItems as $item) {
+                        $gameInstance->memoryGame()->create([
+                            'Mode' => $mode,
+                            'PathImg1' => $item['path_img1'],
+                            'PathImg2' => $mode === 'II' ? $item['path_img2'] : null,
+                            'DescriptionImg' => $mode === 'ID' ? $item['description_img'] : null,
+                            'GameInstanceId' => $gameInstance->Id
+                        ]);
+                    }
                     break;
 
                 case 'puzzle':
                     $gameInstance->puzzle()->create([
-                        'Pieces' => $request->input('puzzle.pieces'),
-                        'ImageUrl' => $request->input('puzzle.image_url'),
-                        'GameInstanceId' => $gameInstance->Id
+                        'GameInstanceId' => $gameInstance->Id,
+                        'PathImg' => $request->input('puzzle.image_url'),
+                        'Clue' => $request->input('puzzle.clue'),
+                        'Rows' => $request->input('puzzle.rows'),
+                        'Cols' => $request->input('puzzle.columns'),
+                        'AutomaticHelp' => $request->input('puzzle.automatic_help', false),
                     ]);
                     break;
+
 
                 case 'solve_the_word':
                     $solveTheWord = $gameInstance->solveTheWord()->create([
                         'Rows' => $request->input('solve_the_word.rows'),
-                        'Columns' => $request->input('solve_the_word.columns'),
+                        'Cols' => $request->input('solve_the_word.columns'),
                         'GameInstanceId' => $gameInstance->Id
                     ]);
+
                     $words = $request->input('solve_the_word.words', []);
                     foreach ($words as $wordData) {
-                        // Aquí asumo que tienes un modelo Word vinculado a SolveTheWord
                         $solveTheWord->words()->create([
+                            'SolveTheWordId' => $solveTheWord->GameInstanceId,
                             'Word' => $wordData['word'],
                             'Orientation' => $wordData['orientation'],
                         ]);
                     }
                     break;
+
             }
 
             DB::commit();

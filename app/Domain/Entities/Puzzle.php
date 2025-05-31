@@ -47,6 +47,7 @@ class Puzzle extends Model
     protected $table = "Puzzle";
     protected $primaryKey = "GameInstanceId";
     public $timestamps = false;
+    public $incrementing = false;
 
     protected $fillable = [
         'GameInstanceId',

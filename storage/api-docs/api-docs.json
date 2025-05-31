@@ -277,74 +277,6 @@
                 }
             }
         },
-        "/game-instances": {
-            "get": {
-                "tags": [
-                    "GameInstances"
-                ],
-                "summary": "Get all game instances",
-                "description": "Retrieves all game instances.",
-                "operationId": "6a6eb13a560ea44e226546518c7e400f",
-                "responses": {
-                    "200": {
-                        "description": "List of game instances",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/GameInstances"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "No game instances found"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "GameInstances"
-                ],
-                "summary": "Create a new game instance",
-                "description": "Creates a new game instance.",
-                "operationId": "f801184436c315aa5c7a3ed798ae8e07",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/GameInstancesDTO"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Game instance created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/GameInstances"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/game-instances/search": {
             "get": {
                 "tags": [
@@ -605,6 +537,43 @@
                 "responses": {
                     "200": {
                         "description": "Game instance deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GameInstances"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/game-instances": {
+            "post": {
+                "tags": [
+                    "GameInstances"
+                ],
+                "summary": "Create a new game instance",
+                "description": "Creates a new game instance.",
+                "operationId": "f801184436c315aa5c7a3ed798ae8e07",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GameInstancesDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Game instance created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {

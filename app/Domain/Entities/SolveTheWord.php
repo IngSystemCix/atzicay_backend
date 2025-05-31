@@ -32,6 +32,7 @@ class SolveTheWord extends Model
     protected $table = "SolveTheWord";
     protected $primaryKey = "GameInstanceId";
     public $timestamps = false;
+    public $incrementing = false;
     protected $fillable = [
         'GameInstanceId',
         'Rows',

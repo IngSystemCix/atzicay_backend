@@ -29,7 +29,7 @@ DELETE http://localhost:8000/api/atzicay/v1/game-instances/1
 Content-Type: application/json
 
 ### GET | get all game
-GET http://localhost:8000/api/atzicay/v1/game-instances/all
+GET http://localhost:8000/api/atzicay/v1/game-instances/all/2
 Content-Type: application/json
 
 ### GET | get all game instances
@@ -46,7 +46,7 @@ GET http://localhost:8000/api/atzicay/v1/game-instances/search?name=Encuentro
 ### GET | search game instances by name and difficulty
 GET http://localhost:8000/api/atzicay/v1/game-instances/search?name=Encuentro&difficulty=M
 
-### POST | create a new game
+### POST | create a new game hangman
 POST http://localhost:8000/api/atzicay/v1/game-instances/game
 Content-Type: application/json
 
@@ -86,6 +86,124 @@ Content-Type: application/json
       {
         "word": "algoritmo",
         "clue": "Conjunto de pasos lógicos para resolver un problema."
+      }
+    ]
+  }
+}
+
+### POST | create a new game memory
+POST http://localhost:8000/api/atzicay/v1/game-instances/game
+Content-Type: application/json
+
+{
+  "Name": "Memoria - Animales con descripción",
+  "Description": "Juego de memoria con imagen y descripción.",
+  "ProfessorId": 1,
+  "Activated": true,
+  "Difficulty": "M",
+  "Visibility": "P",
+  "game_type": "memory",
+  "memory": {
+    "mode": "ID",
+    "items": [
+      {
+        "path_img1": "https://example.com/imgs/lion.png",
+        "description_img": "León"
+      },
+      {
+        "path_img1": "https://example.com/imgs/tiger.png",
+        "description_img": "Tigre"
+      },
+      {
+        "path_img1": "https://example.com/imgs/elephant.png",
+        "description_img": "Elefante"
+      }
+    ]
+  },
+  "settings": [
+    {
+      "ConfigKey": "theme",
+      "ConfigValue": "animals"
+    }
+  ],
+  "assessment": {
+    "value": 5,
+    "comments": "Muy educativo."
+  }
+}
+
+### POST | create a new game puzzle
+POST http://localhost:8000/api/atzicay/v1/game-instances/game
+Content-Type: application/json
+
+{
+  "Name": "Rompecabezas de monumentos",
+  "Description": "Arma el rompecabezas con ayuda o sin ella según la configuración.",
+  "ProfessorId": 1,
+  "Activated": true,
+  "Difficulty": "E",
+  "Visibility": "P",
+  "game_type": "puzzle",
+  "settings": [
+    {
+      "ConfigKey": "Tiempo",
+      "ConfigValue": "180"
+    }
+  ],
+  "assessment": {
+    "value": 5,
+    "comments": "Buen reto visual y espacial para secundaria."
+  },
+  "puzzle": {
+    "image_url": "https://tuservidor.com/img/puzzle_machu_picchu.jpg",
+    "clue": "Famoso sitio arqueológico del Perú.",
+    "rows": 4,
+    "columns": 4,
+    "automatic_help": true
+  }
+}
+
+### POST | create a new game solve the words
+POST http://localhost:8000/api/atzicay/v1/game-instances/game
+Content-Type: application/json
+
+{
+  "Name": "Juego de Palabras",
+  "Description": "Un juego para resolver palabras cruzadas",
+  "ProfessorId": 1,
+  "Activated": true,
+  "Difficulty": "H",
+  "Visibility": "P",
+  "settings": [
+    {
+      "ConfigKey": "time_limit",
+      "ConfigValue": "30"
+    },
+    {
+      "ConfigKey": "max_attempts",
+      "ConfigValue": "5"
+    }
+  ],
+  "assessment": {
+    "value": 4.5,
+    "comments": "Buen juego para evaluación"
+  },
+  "game_type": "solve_the_word",
+  "solve_the_word": {
+    "rows": 10,
+    "columns": 10,
+    "words": [
+      {
+        "word": "SOLAR",
+        "orientation": "HL"
+      },
+      {
+        "word": "LUNA",
+        "orientation": "VU"
+      },
+      {
+        "word": "ESTRELLA",
+        "orientation": "HR"
       }
     ]
   }
