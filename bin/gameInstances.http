@@ -33,7 +33,7 @@ GET http://localhost:8000/api/atzicay/v1/game-instances/all/2
 Content-Type: application/json
 
 ### GET | get all game instances
-GET http://localhost:8000/api/atzicay/v1/game-instances
+GET http://localhost:8000/api/atzicay/v1/game-instances/personal/1
 Content-Type: application/json
 
 ### GET | get a game instance by id

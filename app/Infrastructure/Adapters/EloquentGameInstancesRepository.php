@@ -27,10 +27,15 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         return $gameInstance;
     }
 
-    public function getAllGameInstances(): array
+    public function getAllGameInstances(int $idProfessor): array
     {
-        return GameInstances::all()->toArray();
+        return GameInstances::where('ProfessorId', $idProfessor)
+            ->select('Name', 'Id', 'Description', 'ProfessorId', 'Difficulty', 'Visibility', 'Activated') // asegúrate de listar campos necesarios
+            ->distinct('Name')
+            ->get()
+            ->toArray();
     }
+
 
     public function getGameInstanceById(int $id): GameInstances
     {

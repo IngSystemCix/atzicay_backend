@@ -9,8 +9,8 @@ class GetAllGameInstancesUseCase
         private GameInstancesRepository $repository
     ) {}
 
-    public function execute(): array
+    public function execute(int $idProfessor): array
     {
-        return $this->repository->getAllGameInstances();
+        return $this->repository->getAllGameInstances($idProfessor);
     }
 }

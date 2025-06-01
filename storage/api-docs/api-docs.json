@@ -277,6 +277,50 @@
                 }
             }
         },
+        "/game-instances/personal/{id}": {
+            "get": {
+                "tags": [
+                    "GameInstances"
+                ],
+                "summary": "Get all game instances by game ID",
+                "description": "Retrieves all game instances for a specific game.",
+                "operationId": "d00a28f59d8bcaecc24cdac8f39cffb3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the game",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of game instances",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GameInstances"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No game instances found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/game-instances/search": {
             "get": {
                 "tags": [

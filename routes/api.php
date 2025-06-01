@@ -37,7 +37,7 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     // Route for game instances
     Route::get('/game-instances/search', [GameInstancesController::class, 'searchGameInstances']);
-    Route::get('/game-instances', [GameInstancesController::class, 'getAllGameInstances']);
+    Route::get('/game-instances/personal/{id}', [GameInstancesController::class, 'getAllGameInstances']);
     Route::get('/game-instances/all/{limit?}', [GameInstancesController::class, 'getAllGame']);
     Route::get('/game-instances/{id}', [GameInstancesController::class, 'getGameInstanceById']);
     Route::post('/game-instances', [GameInstancesController::class, 'createGameInstance']);

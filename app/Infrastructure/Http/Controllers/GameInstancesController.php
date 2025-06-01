@@ -55,10 +55,17 @@ class GameInstancesController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/game-instances",
+     *     path="/game-instances/personal/{id}",
      *     tags={"GameInstances"},
-     *     summary="Get all game instances",Add commentMore actions
-     *     description="Retrieves all game instances.",
+     *     summary="Get all game instances by game ID",
+     *     description="Retrieves all game instances for a specific game.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the game",
+     *         @OA\Schema(type="integer")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="List of game instances",
@@ -71,9 +78,9 @@ class GameInstancesController extends Controller
      *     security={{"bearerAuth": {}}}
      * )
      */
-    public function getAllGameInstances()
+    public function getAllGameInstances($id)
     {
-        $gameInstances = $this->getAllGameInstancesUseCase->execute();
+        $gameInstances = $this->getAllGameInstancesUseCase->execute($id);
         if (empty($gameInstances)) {
             return $this->errorResponse(2200);
         }
