@@ -19,7 +19,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => AuthUser::class,  // Cambia por tu modelo de usuario si es distinto
+            'model' => AuthUser::class,
         ],
     ],
 
@@ -31,7 +31,4 @@ return [
             'throttle' => 60,
         ],
     ],
-
-    'password_timeout' => 10800,
-
 ];
