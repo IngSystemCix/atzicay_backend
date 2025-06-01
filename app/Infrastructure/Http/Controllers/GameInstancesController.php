@@ -55,6 +55,33 @@ class GameInstancesController extends Controller
 
     /**
      * @OA\Get(
+     *     path="/game-instances",
+     *     tags={"GameInstances"},
+     *     summary="Get all game instances",Add commentMore actions
+     *     description="Retrieves all game instances.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of game instances",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/GameInstances"))
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No game instances found"
+     *     ),
+     *     security={{"bearerAuth": {}}}
+     * )
+     */
+    public function getAllGameInstances()
+    {
+        $gameInstances = $this->getAllGameInstancesUseCase->execute();
+        if (empty($gameInstances)) {
+            return $this->errorResponse(2200);
+        }
+        return $this->successResponse($gameInstances, 2201);
+    }
+
+    /**
+     * @OA\Get(
      *     path="/game-instances/search",
      *     summary="Buscar game instances",
      *     operationId="searchGameInstances",
