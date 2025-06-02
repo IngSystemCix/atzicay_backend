@@ -637,4 +637,16 @@ return [
         'message' => 'Failed get configuration game',
         'http_code' => 404,
     ],
+    2218 => [
+        'message' => 'programming game successfully created',
+        'http_code' => 200,
+    ],
+    2219 => [
+        'message' => 'Edit game instance successfully',
+        'http_code' => 200,
+    ],
+    2220 => [
+        'message' => 'game progress successfully created',
+        'http_code' => 200,
+    ],
 ];

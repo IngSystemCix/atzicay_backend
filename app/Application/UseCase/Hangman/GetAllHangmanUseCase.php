@@ -9,8 +9,8 @@ class GetAllHangmanUseCase
         private HangmanRepository $repository,
     ) {}
 
-    public function execute(): array
+    public function execute($id): array
     {
-        return $this->repository->getAllHangman();
+        return $this->repository->getAllHangmanByUserId($id);
     }
 }

@@ -15,6 +15,9 @@ use App\Infrastructure\Http\Controllers\UserController;
 use App\Infrastructure\Http\Controllers\WordsController;
 
 Route::prefix('atzicay/v1')->group(function () {
+    Route::put('/game-instances/game/{id}', [GameInstancesController::class, 'editGame']);
+    Route::put('/game-instances/programming/{id}', [GameInstancesController::class, 'programmingGame']);
+    Route::post('/game-instances/progress', [GameInstancesController::class, 'progressGame']);
     // Route for authentication
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::post('/auth/refresh', [AuthController::class, 'refresh']);
@@ -45,6 +48,7 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::delete('/game-instances/{id}', [GameInstancesController::class, 'deleteGameInstance']);
     Route::get('/game-instances/configuration/{id}', [GameInstancesController::class, 'getConfigurations']);
     Route::post('/game-instances/game', [GameInstancesController::class, 'createGame']);
+    
     // Route for programming games
     Route::get('/programming-games', [ProgrammingGameController::class, 'getAllProgrammingGames']);
     Route::get('/programming-games/{id}', [ProgrammingGameController::class, 'getProgrammingGameById']);
@@ -62,7 +66,7 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::post('/game-settings', [GameSettingController::class, 'createGameSetting']);
     Route::put('/game-settings/{id}', [GameSettingController::class, 'updateGameSetting']);
     // Route for hangman game
-    Route::get('/hangman', [HangmanController::class, 'getAllHangman']);
+    Route::get('/hangman/all/{id}', [HangmanController::class, 'getAllHangman']);
     Route::get('/hangman/{id}', [HangmanController::class, 'getHangmanById']);
     Route::post('/hangman', [HangmanController::class, 'createHangman']);
     Route::put('/hangman/{id}', [HangmanController::class, 'updateHangman']);

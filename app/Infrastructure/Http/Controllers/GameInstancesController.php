@@ -81,9 +81,6 @@ class GameInstancesController extends Controller
     public function getAllGameInstances($id)
     {
         $gameInstances = $this->getAllGameInstancesUseCase->execute($id);
-        if (empty($gameInstances)) {
-            return $this->errorResponse(2200);
-        }
         return $this->successResponse($gameInstances, 2201);
     }
 
@@ -488,4 +485,21 @@ class GameInstancesController extends Controller
         return $this->successResponse($gameInstances, 2217);
     }
 
+    public function programmingGame(Request $request, $id)
+    {
+        $programming = $this->gameService->programmingGame($request, $id);
+        return $this->successResponse($programming, 2218);
+    }
+
+    public function editGame(Request $request, $id)
+    {
+        $updateGame = $this->gameService->updateGame($request, $id);
+        return $this->successResponse($updateGame, 2219);
+    }
+
+    public function progressGame(Request $request)
+    {
+        $saveProgress = $this->gameService->createGameSessionWithProgress($request);
+        return $this->successResponse($saveProgress, 2220);
+    }
 }

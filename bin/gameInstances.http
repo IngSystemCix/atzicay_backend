@@ -33,7 +33,7 @@ GET http://localhost:8000/api/atzicay/v1/game-instances/all/2
 Content-Type: application/json
 
 ### GET | get all game instances
-GET http://localhost:8000/api/atzicay/v1/game-instances/personal/1
+GET http://localhost:8000/api/atzicay/v1/game-instances/personal/4
 Content-Type: application/json
 
 ### GET | get a game instance by id
@@ -51,41 +51,41 @@ POST http://localhost:8000/api/atzicay/v1/game-instances/game
 Content-Type: application/json
 
 {
-  "Name": "Aventura Matemática",
-  "Description": "Juego para resolver acertijos matemáticos y avanzar de nivel.",
-  "ProfessorId": 1,
+  "Name": "Historia Misteriosa",
+  "Description": "Descubre conceptos clave de la historia universal resolviendo palabras ocultas.",
+  "ProfessorId": 4,
   "Activated": false,
-  "Difficulty": "M",
+  "Difficulty": "H",
   "Visibility": "P",
   "settings": [
     {
       "ConfigKey": "TiempoLimite",
-      "ConfigValue": "30"
+      "ConfigValue": "40"
     },
     {
       "ConfigKey": "Tema",
-      "ConfigValue": "Oscuro"
+      "ConfigValue": "Sepia"
     }
   ],
   "assessment": {
-    "value": 0.8,
-    "comments": "Buen desafío para principiantes."
+    "value": 0.85,
+    "comments": "Buen recurso para reforzar conocimientos históricos de manera lúdica."
   },
   "game_type": "hangman",
   "hangman": {
     "presentation": "A",
     "words": [
       {
-        "word": "variable",
-        "clue": "Es un espacio de memoria que almacena datos."
+        "word": "revolucion",
+        "clue": "Cambio profundo y generalmente violento en las estructuras políticas o sociales."
       },
       {
-        "word": "funcion",
-        "clue": "Bloque reutilizable de código que realiza una tarea."
+        "word": "imperio",
+        "clue": "Estado gobernado por un emperador con dominio sobre varios territorios."
       },
       {
-        "word": "algoritmo",
-        "clue": "Conjunto de pasos lógicos para resolver un problema."
+        "word": "feudalismo",
+        "clue": "Sistema social y económico de la Edad Media basado en relaciones de vasallaje."
       }
     ]
   }
@@ -206,5 +206,95 @@ Content-Type: application/json
         "orientation": "HR"
       }
     ]
+  }
+}
+
+### GET | get game instance configuration by id
+
+GET http://localhost:8000/api/atzicay/v1/game-instances/configuration/1
+Content-Type: application/json
+
+### PUT | edit create game
+PUT http://localhost:8000/api/atzicay/v1/game-instances/game/31
+Content-Type: application/json
+
+{
+  "Name": "Historia Misteriosa fanstastica",
+  "Description": "Descubre conceptos clave de la historia universal resolviendo palabras ocultas.",
+  "ProfessorId": 4,
+  "Activated": false,
+  "Difficulty": "H",
+  "Visibility": "P",
+  "settings": [
+    {
+      "ConfigKey": "TiempoLimite",
+      "ConfigValue": "40"
+    },
+    {
+      "ConfigKey": "Tema",
+      "ConfigValue": "Sepia"
+    }
+  ],
+  "assessment": {
+    "value": 0.85,
+    "comments": "Buen recurso para reforzar conocimientos históricos de manera lúdica."
+  },
+  "game_type": "hangman",
+  "hangman": {
+    "presentation": "A",
+    "words": [
+      {
+        "word": "revolucion",
+        "clue": "Cambio profundo y generalmente violento en las estructuras políticas o sociales."
+      },
+      {
+        "word": "imperio",
+        "clue": "Estado gobernado por un emperador con dominio sobre varios territorios."
+      },
+      {
+        "word": "feudalismo",
+        "clue": "Sistema social y económico de la Edad Media basado en relaciones de vasallaje."
+      }
+    ]
+  }
+}
+
+### PUT | create programming game
+PUT http://localhost:8000/api/atzicay/v1/game-instances/programming/31
+Content-Type: application/json
+
+{
+  "Name": "Historia Misteriosa",
+  "Description": "Descubre conceptos clave de la historia universal resolviendo palabras ocultas.",
+  "Activated": true,
+  "settings": [
+    {
+      "ConfigKey": "Filtros",
+      "ConfigValue": "Python, JavaScript"
+    }
+  ],
+  "ProgrammerId": 4,
+  "ProgrammingGameName": "Desafío de Algoritmos",
+  "StartTime": "2025-06-02T09:00:00",
+  "EndTime": "2025-06-02T17:00:00",
+  "Attempts": 3,
+  "MaximumTime": 120
+}
+
+
+### POST | create progressing game
+POST http://localhost:8000/api/atzicay/v1/game-instances/progress
+Content-Type: application/json
+
+{
+  "ProgrammingGameId": 5,
+  "StudentId": 4,
+  "Duration": 120,
+  "Won": true,
+  "DateGame": "2025-06-02T15:30:00",
+  "Progress": {
+    "level1": "completed",
+    "level2": "incomplete",
+    "score": 85
   }
 }

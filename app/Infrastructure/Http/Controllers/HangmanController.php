@@ -52,11 +52,8 @@ class HangmanController extends Controller {
      *     ),
      * )
      */
-    public function getAllHangman() {
-        $hangman = $this->getAllHangmanUseCase->execute();
-        if (empty($hangman)) {
-            return $this->errorResponse(2601);
-        }
+    public function getAllHangman($id) {
+        $hangman = $this->getAllHangmanUseCase->execute($id);
         return $this->successResponse($hangman, 2600);
     }
 

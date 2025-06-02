@@ -17,14 +17,24 @@ class EloquentHangmanRepository implements HangmanRepository
         ]);
     }
 
-    public function getAllHangman(): array
+    public function getAllHangmanByUserId(int $userId): array
     {
-        // Obtener el menor Id por cada GameInstanceId
+        // Obtener los GameInstanceId que pertenecen al usuario
+        $gameInstanceIds = DB::table('GameInstances')
+            ->where('ProfessorId', $userId)
+            ->pluck('Id');
+
+        if ($gameInstanceIds->isEmpty()) {
+            return [];
+        }
+
+        // Subconsulta para obtener el menor Id de Hangman por cada GameInstanceId del usuario
         $subquery = DB::table('Hangman')
             ->select(DB::raw('MIN(Id) as min_id'))
+            ->whereIn('GameInstanceId', $gameInstanceIds)
             ->groupBy('GameInstanceId');
 
-        // Luego obtener los registros que coinciden con esos Ids
+        // Obtener los Hangman cuyo Id es el menor por GameInstanceId y cuyo GameInstanceId pertenece al usuario
         return Hangman::query()
             ->whereIn('Id', function ($query) use ($subquery) {
                 $query->select('min_id')->fromSub($subquery, 'sub');
@@ -32,6 +42,7 @@ class EloquentHangmanRepository implements HangmanRepository
             ->get()
             ->toArray();
     }
+
 
 
     public function getHangmanById(int $id): Hangman

@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 
 ### GET | get all games hangman
-GET http://localhost:8000/api/atzicay/v1/hangman
+GET http://localhost:8000/api/atzicay/v1/hangman/all/4
 Content-Type: application/json
 
 ### GET | get a game hangman by id
