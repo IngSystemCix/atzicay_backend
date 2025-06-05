@@ -2,6 +2,10 @@
 namespace App\Infrastructure\Adapters;
 
 use App\Domain\Entities\GameInstances;
+use App\Domain\Entities\Hangman;
+use App\Domain\Entities\MemoryGame;
+use App\Domain\Entities\Puzzle;
+use App\Domain\Entities\SolveTheWord;
 use App\Domain\Repositories\GameInstancesRepository;
 
 class EloquentGameInstancesRepository implements GameInstancesRepository
@@ -27,13 +31,67 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         return $gameInstance;
     }
 
-    public function getAllGameInstances(int $idProfessor): array
+    public function getAllGameInstances(int $idProfessor, string $gameType = null): array
     {
-        return GameInstances::where('ProfessorId', $idProfessor)
-            ->select('Name', 'Id', 'Description', 'ProfessorId', 'Difficulty', 'Visibility', 'Activated') // asegúrate de listar campos necesarios
-            ->distinct('Name')
-            ->get()
-            ->toArray();
+        $query = GameInstances::where('ProfessorId', $idProfessor)
+            ->select('Name', 'Id', 'Description', 'ProfessorId', 'Difficulty', 'Visibility', 'Activated')
+            ->distinct('Name');
+
+        if ($gameType) {
+            $gameType = strtolower($gameType);
+
+            switch ($gameType) {
+                case 'hangman':
+                    $query->whereHas('hangman');
+                    break;
+                case 'memory':
+                    $query->whereHas('memoryGame');
+                    break;
+                case 'puzzle':
+                    $query->whereHas('puzzle');
+                    break;
+                case 'solve_the_word':
+                    $query->whereHas('solveTheWord');
+                    break;
+                case 'all':
+                    // No filtro adicional, trae todos
+                    break;
+                default:
+                    // Si viene un tipo inválido, devolver vacío o lanzar excepción
+                    return [];
+            }
+        }
+
+        return $query->get()->toArray();
+    }
+
+    public function countGameTypesByProfessor(int $idProfessor): array
+    {
+        return [
+            'hangman' => Hangman::whereHas('gameInstances', function ($query) use ($idProfessor) {
+                $query->where('ProfessorId', $idProfessor);
+            })
+                ->distinct('GameInstanceId')
+                ->count('GameInstanceId'),
+
+            'memory' => MemoryGame::whereHas('gameInstance', function ($query) use ($idProfessor) {
+                $query->where('ProfessorId', $idProfessor);
+            })
+                ->distinct('GameInstanceId')
+                ->count('GameInstanceId'),
+
+            'puzzle' => Puzzle::whereHas('gameInstances', function ($query) use ($idProfessor) {
+                $query->where('ProfessorId', $idProfessor);
+            })
+                ->distinct('GameInstanceId')
+                ->count('GameInstanceId'),
+
+            'solve_the_word' => SolveTheWord::whereHas('gameInstances', function ($query) use ($idProfessor) {
+                $query->where('ProfessorId', $idProfessor);
+            })
+                ->distinct('GameInstanceId')
+                ->count('GameInstanceId'),
+        ];
     }
 
 

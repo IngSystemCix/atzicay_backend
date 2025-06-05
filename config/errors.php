@@ -649,4 +649,8 @@ return [
         'message' => 'game progress successfully created',
         'http_code' => 200,
     ],
+    2221 => [
+        'message' => 'Count of game instances by professor successfully retrieved',
+        'http_code' => 200,
+    ],
 ];

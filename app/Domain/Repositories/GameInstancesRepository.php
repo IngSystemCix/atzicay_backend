@@ -5,7 +5,8 @@ use App\Domain\Entities\GameInstances;
 
 interface GameInstancesRepository
 {
-    public function getAllGameInstances(int $idProfessor): array;
+    public function getAllGameInstances(int $idProfessor, ?string $gameType = null): array;
+    public function countGameTypesByProfessor(int $idProfessor): array;
     public function getGameInstanceById(int $id): GameInstances;
     public function createGameInstance(array $data): GameInstances;
     public function updateGameInstance(int $id, array $data): GameInstances;

@@ -4,7 +4,6 @@ namespace App\Infrastructure\Http\Controllers;
 use App\Application\DTOs\HangmanDTO;
 use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\Hangman\CreateHangmanUseCase;
-use App\Application\UseCase\Hangman\GetAllHangmanUseCase;
 use App\Application\UseCase\Hangman\GetHangmanByIdUseCase;
 use App\Application\UseCase\Hangman\UpdateHangmanUseCase;
 use App\Infrastructure\Http\Requests\StoreHangmanRequest;
@@ -19,42 +18,17 @@ use Illuminate\Routing\Controller;
 class HangmanController extends Controller {
     use ApiResponse;
     private CreateHangmanUseCase $createHangmanUseCase;
-    private GetAllHangmanUseCase $getAllHangmanUseCase;
     private GetHangmanByIdUseCase $getHangmanByIdUseCase;
     private UpdateHangmanUseCase $updateHangmanUseCase;
 
     public function __construct(
         CreateHangmanUseCase $createHangmanUseCase,
-        GetAllHangmanUseCase $getAllHangmanUseCase,
         GetHangmanByIdUseCase $getHangmanByIdUseCase,
         UpdateHangmanUseCase $updateHangmanUseCase
     ) {
         $this->createHangmanUseCase = $createHangmanUseCase;
-        $this->getAllHangmanUseCase = $getAllHangmanUseCase;
         $this->getHangmanByIdUseCase = $getHangmanByIdUseCase;
         $this->updateHangmanUseCase = $updateHangmanUseCase;
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/hangman",
-     *     tags={"Hangman"},
-     *     summary="Get all hangman games",
-     *     description="Retrieves all hangman games.",
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of hangman games",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Hangman"))
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="No hangman games found"
-     *     ),
-     * )
-     */
-    public function getAllHangman($id) {
-        $hangman = $this->getAllHangmanUseCase->execute($id);
-        return $this->successResponse($hangman, 2600);
     }
 
     /**

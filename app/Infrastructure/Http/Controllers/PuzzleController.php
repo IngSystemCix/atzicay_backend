@@ -21,39 +21,15 @@ class PuzzleController extends Controller {
     private CreatePuzzleUseCase $createPuzzleUseCase;
     private GetPuzzleByIdUseCase $getPuzzleByIdUseCase;
     private UpdatePuzzleUseCase $updatePuzzleUseCase;
-    private GetAllPuzzlesUseCase $getAllPuzzlesUseCase;
 
     public function __construct(
         CreatePuzzleUseCase $createPuzzleUseCase,
         GetPuzzleByIdUseCase $getPuzzleByIdUseCase,
         UpdatePuzzleUseCase $updatePuzzleUseCase,
-        GetAllPuzzlesUseCase $getAllPuzzlesUseCase
     ) {
         $this->createPuzzleUseCase = $createPuzzleUseCase;
         $this->getPuzzleByIdUseCase = $getPuzzleByIdUseCase;
         $this->updatePuzzleUseCase = $updatePuzzleUseCase;
-        $this->getAllPuzzlesUseCase = $getAllPuzzlesUseCase;
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/puzzles",
-     *     tags={"Puzzles"},
-     *     summary="Get all puzzles",
-     *     description="Retrieves all puzzles.",
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of puzzles",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Puzzle"))
-     *     ),
-     * )
-     */
-    public function getAllPuzzles() {
-        $puzzles = $this->getAllPuzzlesUseCase->execute();
-        if (!$puzzles) {
-            return $this->errorResponse(2911);
-        }
-        return $this->successResponse($puzzles, 2910);
     }
 
     /**

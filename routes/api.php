@@ -15,7 +15,7 @@ use App\Infrastructure\Http\Controllers\UserController;
 use App\Infrastructure\Http\Controllers\WordsController;
 
 Route::prefix('atzicay/v1')->group(function () {
-    
+    Route::get('/game-instances/programming/filter', [GameInstancesController::class, 'filterProgrammingGames']);
     // Route for authentication
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::post('/auth/refresh', [AuthController::class, 'refresh']);
@@ -37,6 +37,8 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::put('/users/{id}', [UserController::class, 'updateUser']);
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     // Route for game instances
+    
+    Route::get('/game-instances/personal/count/{idProfessor}', [GameInstancesController::class, 'countGameTypesByProfessor']);
     Route::get('/game-instances/search', [GameInstancesController::class, 'searchGameInstances']);
     Route::get('/game-instances/personal/{id}', [GameInstancesController::class, 'getAllGameInstances']);
     Route::get('/game-instances/all/{limit?}', [GameInstancesController::class, 'getAllGame']);
@@ -66,22 +68,18 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::post('/game-settings', [GameSettingController::class, 'createGameSetting']);
     Route::put('/game-settings/{id}', [GameSettingController::class, 'updateGameSetting']);
     // Route for hangman game
-    Route::get('/hangman/all/{id}', [HangmanController::class, 'getAllHangman']);
     Route::get('/hangman/{id}', [HangmanController::class, 'getHangmanById']);
     Route::post('/hangman', [HangmanController::class, 'createHangman']);
     Route::put('/hangman/{id}', [HangmanController::class, 'updateHangman']);
     // Route for solve the word game
-    Route::get('/solve-the-word', [SolveTheWordController::class, 'getAllSolveTheWords']);
     Route::get('/solve-the-word/{id}', [SolveTheWordController::class, 'getSolveTheWordById']);
     Route::post('/solve-the-word', [SolveTheWordController::class, 'createSolveTheWord']);
     Route::put('/solve-the-word/{id}', [SolveTheWordController::class, 'updateSolveTheWord']);
     // Route for memory game
-    Route::get('/memory-game', [MemoryGameController::class, 'getAllMemoryGames']);
     Route::get('/memory-game/{id}', [MemoryGameController::class, 'getMemoryGameById']);
     Route::post('/memory-game', [MemoryGameController::class, 'createMemoryGame']);
     Route::put('/memory-game/{id}', [MemoryGameController::class, 'updateMemoryGame']);
     // Route for puzzles
-    Route::get('/puzzles', [PuzzleController::class, 'getAllPuzzles']);
     Route::get('/puzzles/{id}', [PuzzleController::class, 'getPuzzleById']);
     Route::post('/puzzles', [PuzzleController::class, 'createPuzzle']);
     Route::put('/puzzles/{id}', [PuzzleController::class, 'updatePuzzle']);

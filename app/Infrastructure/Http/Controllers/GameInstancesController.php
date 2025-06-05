@@ -3,6 +3,7 @@ namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\DTOs\GameInstancesDTO;
 use App\Application\Traits\ApiResponse;
+use App\Application\UseCase\GameInstances\CountGameTypesByProfessorUseCase;
 use App\Application\UseCase\GameInstances\CreateGameInstanceUseCase;
 use App\Application\UseCase\GameInstances\DeleteGameInstanceUseCase;
 use App\Application\UseCase\GameInstances\GetAllGameInstancesUseCase;
@@ -32,6 +33,7 @@ class GameInstancesController extends Controller
     private DeleteGameInstanceUseCase $deleteGameInstanceUseCase;
     private GetAllGameUseCase $getAllGameUseCase;
     private SearchUseCase $searchUseCase;
+    private CountGameTypesByProfessorUseCase $countGameTypesByProfessorUseCase;
 
     public function __construct(
         GameService $gameService,
@@ -41,7 +43,8 @@ class GameInstancesController extends Controller
         GetGameInstanceByIdUseCase $getGameInstanceByIdUseCase,
         UpdateGameInstanceUseCase $updateGameInstanceUseCase,
         DeleteGameInstanceUseCase $deleteGameInstanceUseCase,
-        SearchUseCase $searchUseCase
+        SearchUseCase $searchUseCase,
+        CountGameTypesByProfessorUseCase $countGameTypesByProfessorUseCase
     ) {
         $this->gameService = $gameService;
         $this->createGameInstanceUseCase = $createGameInstanceUseCase;
@@ -51,20 +54,28 @@ class GameInstancesController extends Controller
         $this->updateGameInstanceUseCase = $updateGameInstanceUseCase;
         $this->deleteGameInstanceUseCase = $deleteGameInstanceUseCase;
         $this->searchUseCase = $searchUseCase;
+        $this->countGameTypesByProfessorUseCase = $countGameTypesByProfessorUseCase;
     }
 
     /**
      * @OA\Get(
      *     path="/game-instances/personal/{id}",
      *     tags={"GameInstances"},
-     *     summary="Get all game instances by game ID",
-     *     description="Retrieves all game instances for a specific game.",
+     *     summary="Get all game instances by professor ID with optional game type filter",
+     *     description="Retrieves all game instances for a specific professor, optionally filtered by game type.",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID of the game",
+     *         description="ID of the professor",
      *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="gameType",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by game type: all, hangman, memory, puzzle, solve_the_word",
+     *         @OA\Schema(type="string", enum={"all", "hangman", "memory", "puzzle", "solve_the_word"})
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -80,8 +91,80 @@ class GameInstancesController extends Controller
      */
     public function getAllGameInstances($id)
     {
-        $gameInstances = $this->getAllGameInstancesUseCase->execute($id);
+        $gameType = request()->query('gameType', 'all'); // obtener de query param o 'all' por defecto
+
+        $gameInstances = $this->getAllGameInstancesUseCase->execute($id, $gameType);
+
         return $this->successResponse($gameInstances, 2201);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/programming-games/filter",
+     *     tags={"ProgrammingGame"},
+     *     summary="Filtrar ProgrammingGames por fechas",
+     *     description="Filtra las programaciones por fecha de inicio, fin o un rango de fechas.",
+     *     @OA\Parameter(
+     *         name="start",
+     *         in="query",
+     *         required=false,
+     *         description="Fecha de inicio (Y-m-d)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="end",
+     *         in="query",
+     *         required=false,
+     *         description="Fecha de fin (Y-m-d)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de ProgrammingGames filtrados",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/ProgrammingGame"))
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron resultados"
+     *     ),
+     *     security={{"bearerAuth": {}}}
+     * )
+     */
+    public function filterProgrammingGames(Request $request)
+    {
+        return $this->gameService->filterProgrammingGames($request);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/game-instances/personal/count/{id}",
+     *     tags={"GameInstances"},
+     *     summary="Get game counts by type for a professor",
+     *     description="Returns the total number of each game type created by a specific professor.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Professor ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Game type counts",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="hangman", type="integer"),
+     *             @OA\Property(property="memory", type="integer"),
+     *             @OA\Property(property="puzzle", type="integer"),
+     *             @OA\Property(property="solve_the_word", type="integer")
+     *         )
+     *     ),
+     *     security={{"bearerAuth": {}}}
+     * )
+     */
+    public function countGameTypesByProfessor($id)
+    {
+        $counts = $this->countGameTypesByProfessorUseCase->execute($id);
+        return $this->successResponse($counts, 2221);
     }
 
     /**

@@ -4,7 +4,6 @@ namespace App\Infrastructure\Http\Controllers;
 use App\Application\DTOs\SolveTheWordDTO;
 use App\Application\Traits\ApiResponse;
 use App\Application\UseCase\SolveTheWord\CreateSolveTheWordUseCase;
-use App\Application\UseCase\SolveTheWord\GetAllSolveTheWordsUseCase;
 use App\Application\UseCase\SolveTheWord\GetSolveTheWordByIdUseCase;
 use App\Application\UseCase\SolveTheWord\UpdateSolveTheWordUseCase;
 use App\Infrastructure\Http\Requests\StoreSolveTheWordRequest;
@@ -21,39 +20,15 @@ class SolveTheWordController extends Controller {
     private CreateSolveTheWordUseCase $createSolveTheWordUseCase;
     private GetSolveTheWordByIdUseCase $getSolveTheWordByIdUseCase;
     private UpdateSolveTheWordUseCase $updateSolveTheWordUseCase;
-    private GetAllSolveTheWordsUseCase $getAllSolveTheWordsUseCase;
 
     public function __construct(
         CreateSolveTheWordUseCase $createSolveTheWordUseCase,
         GetSolveTheWordByIdUseCase $getSolveTheWordByIdUseCase,
         UpdateSolveTheWordUseCase $updateSolveTheWordUseCase,
-        GetAllSolveTheWordsUseCase $getAllSolveTheWordsUseCase
     ) {
         $this->createSolveTheWordUseCase = $createSolveTheWordUseCase;
         $this->getSolveTheWordByIdUseCase = $getSolveTheWordByIdUseCase;
         $this->updateSolveTheWordUseCase = $updateSolveTheWordUseCase;
-        $this->getAllSolveTheWordsUseCase = $getAllSolveTheWordsUseCase;
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/solve-the-word",
-     *     tags={"SolveTheWord"},
-     *     summary="Get all SolveTheWords",
-     *     description="Retrieves all SolveTheWords.",
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of SolveTheWords",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/SolveTheWord"))
-     *     ),
-     * )
-     */
-    public function getAllSolveTheWords() {
-        $solveTheWords = $this->getAllSolveTheWordsUseCase->execute();
-        if (!$solveTheWords) {
-            return $this->errorResponse(2711);
-        }
-        return $this->successResponse($solveTheWords, 2710);
     }
 
     /**

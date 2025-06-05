@@ -6,6 +6,7 @@ use App\Application\Traits\ApiResponse;
 use App\Domain\Entities\GameInstances;
 use App\Domain\Entities\GameProgress;
 use App\Domain\Entities\GameSession;
+use App\Domain\Entities\ProgrammingGame;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +15,7 @@ class GameService
     use ApiResponse;
     public function createGame(Request $request)
     {
+        $uploader = new UploadFileServices();
         DB::beginTransaction();
         try {
             $gameInstance = GameInstances::create([
@@ -29,7 +31,6 @@ class GameService
                 $gameInstance->gameSetting()->create(
                     collect($setting)->only(['ConfigKey', 'ConfigValue'])->toArray()
                 );
-
             }
 
             $gameInstance->assessments()->create([
@@ -40,8 +41,10 @@ class GameService
                 'GameInstanceId' => $gameInstance->Id
             ]);
 
-            // Aquí se verifica qué tipo de juego se debe crear adicionalmente
-            switch ($request->input('game_type')) {
+            $uploader = new UploadFileServices();
+            $game_type = $request->input('game_type');
+
+            switch ($game_type) {
                 case 'hangman':
                     foreach ($request->input('hangman.words', []) as $wordData) {
                         $gameInstance->hangman()->create([
@@ -53,33 +56,39 @@ class GameService
                     }
                     break;
 
-
                 case 'memory':
                     $mode = $request->input('memory.mode');
                     $memoryItems = $request->input('memory.items', []);
+                    $uploaded_files = $uploader->upload_multiple($_FILES['files'], 'memory_game', $gameInstance->Id);
 
-                    foreach ($memoryItems as $item) {
+                    foreach ($memoryItems as $index => $item) {
+                        $img1 = $uploaded_files[$index * 2]['file'] ?? null;
+                        $img2 = $mode === 'II' ? ($uploaded_files[($index * 2) + 1]['file'] ?? null) : null;
+                        $desc = $mode === 'ID' ? $item['description_img'] : null;
+
                         $gameInstance->memoryGame()->create([
                             'Mode' => $mode,
-                            'PathImg1' => $item['path_img1'],
-                            'PathImg2' => $mode === 'II' ? $item['path_img2'] : null,
-                            'DescriptionImg' => $mode === 'ID' ? $item['description_img'] : null,
+                            'PathImg1' => $img1,
+                            'PathImg2' => $img2,
+                            'DescriptionImg' => $desc,
                             'GameInstanceId' => $gameInstance->Id
                         ]);
                     }
                     break;
 
                 case 'puzzle':
+                    $uploaded = $uploader->upload_multiple($_FILES['files'], 'puzzles', $gameInstance->Id);
+                    $img_path = $uploaded[0]['file'] ?? null;
+
                     $gameInstance->puzzle()->create([
                         'GameInstanceId' => $gameInstance->Id,
-                        'PathImg' => $request->input('puzzle.image_url'),
+                        'PathImg' => $img_path,
                         'Clue' => $request->input('puzzle.clue'),
                         'Rows' => $request->input('puzzle.rows'),
                         'Cols' => $request->input('puzzle.columns'),
                         'AutomaticHelp' => $request->input('puzzle.automatic_help', false),
                     ]);
                     break;
-
 
                 case 'solve_the_word':
                     $solveTheWord = $gameInstance->solveTheWord()->create([
@@ -97,11 +106,9 @@ class GameService
                         ]);
                     }
                     break;
-
             }
 
             DB::commit();
-
             return $this->successResponse($gameInstance, 2214);
 
         } catch (\Throwable $e) {
@@ -110,6 +117,7 @@ class GameService
             return $this->errorResponse(2215);
         }
     }
+
 
     public function getGameById(int $id): ?array
     {
@@ -238,6 +246,27 @@ class GameService
         }
     }
 
+    public function filterProgrammingGames(Request $request)
+    {
+        $startDate = $request->query('start');
+        $endDate = $request->query('end');
+
+        $query = ProgrammingGame::query();
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('StartTime', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->whereDate('StartTime', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('EndTime', $endDate);
+        }
+
+        $results = $query->with('gameInstances')->get(); // Carga relación si la necesitas
+
+        return $this->successResponse($results, 2204);
+    }
+
+
     public function updateGame(Request $request, $id)
     {
         DB::beginTransaction();
@@ -254,12 +283,24 @@ class GameService
                 'Visibility' => $request->input('Visibility')
             ]);
 
-            // Limpiar y volver a crear settings
-            $gameInstance->gameSetting()->delete();
-            foreach ($request->input('settings', []) as $setting) {
-                $gameInstance->gameSetting()->create(
-                    collect($setting)->only(['ConfigKey', 'ConfigValue'])->toArray()
-                );
+            // Solo actualizar settings existentes
+            foreach ($request->input('settings', []) as $settingInput) {
+                $configKey = $settingInput['ConfigKey'];
+                $configValue = $settingInput['ConfigValue'];
+
+                $existingSetting = $gameInstance->gameSetting()->where('ConfigKey', $configKey)->first();
+                if ($existingSetting) {
+                    $existingSetting->update(['ConfigValue' => $configValue]);
+                }
+                // Si deseas permitir agregar nuevas configuraciones, descomenta esta parte:
+                /*
+                else {
+                    $gameInstance->gameSetting()->create([
+                        'ConfigKey' => $configKey,
+                        'ConfigValue' => $configValue
+                    ]);
+                }
+                */
             }
 
             // Actualizar o crear assessment
@@ -281,7 +322,7 @@ class GameService
                 ]);
             }
 
-            // Limpiar todos los juegos específicos antes de actualizar
+            // Eliminar datos previos del tipo de juego antes de recrear
             $gameInstance->hangman()->delete();
             $gameInstance->memoryGame()->delete();
             $gameInstance->puzzle()->delete();

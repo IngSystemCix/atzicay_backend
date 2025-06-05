@@ -33,8 +33,15 @@ GET http://localhost:8000/api/atzicay/v1/game-instances/all/2
 Content-Type: application/json
 
 ### GET | get all game instances
-GET http://localhost:8000/api/atzicay/v1/game-instances/personal/4
+GET http://localhost:8000/api/atzicay/v1/game-instances/personal/4?gameType=memory
 Content-Type: application/json
+
+### GET | get caount of game instances
+GET http://localhost:8000/api/atzicay/v1/game-instances/personal/count/1
+Content-Type: application/json
+
+### GET | filter programming game instances by date
+GET http://localhost:8000/api/atzicay/v1/game-instances/programming/filter?start=2025-01-01&end=2025-12-31
 
 ### GET | get a game instance by id
 GET http://localhost:8000/api/atzicay/v1/game-instances/1
