@@ -260,19 +260,10 @@ Content-Type: application/json
 }
 
 ### PUT | create programming game
-PUT http://localhost:8000/api/atzicay/v1/game-instances/programming/31
+POST http://localhost:8000/api/atzicay/v1/game-instances/programming/31
 Content-Type: application/json
 
 {
-  "Name": "Historia Misteriosa",
-  "Description": "Descubre conceptos clave de la historia universal resolviendo palabras ocultas.",
-  "Activated": true,
-  "settings": [
-    {
-      "ConfigKey": "Filtros",
-      "ConfigValue": "Python, JavaScript"
-    }
-  ],
   "ProgrammerId": 4,
   "ProgrammingGameName": "Desafío de Algoritmos",
   "StartTime": "2025-06-02T09:00:00",

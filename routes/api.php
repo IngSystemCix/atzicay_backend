@@ -47,7 +47,7 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::get('/game-instances/configuration/{id}', [GameInstancesController::class, 'getConfigurations']);
     Route::post('/game-instances/game', [GameInstancesController::class, 'createGame']);
     Route::put('/game-instances/game/{id}', [GameInstancesController::class, 'editGame']);
-    Route::put('/game-instances/programming/{id}', [GameInstancesController::class, 'programmingGame']);
+    Route::post('/game-instances/programming/{id}', [GameInstancesController::class, 'programmingGame']);
     Route::post('/game-instances/progress', [GameInstancesController::class, 'progressGame']);
     // Route for programming games
     Route::get('/programming-games', [ProgrammingGameController::class, 'getAllProgrammingGames']);

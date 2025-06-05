@@ -196,26 +196,6 @@ class GameService
             // Obtener la instancia de juego
             $gameInstance = GameInstances::findOrFail($id);
 
-            // Campos que pueden actualizarse en GameInstances (reemplazamos 'Visibility' por 'Activated')
-            $updatableFields = ['Name', 'Description', 'Activated'];
-
-            foreach ($updatableFields as $field) {
-                if ($request->has($field)) {
-                    $gameInstance->$field = $request->input($field);
-                }
-            }
-
-            $gameInstance->save();
-
-            // Agregar nuevas configuraciones si las hay
-            if ($request->has('settings')) {
-                foreach ($request->input('settings') as $setting) {
-                    $gameInstance->gameSetting()->create(
-                        collect($setting)->only(['ConfigKey', 'ConfigValue'])->toArray()
-                    );
-                }
-            }
-
             // Actualizar o crear el ProgrammingGame asociado
             $programmingGame = $gameInstance->programmingGame()->first();
 
@@ -249,7 +229,7 @@ class GameService
 
             DB::commit();
 
-            return $this->successResponse($gameInstance->load(['gameSetting', 'programmingGame']), 2202);
+            return $this->successResponse($gameInstance->load('programmingGame'), 2202);
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -257,7 +237,6 @@ class GameService
             return $this->errorResponse(2203);
         }
     }
-
 
     public function updateGame(Request $request, $id)
     {
