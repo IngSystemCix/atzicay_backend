@@ -15,7 +15,6 @@ use App\Infrastructure\Http\Controllers\UserController;
 use App\Infrastructure\Http\Controllers\WordsController;
 
 Route::prefix('atzicay/v1')->group(function () {
-    Route::get('/game-instances/programming/filter', [GameInstancesController::class, 'filterProgrammingGames']);
     // Route for authentication
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::post('/auth/refresh', [AuthController::class, 'refresh']);
@@ -37,7 +36,7 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::put('/users/{id}', [UserController::class, 'updateUser']);
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     // Route for game instances
-    
+    Route::get('/game-instances/programming/filter', [GameInstancesController::class, 'filterProgrammingGames']);
     Route::get('/game-instances/personal/count/{idProfessor}', [GameInstancesController::class, 'countGameTypesByProfessor']);
     Route::get('/game-instances/search', [GameInstancesController::class, 'searchGameInstances']);
     Route::get('/game-instances/personal/{id}', [GameInstancesController::class, 'getAllGameInstances']);
