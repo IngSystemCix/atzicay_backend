@@ -246,7 +246,7 @@ class GameService
         }
     }
 
-    public function filterProgrammingGames(Request $request)
+    public function filterProgrammingGames(Request $request, $professorId)
     {
         $startDate = $request->query('start');
         $endDate = $request->query('end');
@@ -261,11 +261,47 @@ class GameService
             $query->whereDate('EndTime', $endDate);
         }
 
-        $results = $query->with('gameInstances')->get(); // Carga relación si la necesitas
+        // Filtra por profesor usando la relación correcta (singular)
+        $query->whereHas('gameInstances', function ($q) use ($professorId) {
+            $q->where('ProfessorId', $professorId); // fíjate que en tu tabla es 'Professorld' con L minúscula al final
+        });
+
+        // Eager load de relaciones anidadas desde gameInstances
+        $results = $query->with([
+            'gameInstances.hangman',
+            'gameInstances.solveTheWord',
+            'gameInstances.memoryGame',
+            'gameInstances.puzzle'
+        ])->get();
+
+        // Mapeo para devolver lo que quieres
+        $results = $results->map(function ($pg) {
+            $gameInstance = $pg->gameInstances; // plural, como el método
+            $tipoJuego = null;
+
+            if ($gameInstance->hangman) {
+                $tipoJuego = 'Hangman';
+            } elseif ($gameInstance->solveTheWord) {
+                $tipoJuego = 'SolveTheWord';
+            } elseif ($gameInstance->memoryGame) {
+                $tipoJuego = 'MemoryGame';
+            } elseif ($gameInstance->puzzle) {
+                $tipoJuego = 'Puzzle';
+            }
+
+            return [
+                'Name' => $pg->Name,
+                'Activated' => $pg->Activated,
+                'StartTime' => $pg->StartTime,
+                'EndTime' => $pg->EndTime,
+                'Attempts' => $pg->Attempts,
+                'MaximumTime' => $pg->MaximumTime,
+                'TipoDeJuego' => $tipoJuego,
+            ];
+        });
 
         return $this->successResponse($results, 2204);
     }
-
 
     public function updateGame(Request $request, $id)
     {

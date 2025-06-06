@@ -130,9 +130,9 @@ class GameInstancesController extends Controller
      *     security={{"bearerAuth": {}}}
      * )
      */
-    public function filterProgrammingGames(Request $request)
+    public function filterProgrammingGames(Request $request, $idProfessor)
     {
-        return $this->gameService->filterProgrammingGames($request);
+        return $this->gameService->filterProgrammingGames($request, $idProfessor);
     }
 
     /**
