@@ -261,9 +261,9 @@ class GameService
             $query->whereDate('EndTime', $endDate);
         }
 
-        // Filtra por profesor usando la relación correcta (singular)
+        // Filtra por profesor usando la relación correcta
         $query->whereHas('gameInstances', function ($q) use ($professorId) {
-            $q->where('ProfessorId', $professorId); // fíjate que en tu tabla es 'Professorld' con L minúscula al final
+            $q->where('ProfessorId', $professorId);
         });
 
         // Eager load de relaciones anidadas desde gameInstances
@@ -274,19 +274,26 @@ class GameService
             'gameInstances.puzzle'
         ])->get();
 
-        // Mapeo para devolver lo que quieres
+        // Mapeo para devolver la información incluyendo Difficulty
         $results = $results->map(function ($pg) {
-            $gameInstance = $pg->gameInstances; // plural, como el método
-            $tipoJuego = null;
+            // Obtiene la primera instancia relacionada de GameInstance
+            $gameInstance = $pg->gameInstances->first(); // Usamos first() porque es hasMany
 
-            if ($gameInstance->hangman) {
-                $tipoJuego = 'Hangman';
-            } elseif ($gameInstance->solveTheWord) {
-                $tipoJuego = 'SolveTheWord';
-            } elseif ($gameInstance->memoryGame) {
-                $tipoJuego = 'MemoryGame';
-            } elseif ($gameInstance->puzzle) {
-                $tipoJuego = 'Puzzle';
+            $tipoJuego = null;
+            $difficulty = null;
+
+            if ($gameInstance) {
+                $difficulty = $gameInstance->Difficulty; // Incluye la dificultad si existe
+
+                if ($gameInstance->hangman) {
+                    $tipoJuego = 'Hangman';
+                } elseif ($gameInstance->solveTheWord) {
+                    $tipoJuego = 'SolveTheWord';
+                } elseif ($gameInstance->memoryGame) {
+                    $tipoJuego = 'MemoryGame';
+                } elseif ($gameInstance->puzzle) {
+                    $tipoJuego = 'Puzzle';
+                }
             }
 
             return [
@@ -296,6 +303,7 @@ class GameService
                 'EndTime' => $pg->EndTime,
                 'Attempts' => $pg->Attempts,
                 'MaximumTime' => $pg->MaximumTime,
+                'Difficulty' => $difficulty, // Devuelve la dificultad
                 'TipoDeJuego' => $tipoJuego,
             ];
         });
