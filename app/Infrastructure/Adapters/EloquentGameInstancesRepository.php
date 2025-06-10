@@ -83,13 +83,11 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
             'puzzle' => Puzzle::whereHas('gameInstances', function ($query) use ($idProfessor) {
                 $query->where('ProfessorId', $idProfessor);
             })
-                ->distinct('GameInstanceId')
                 ->count('GameInstanceId'),
 
             'solve_the_word' => SolveTheWord::whereHas('gameInstances', function ($query) use ($idProfessor) {
                 $query->where('ProfessorId', $idProfessor);
             })
-                ->distinct('GameInstanceId')
                 ->count('GameInstanceId'),
         ];
     }
