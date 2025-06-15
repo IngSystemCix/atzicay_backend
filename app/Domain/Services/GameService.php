@@ -8,6 +8,7 @@ use App\Domain\Entities\GameProgress;
 use App\Domain\Entities\GameSession;
 use App\Domain\Entities\ProgrammingGame;
 use Illuminate\Http\Request;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\DB;
 
 class GameService
@@ -121,6 +122,8 @@ class GameService
 
     public function getGameById(int $id): ?array
     {
+        $key = Env::get('KEY_ENCRYPTION_KEY');
+        $crypto = new CryptoUtil($key);
         $game = GameInstances::with([
             'professor',
             'assessments',
@@ -129,7 +132,7 @@ class GameService
             'puzzle',
             'solveTheWord.words', // Incluye palabras si es 'solve the word'
             'gameSetting'
-        ])->find($id);
+        ])->find($crypto->decrypt($id));
 
         if (!$game) {
             return null;

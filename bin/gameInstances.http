@@ -29,11 +29,11 @@ DELETE http://localhost:8000/api/atzicay/v1/game-instances/1
 Content-Type: application/json
 
 ### GET | get all game
-GET http://localhost:8000/api/atzicay/v1/game-instances/all/2
+GET http://localhost:8000/api/atzicay/v1/game-instances/all?limit=5&offset=0
 Content-Type: application/json
 
 ### GET | get all game instances
-GET http://localhost:8000/api/atzicay/v1/game-instances/personal/4?gameType=memory
+GET http://localhost:8000/api/atzicay/v1/game-instances/personal/1?gameType=memory&limit=5&offset=0
 Content-Type: application/json
 
 ### GET | get caount of game instances

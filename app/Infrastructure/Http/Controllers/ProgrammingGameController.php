@@ -57,7 +57,9 @@ class ProgrammingGameController extends Controller {
      * )
      */
     public function getAllProgrammingGames() {
-        $programmingGames = $this->getAllProgrammingGamesUseCase->execute();
+        $limit = request()->query('limit', 6); // obtener de query param o 6 por defecto
+        $offset = request()->query('offset', 0); // obtener de query param o 0 por defecto
+        $programmingGames = $this->getAllProgrammingGamesUseCase->execute($limit, $offset);
         if (empty($programmingGames)) {
             return $this->errorResponse(2300);
         }

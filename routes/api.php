@@ -15,6 +15,11 @@ use App\Infrastructure\Http\Controllers\UserController;
 use App\Infrastructure\Http\Controllers\WordsController;
 
 Route::prefix('atzicay/v1')->group(function () {
+    Route::get('/programming-games', [ProgrammingGameController::class, 'getAllProgrammingGames']);
+    Route::get('/programming-games/{id}', [ProgrammingGameController::class, 'getProgrammingGameById']);
+    Route::get('/game-instances/personal/{id}', [GameInstancesController::class, 'getAllGameInstances']);
+    Route::get('/game-instances/personal/count/{idProfessor}', [GameInstancesController::class, 'countGameTypesByProfessor']);
+    Route::get('/game-instances/all/', [GameInstancesController::class, 'getAllGame']);
     Route::get('/game-instances/programming/filter/{id}', [GameInstancesController::class, 'filterProgrammingGames']);
     // Route for authentication
     Route::post('/auth/login', [AuthController::class, 'login']);
@@ -38,10 +43,10 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     // Route for game instances
     
-    Route::get('/game-instances/personal/count/{idProfessor}', [GameInstancesController::class, 'countGameTypesByProfessor']);
+    
     Route::get('/game-instances/search', [GameInstancesController::class, 'searchGameInstances']);
-    Route::get('/game-instances/personal/{id}', [GameInstancesController::class, 'getAllGameInstances']);
-    Route::get('/game-instances/all/{limit?}', [GameInstancesController::class, 'getAllGame']);
+    
+    
     Route::get('/game-instances/{id}', [GameInstancesController::class, 'getGameInstanceById']);
     Route::post('/game-instances', [GameInstancesController::class, 'createGameInstance']);
     Route::put('/game-instances/{id}', [GameInstancesController::class, 'updateGameInstance']);
@@ -52,8 +57,8 @@ Route::prefix('atzicay/v1')->middleware(['atzicay.auth'])->group(function () {
     Route::post('/game-instances/programming/{id}', [GameInstancesController::class, 'programmingGame']);
     Route::post('/game-instances/progress', [GameInstancesController::class, 'progressGame']);
     // Route for programming games
-    Route::get('/programming-games', [ProgrammingGameController::class, 'getAllProgrammingGames']);
-    Route::get('/programming-games/{id}', [ProgrammingGameController::class, 'getProgrammingGameById']);
+    
+    
     Route::post('/programming-games', [ProgrammingGameController::class, 'createProgrammingGame']);
     Route::put('/programming-games/{id}', [ProgrammingGameController::class, 'updateProgrammingGame']);
     Route::delete('/programming-games/{id}', [ProgrammingGameController::class, 'deleteProgrammingGame']);

@@ -5,12 +5,12 @@ use App\Domain\Entities\GameInstances;
 
 interface GameInstancesRepository
 {
-    public function getAllGameInstances(int $idProfessor, ?string $gameType = null): array;
+    public function getAllGameInstances(int $idProfessor, ?string $gameType = null, ?int $limit = 10, ?int $offset = 0): array;
     public function countGameTypesByProfessor(int $idProfessor): array;
     public function getGameInstanceById(int $id): GameInstances;
     public function createGameInstance(array $data): GameInstances;
     public function updateGameInstance(int $id, array $data): GameInstances;
     public function deleteGameInstance(int $id): GameInstances;
-    public function getAllGame(int $limit = 6): array;
+    public function getAllGame(int $limit = 6, int $offset = 0): array;
     public function search(array $filters): array;
 }

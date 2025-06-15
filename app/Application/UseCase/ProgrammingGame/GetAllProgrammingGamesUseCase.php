@@ -9,8 +9,8 @@ class GetAllProgrammingGamesUseCase
         private ProgrammingGameRepository $programmingGameRepository
     ){}
 
-    public function execute()
+    public function execute($limit = 6, $offset = 0): array
     {
-        return $this->programmingGameRepository->getAllProgrammingGames();
+        return $this->programmingGameRepository->getAllProgrammingGames($limit, $offset);
     }
 }

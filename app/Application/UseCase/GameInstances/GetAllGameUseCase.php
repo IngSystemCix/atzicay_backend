@@ -9,8 +9,8 @@ class GetAllGameUseCase
         private GameInstancesRepository $repository
     ) {}
 
-    public function execute($limit = 6): array
+    public function execute($limit = 6, $offset = 0): array
     {
-        return $this->repository->getAllGame($limit);
+        return $this->repository->getAllGame($limit, $offset);
     }
 }

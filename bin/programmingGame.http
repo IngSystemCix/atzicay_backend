@@ -33,7 +33,7 @@ DELETE http://localhost:8000/api/atzicay/v1/programming-games/1
 Content-Type: application/json
 
 ### GET | get all programming games
-GET http://localhost:8000/api/atzicay/v1/programming-games
+GET http://localhost:8000/api/atzicay/v1/programming-games?limit=5&offset=0
 Content-Type: application/json
 
 ### GET | get a programming game by id

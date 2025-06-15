@@ -92,8 +92,10 @@ class GameInstancesController extends Controller
     public function getAllGameInstances($id)
     {
         $gameType = request()->query('gameType', 'all'); // obtener de query param o 'all' por defecto
+        $limit = request()->query('limit', 10); // obtener de query param o 10 por defecto
+        $offset = request()->query('offset', 0); // obtener de query param o 0 por defecto
 
-        $gameInstances = $this->getAllGameInstancesUseCase->execute($id, $gameType);
+        $gameInstances = $this->getAllGameInstancesUseCase->execute($id, $gameType, $limit, $offset);
 
         return $this->successResponse($gameInstances, 2201);
     }
@@ -267,9 +269,11 @@ class GameInstancesController extends Controller
      *     security={{"bearerAuth": {}}}
      * )
      */
-    public function getAllGame($limit = 6)
+    public function getAllGame()
     {
-        $games = $this->getAllGameUseCase->execute($limit);
+        $limit = request()->query('limit', 6); // obtener de query param o 6 por defecto
+        $offset = request()->query('offset', 0); // obtener de query param o 0 por defecto
+        $games = $this->getAllGameUseCase->execute($limit, $offset);
         if (empty($games)) {
             return $this->errorResponse(2210);
         }

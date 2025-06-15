@@ -7,6 +7,8 @@ use App\Domain\Entities\MemoryGame;
 use App\Domain\Entities\Puzzle;
 use App\Domain\Entities\SolveTheWord;
 use App\Domain\Repositories\GameInstancesRepository;
+use App\Domain\Services\CryptoUtil;
+use Illuminate\Support\Env;
 
 class EloquentGameInstancesRepository implements GameInstancesRepository
 {
@@ -31,10 +33,14 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         return $gameInstance;
     }
 
-    public function getAllGameInstances(int $idProfessor, string $gameType = null): array
+    public function getAllGameInstances(int $idProfessor, string $gameType = null, ?int $limit = 10, ?int $offset = 0): array
     {
+        $key = Env::get('KEY_ENCRYPTION_KEY');
+        $crypto = new CryptoUtil($key);
+
         $query = GameInstances::where('ProfessorId', $idProfessor)
             ->select('Name', 'Id', 'Description', 'ProfessorId', 'Difficulty', 'Visibility', 'Activated')
+            ->with(['programmingGame', 'hangman', 'memoryGame', 'puzzle', 'solveTheWord'])
             ->distinct('Name');
 
         if ($gameType) {
@@ -53,17 +59,80 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
                 case 'solve_the_word':
                     $query->whereHas('solveTheWord');
                     break;
+                case 'programming':
+                    $query->whereHas('programmingGame');
+                    break;
                 case 'all':
-                    // No filtro adicional, trae todos
+                    $query->where(function ($q) {
+                        $q->whereHas('hangman')
+                            ->orWhereHas('memoryGame')
+                            ->orWhereHas('puzzle')
+                            ->orWhereHas('solveTheWord')
+                            ->orWhereHas('programmingGame');
+                    });
                     break;
                 default:
-                    // Si viene un tipo inválido, devolver vacío o lanzar excepción
-                    return [];
+                    return [
+                        'total' => 0,
+                        'data' => []
+                    ];
             }
         }
 
-        return $query->get()->toArray();
+        // Obtener el total antes de aplicar limit
+        $total = $query->count();
+
+        // Aplicar limit y offset
+        $results = $query->skip($offset)->take($limit)->get();
+
+        // Transformar y encriptar los campos necesarios
+        $data = $results->transform(function ($item) use ($crypto) {
+            $data = $item->toArray();
+
+            // Encriptar 'Id' y 'ProfessorId'
+            $data['Id'] = $crypto->encrypt($data['Id']);
+            $data['ProfessorId'] = $crypto->encrypt($data['ProfessorId']);
+
+            // Determinar el tipo de juego
+            if ($item->programmingGame !== null) {
+                $data['gameType'] = 'programming';
+                $data['programmingGameId'] = $crypto->encrypt($item->programmingGame->Id);
+            } elseif ($item->hangman !== null) {
+                $data['gameType'] = 'hangman';
+                $data['programmingGameId'] = null;
+            } elseif ($item->memoryGame !== null) {
+                $data['gameType'] = 'memory';
+                $data['programmingGameId'] = null;
+            } elseif ($item->puzzle !== null) {
+                $data['gameType'] = 'puzzle';
+                $data['programmingGameId'] = null;
+            } elseif ($item->solveTheWord !== null) {
+                $data['gameType'] = 'solve_the_word';
+                $data['programmingGameId'] = null;
+            } else {
+                $data['gameType'] = 'unknown';
+                $data['programmingGameId'] = null;
+            }
+
+            // Agregar campo 'isProgrammed'
+            $data['isProgrammed'] = $item->programmingGame !== null ? 1 : 0;
+
+            // Eliminar relaciones cargadas
+            unset($data['programming_game']);
+            unset($data['hangman']);
+            unset($data['memory_game']);
+            unset($data['puzzle']);
+            unset($data['solve_the_word']);
+
+            return $data;
+        })->toArray();
+
+        return [
+            'total' => $total,
+            'data' => $data
+        ];
     }
+
 
     public function countGameTypesByProfessor(int $idProfessor): array
     {
@@ -122,8 +191,15 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
         return $gameInstance;
     }
 
-    public function getAllGame(int $limit = 6): array
+    public function getAllGame(int $limit = 6, int $offset = 0): array
     {
+        $key = Env::get('KEY_ENCRYPTION_KEY');
+        $crypto = new CryptoUtil($key);
+
+        // Obtener el total de juegos activados (sin limit ni offset)
+        $total = GameInstances::where('Activated', true)->count();
+
+        // Obtener los juegos aplicando limit y offset
         $games = GameInstances::with([
             'professor',
             'assessments',
@@ -133,9 +209,10 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
             'solveTheWord'
         ])
             ->where('Activated', true)
-            ->take($limit)
+            ->skip($offset) // aplicar offset
+            ->take($limit)  // aplicar limit
             ->get()
-            ->map(function ($game) {
+            ->map(function ($game) use ($crypto) {
                 $type = 'Unknown';
 
                 if ($game->hangman()->exists()) {
@@ -149,7 +226,7 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
                 }
 
                 return [
-                    'id' => $game->Id,
+                    'id' => $crypto->encrypt($game->Id),
                     'title' => $game->Name,
                     'level' => $game->Difficulty,
                     'description' => $game->Description,
@@ -157,13 +234,19 @@ class EloquentGameInstancesRepository implements GameInstancesRepository
                     'author' => $game->professor
                         ? $game->professor->Name . ' ' . $game->professor->LastName
                         : 'Unknown',
+                    'idProfessor' => $crypto->encrypt($game->ProfessorId),
                     'type' => $type,
                 ];
             })->toArray();
 
-        return $games;
+        // Devolver la respuesta con datos paginados y total
+        return [
+            'total' => $total,
+            'limit' => $limit,
+            'offset' => $offset,
+            'data' => $games
+        ];
     }
-
 
     public function search(array $filters): array
     {

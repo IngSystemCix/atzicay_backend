@@ -86,11 +86,11 @@ class GameInstances extends Model
     /**
      * Relationship with the ProgrammingGame entity.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function programmingGame()
     {
-        return $this->hasMany(ProgrammingGame::class, 'GameInstancesId', 'Id');
+        return $this->hasOne(ProgrammingGame::class, 'GameInstancesId', 'Id');
     }
 
     /**
