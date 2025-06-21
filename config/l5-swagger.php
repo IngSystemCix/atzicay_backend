@@ -5,14 +5,14 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'Atzicay API',
+                'title' => 'L5 Swagger UI',
             ],
 
             'routes' => [
                 /*
                  * Route for accessing api documentation interface
                  */
-                'api' => 'api/atzicay/v1/docs',
+                'api' => 'api/documentation',
             ],
             'paths' => [
                 /*
@@ -44,11 +44,7 @@ return [
                  * Absolute paths to directory containing the swagger annotations are stored.
                  */
                 'annotations' => [
-                    base_path('App/Config'),
-                    base_path('App/Application/DTOs'),
-                    base_path('App/Domain/Entities'),
-                    base_path('App/Infrastructure/Http/Requests'),
-                    base_path('App/Infrastructure/Http/Controllers'),
+                    base_path('app/Http/Controllers'),
                 ],
             ],
         ],

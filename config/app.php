@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'America/Lima',
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -123,19 +123,4 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Application Providers
-    |--------------------------------------------------------------------------
-    |
-    | The service providers listed here will be automatically loaded on the
-    | request to your application. Feel free to add your own services to
-    | this array to grant expanded functionality to your applications.
-    |
-    | Laravel provides a default set of providers for you to get started.
-    | Feel free to add your own services to this array to grant expanded
-    | functionality to your applications.
-    |
-    */
-    'errors' => require __DIR__.'/errors.php',
 ];
