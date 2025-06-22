@@ -2488,24 +2488,32 @@
             }
         },
         "/user/id-by-email": {
-            "get": {
+            "post": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Obtiene el ID de un usuario a partir de su correo electrónico",
-                "operationId": "32a79f419b990a58c1e63ee87e2bbb97",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "Correo electrónico del usuario",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "email"
+                "operationId": "1adccb4927632c64e8639a0ad44785af",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
                         "description": "ID del usuario recuperado correctamente",

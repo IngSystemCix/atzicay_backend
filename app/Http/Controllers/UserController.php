@@ -188,16 +188,16 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/user/id-by-email",
      *     summary="Obtiene el ID de un usuario a partir de su correo electrónico",
      *     tags={"Users"},
-     *     @OA\Parameter(
-     *         name="email",
-     *         in="query",
-     *         description="Correo electrónico del usuario",
+     *     @OA\RequestBody(
      *         required=true,
-     *         @OA\Schema(type="string", format="email")
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -228,9 +228,14 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function getIdByEmail(string $email): JsonResponse
+    public function getIdByEmail(Request $request): JsonResponse
     {
         try {
+            $request->validate([
+                'email' => 'required|email'
+            ]);
+
+            $email = $request->input('email');
             $userId = $this->userService->getIdByEmail($email);
 
             if ($userId === null) {
@@ -242,4 +247,5 @@ class UserController extends Controller
             return ApiResponse::error('Error retrieving user ID: ' . $e->getMessage(), 500);
         }
     }
+
 }

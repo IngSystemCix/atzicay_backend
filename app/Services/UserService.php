@@ -47,7 +47,10 @@ class UserService
 
     public function getIdByEmail(string $email): ?int
     {
-        $user = User::where('Email', $email)->first();
-        return $user ? $user->Id : null;
+        return User::query()
+            ->select('Id')
+            ->where('Email', $email)
+            ->value('Id');
     }
+
 }

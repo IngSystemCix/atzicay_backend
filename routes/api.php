@@ -9,7 +9,6 @@ Route::prefix('v1/atzicay')->group(function () {
     // Public Auth Routes
     Route::post('/auth/generate-token', [\App\Http\Controllers\AuthController::class, 'generateToken']);
     Route::post('/auth/refresh-token', [\App\Http\Controllers\AuthController::class, 'refreshToken']);
-    Route::get('/game/settings/{gameInstanceId}', [GameController::class, 'getSettingsGame']);
 
     // Protected Routes
     Route::middleware(['auth.jwt'])->group(function () {
@@ -21,7 +20,7 @@ Route::prefix('v1/atzicay')->group(function () {
         Route::put('/my-game/update/{gameInstanceId}', [GameController::class, 'updateGameInstance']);
         Route::post('/my-game/create/{userId}', [GameController::class, 'createGame']);
         Route::get('/game/report/{gameInstanceId}', [GameController::class, 'reportGame']);
-        
+        Route::get('/game/settings/{gameInstanceId}', [GameController::class, 'getSettingsGame']);
 
         // Programming Routes
         Route::get('/my-programming-games/{userId}', [ProgrammingController::class, 'myProgrammingGames']);
@@ -31,7 +30,7 @@ Route::prefix('v1/atzicay')->group(function () {
         // User Routes
         Route::get('/user/profile/{userId}', [UserController::class, 'getUserProfile']);
         Route::put('/user/update/{userId}', [UserController::class, 'updateUserProfile']);
-        Route::get('/user/id-by-email', [UserController::class, 'getIdByEmail']);
+        Route::post('/user/id-by-email', [UserController::class, 'getIdByEmail']);
 
         // Country Routes
         Route::get('/country/all', [\App\Http\Controllers\CountryController::class, 'getAllCountries']);
