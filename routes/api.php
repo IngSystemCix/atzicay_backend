@@ -31,6 +31,7 @@ Route::prefix('v1/atzicay')->group(function () {
         // User Routes
         Route::get('/user/profile/{userId}', [UserController::class, 'getUserProfile']);
         Route::put('/user/update/{userId}', [UserController::class, 'updateUserProfile']);
+        Route::get('/user/id-by-email', [UserController::class, 'getIdByEmail']);
 
         // Country Routes
         Route::get('/country/all', [\App\Http\Controllers\CountryController::class, 'getAllCountries']);

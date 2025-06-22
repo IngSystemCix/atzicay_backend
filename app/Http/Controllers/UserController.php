@@ -186,4 +186,60 @@ class UserController extends Controller
             return ApiResponse::error('User not found', 404);
         }
     }
+
+    /**
+     * @OA\Get(
+     *     path="/user/id-by-email",
+     *     summary="Obtiene el ID de un usuario a partir de su correo electrónico",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="Correo electrónico del usuario",
+     *         required=true,
+     *         @OA\Schema(type="string", format="email")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="ID del usuario recuperado correctamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="user_id", type="integer", example=123)
+     *             ),
+     *             @OA\Property(property="message", type="string", example="User ID retrieved successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno del servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error retrieving user ID: Detalles del error")
+     *         )
+     *     )
+     * )
+     */
+    public function getIdByEmail(string $email): JsonResponse
+    {
+        try {
+            $userId = $this->userService->getIdByEmail($email);
+
+            if ($userId === null) {
+                return ApiResponse::error('User not found', 404);
+            }
+
+            return ApiResponse::success(['user_id' => $userId], 'User ID retrieved successfully');
+        } catch (\Exception $e) {
+            return ApiResponse::error('Error retrieving user ID: ' . $e->getMessage(), 500);
+        }
+    }
 }

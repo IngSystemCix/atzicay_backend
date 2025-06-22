@@ -45,4 +45,9 @@ class UserService
         return $user->save();
     }
 
+    public function getIdByEmail(string $email): ?int
+    {
+        $user = User::where('Email', $email)->first();
+        return $user ? $user->Id : null;
+    }
 }
