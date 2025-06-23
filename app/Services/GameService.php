@@ -10,8 +10,10 @@ use App\Models\MemoryGame;
 use App\Models\Puzzle;
 use App\Models\SolveTheWord;
 use App\Models\Word;
+use App\Models\ProgrammingGame;
 use Illuminate\Support\Facades\DB;
 use App\Utils\StorageUtility;
+use Illuminate\Support\Facades\Log;
 
 class GameService
 {
@@ -369,17 +371,23 @@ class GameService
 
     public function createByGameType(int $professorId, string $gameType, array $data): string
     {
+        Log::info('[GameService][createByGameType] INICIO', ['professorId' => $professorId, 'gameType' => $gameType, 'data' => $data]);
         // Crear instancia base del juego
-        $gameInstance = GameInstance::create([
-            'Name' => $data['Name'] ?? 'New Game Instance',
-            'Description' => $data['Description'] ?? '',
-            'ProfessorId' => $professorId,
-            'Activated' => $data['Activated'] ?? true,
-            'Difficulty' => $data['Difficulty'] ?? 'Easy',
-            'Visibility' => $data['Visibility'] ?? 'Public',
-        ]);
-
+        try {
+            $gameInstance = GameInstance::create([
+                'Name' => $data['Name'] ?? 'New Game Instance',
+                'Description' => $data['Description'] ?? '',
+                'ProfessorId' => $professorId,
+                'Activated' => $data['Activated'] ?? true,
+                'Difficulty' => $data['Difficulty'] ?? 'Easy',
+                'Visibility' => $data['Visibility'] ?? 'Public',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('[GameService][createByGameType] Error creando GameInstance', ['error' => $e->getMessage()]);
+            return 'Error creating GameInstance: ' . $e->getMessage();
+        }
         $gameInstanceId = $gameInstance->Id;
+        Log::info('[GameService][createByGameType] GameInstance creado', ['gameInstanceId' => $gameInstanceId]);
 
         switch (strtolower($gameType)) {
             case 'hangman':
@@ -401,190 +409,213 @@ class GameService
                         'Presentation' => $data['Presentation'] ?? '',
                     ]);
                 }
-                break;
+                return 'Hangman game created successfully';
 
             case 'memory':
-                $pathImage1 = '';
-                if (!empty($data['PathImage1'])) {
-                    $upload1 = StorageUtility::uploadImage(
-                        $data['PathImage1'],
-                        env('PATH_STORAGE', '') . '/memory',
-                        'memory_' . $gameInstanceId . '_'
-                    );
-                    $pathImage1 = $upload1['success'][0] ?? '';
+                // Para Memory, se espera que envíen al menos PathImage1 y PathImage2 en modo II
+                if (empty($data['PathImage1']) || (isset($data['Mode']) && $data['Mode'] === 'II' && empty($data['PathImage2']))) {
+                    return 'For Memory game, PathImage1 and PathImage2 (in mode II) are required';
                 }
 
-                $pathImage2 = '';
-                if (($data['Mode'] ?? 'II') === 'II' && !empty($data['PathImage2'])) {
-                    $upload2 = StorageUtility::uploadImage(
-                        $data['PathImage2'],
-                        env('PATH_STORAGE', '') . '/memory',
-                        'memory_' . $gameInstanceId . '_'
-                    );
-                    $pathImage2 = $upload2['success'][0] ?? '';
-                }
-
-                MemoryGame::create([
+                // Crear el registro base del juego en memorygame
+                $memoryGame = MemoryGame::create([
                     'GameInstanceId' => $gameInstanceId,
-                    'Mode' => $data['Mode'] ?? 'II',
-                    'PathImage1' => $pathImage1,
-                    'PathImage2' => $pathImage2,
-                    'Description' => $data['Description'] ?? '',
+                    'Mode' => $data['Mode'] ?? 'I', // modo por defecto
+                    'PathImage1' => $data['PathImage1'] ?? '',
+                    'PathImage2' => $data['PathImage2'] ?? '',
                 ]);
-                break;
+
+                // Si hay más datos específicos del modo, se pueden manejar aquí
+                switch ($memoryGame->Mode) {
+                    case 'II':
+                        // Para el modo II, se pueden esperar más configuraciones o imágenes
+                        break;
+
+                    case 'ID':
+                        // Para el modo ID, se puede esperar una descripción
+                        $memoryGame->update([
+                            'Description' => $data['Description'] ?? '',
+                        ]);
+                        break;
+
+                    default:
+                        return 'Invalid mode for Memory game';
+                }
+
+                return 'Memory game created successfully';
 
             case 'puzzle':
-                $pathImg = '';
-                if (!empty($data['PathImg'])) {
-                    $upload = StorageUtility::uploadImage(
-                        $data['PathImg'],
-                        env('PATH_STORAGE', '') . '/puzzle',
-                        'puzzle_' . $gameInstanceId . '_'
-                    );
-                    $pathImg = $upload['success'][0] ?? '';
+                if (empty($data['PathImg'])) {
+                    Log::error('[GameService][createByGameType] PathImg vacío para puzzle', ['data' => $data]);
+                    return 'For Puzzle game, PathImg is required';
                 }
 
-                Puzzle::create([
-                    'GameInstanceId' => $gameInstanceId,
-                    'PathImg' => $pathImg,
-                    'Clue' => $data['Clue'] ?? '',
-                    'Rows' => $data['Rows'] ?? 3,
-                    'Cols' => $data['Cols'] ?? 3,
-                    'AutomaticHelp' => $data['AutomaticHelp'] ?? 0,
-                ]);
-                break;
+                // Procesar imagen (base64 o ruta local)
+                $destino = rtrim(env('PATH_STORAGE'), '/\\') . DIRECTORY_SEPARATOR . 'puzzle';
 
+                Log::info('[GameService][createByGameType] Procesando imagen puzzle', [
+                    'destino' => $destino,
+                    'pathImg_sample' => substr($data['PathImg'], 0, 100)
+                ]);
+
+                $upload = StorageUtility::uploadImage(
+                    $data['PathImg'],
+                    $destino,
+                    null, // Generar nombre automáticamente
+                    ['jpg', 'jpeg', 'png'],
+                    'puzzle_'
+                );
+
+                if (!empty($upload['success'][0])) {
+                    $data['PathImg'] = $upload['success'][0]; // ruta absoluta
+                    Log::info('[GameService][createByGameType] Imagen puzzle guardada', ['ruta' => $data['PathImg']]);
+                } else {
+                    Log::error('[GameService][createByGameType] Error subiendo imagen puzzle', ['errores' => $upload['errors']]);
+                    return 'Error uploading PathImg: ' . implode(', ', $upload['errors']);
+                }
+
+                Log::info('[GameService][createByGameType] Antes de crear Puzzle', ['gameInstanceId' => $gameInstanceId, 'data' => $data]);
+                try {
+                    $puzzle = Puzzle::create([
+                        'GameInstanceId' => $gameInstanceId,
+                        'PathImg' => $data['PathImg'], // ruta absoluta
+                        'Clue' => $data['Clue'] ?? '',
+                        'Rows' => $data['Rows'] ?? 3,
+                        'Cols' => $data['Cols'] ?? 3,
+                        'AutomaticHelp' => $data['AutomaticHelp'] ?? 0,
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('[GameService][createByGameType] Error creando Puzzle', ['error' => $e->getMessage(), 'data' => $data]);
+                    return 'Error creating Puzzle: ' . $e->getMessage();
+                }
+                Log::info('[GameService][createByGameType] Puzzle creado', ['puzzleId' => $puzzle->Id]);
+                return 'Puzzle game created successfully';
             case 'solve_the_word':
-                $solveTheWord = SolveTheWord::create([
-                    'GameInstanceId' => $gameInstanceId,
-                    'Rows' => $data['Rows'] ?? 10,
-                    'Cols' => $data['Cols'] ?? 10,
-                ]);
-
+                try {
+                    $solveTheWord = SolveTheWord::create([
+                        'GameInstanceId' => $gameInstanceId,
+                        'Rows' => $data['Rows'] ?? 5, // valor por defecto
+                        'Cols' => $data['Cols'] ?? 5, // valor por defecto
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('[GameService][createByGameType] Error creando SolveTheWord', ['error' => $e->getMessage(), 'data' => $data]);
+                    return 'Error creating SolveTheWord: ' . $e->getMessage();
+                }
+                Log::info('[GameService][createByGameType] SolveTheWord creado', ['solveTheWordId' => $solveTheWord->Id]);
                 if (!empty($data['Words']) && is_array($data['Words'])) {
                     foreach ($data['Words'] as $wordData) {
-                        Word::create([
-                            'SolveTheWordId' => $solveTheWord->Id,
-                            'Word' => $wordData['Word'] ?? '',
-                            'Orientation' => $wordData['Orientation'] ?? 'HR',
-                        ]);
+                        try {
+                            Word::create([
+                                'SolveTheWordId' => $solveTheWord->Id, // Relación correcta según FK
+                                'Word' => $wordData['Word'] ?? '',
+                                'Orientation' => $wordData['Orientation'] ?? 'HR',
+                            ]);
+                        } catch (\Exception $e) {
+                            Log::error('[GameService][createByGameType] Error creando Word', ['error' => $e->getMessage(), 'wordData' => $wordData]);
+                        }
                     }
                 }
-                break;
-
+                return 'Solve the word game created successfully';
             default:
+                Log::error('[GameService][createByGameType] Tipo de juego inválido', ['gameType' => $gameType]);
                 return 'Invalid game type';
         }
-
-        // Agregar configuración (GameSettings) si se proporciona
-        if (!empty($data['Settings']) && is_array($data['Settings'])) {
-            foreach ($data['Settings'] as $setting) {
-                GameSettings::create([
-                    'GameInstanceId' => $gameInstanceId,
-                    'ConfigKey' => $setting['Key'] ?? '',
-                    'ConfigValue' => $setting['Value'] ?? '',
-                ]);
-            }
-        }
-
-        return ucfirst($gameType) . ' game created successfully';
     }
 
-    public function reportByGame(int $gameInstanceId): array
+    /**
+     * Genera un reporte de sesiones y estadísticas para un juego específico.
+     */
+    public function reportByGame(int $gameInstanceId)
     {
-        return GameSessions::selectRaw("
-            CONCAT(users.Name, ' ', users.LastName) AS user,
-            MONTHNAME(gamesessions.DateGame) AS month_name,
-            YEAR(gamesessions.DateGame) AS year,
-            COUNT(gamesessions.Id) AS total_sessions,
-            SUM(gamesessions.Duration) AS total_minutes_played,
-            ROUND(AVG(gamesessions.Duration), 2) AS avg_minutes_per_session
-        ")
-            ->join('users', 'users.Id', '=', 'gamesessions.StudentId')
-            ->where('gamesessions.ProgrammingGameId', $gameInstanceId)
-            ->groupBy('users.Id', 'users.Name', 'users.LastName', 'month_name', 'year')
-            ->orderByRaw('year ASC, MONTH(gamesessions.DateGame) ASC')
-            ->get()
-            ->toArray();
+        // Buscar el ProgrammingGameId correspondiente al GameInstanceId
+        $programmingGame = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->first();
+        $sessions = 0;
+        if ($programmingGame) {
+            $sessions = GameSessions::where('ProgrammingGameId', $programmingGame->Id)->count();
+        }
+        $avgRating = DB::table('assessment')
+            ->where('GameInstanceId', $gameInstanceId)
+            ->avg('Value');
+
+        return [
+            'game_instance_id' => $gameInstanceId,
+            'sessions_count' => $sessions,
+            'average_rating' => round($avgRating, 2),
+        ];
     }
 
+    /**
+     * Devuelve la configuración completa de un juego, incluyendo detalles específicos según el tipo.
+     */
     public function getConfig(int $gameInstanceId)
     {
-        $gameInstance = GameInstance::with([
-            'hangman',
-            'memorygame',
-            'puzzle',
-            'solvetheword',
-            'gamesettings'
-        ])->where('Id', $gameInstanceId)->first();
-
-        if (!$gameInstance) {
-            return null; // o puedes lanzar una excepción o retornar un error customizado
+        $game = GameInstance::find($gameInstanceId);
+        if (!$game) {
+            throw new \Exception('Game instance not found');
         }
 
-        $response = [
-            'game_instance_id' => $gameInstance->Id,
-            'game_name' => $gameInstance->Name,
-            'game_description' => $gameInstance->Description,
-            'difficulty' => $gameInstance->Difficulty,
-            'visibility' => $gameInstance->Visibility,
-            'activated' => $gameInstance->Activated,
-        ];
+        // Hangman
+        $hangmanWords = Hangman::where('GameInstanceId', $gameInstanceId)
+            ->get(['Word as word', 'Clue as clue', 'Presentation as presentation'])
+            ->toArray();
+        if (empty($hangmanWords))
+            $hangmanWords = null;
 
-        // Hangman words (solo si hay datos)
-        if ($gameInstance->hangman->isNotEmpty()) {
-            $response['hangman_words'] = $gameInstance->hangman->map(function ($item) {
-                return [
-                    'word' => $item->Word,
-                    'clue' => $item->Clue,
-                    'presentation' => $item->Presentation,
-                ];
-            })->toArray();
-        }
-
-        // Memory pairs (solo si hay datos)
-        if ($gameInstance->memorygame->isNotEmpty()) {
-            $response['memory_pairs'] = $gameInstance->memorygame->map(function ($item) {
-                return [
-                    'mode' => $item->Mode,
-                    'path_image1' => $item->PathImg1,
-                    'path_image2' => $item->PathImg2,
-                    'description_image' => $item->DescriptionImg,
-                ];
-            })->toArray();
-        }
-
-        // Puzzle (solo si existe)
-        if ($gameInstance->puzzle) {
-            $response['puzzle'] = [
-                'path_img' => $gameInstance->puzzle->PathImg,
-                'clue' => $gameInstance->puzzle->Clue,
-                'rows' => $gameInstance->puzzle->Rows,
-                'cols' => $gameInstance->puzzle->Cols,
-                'automatic_help' => $gameInstance->puzzle->AutomaticHelp,
+        // Memory
+        $memory = MemoryGame::where('GameInstanceId', $gameInstanceId)->first();
+        $memoryPairs = null;
+        if ($memory) {
+            $memoryPairs = [
+                [
+                    'mode' => $memory->Mode,
+                    'path_image1' => $memory->PathImage1,
+                    'path_image2' => $memory->PathImage2,
+                    'description_image' => $memory->Description,
+                ]
             ];
         }
 
-        // Solve The Word (solo si hay datos)
-        if ($gameInstance->solvetheword->isNotEmpty()) {
-            $response['solve_the_word'] = $gameInstance->solvetheword->map(function ($item) {
-                return [
-                    'word' => $item->Word,
-                    'orientation' => $item->Orientation,
-                ];
-            })->toArray();
+        // Puzzle
+        $puzzle = Puzzle::where('GameInstanceId', $gameInstanceId)->first();
+        $puzzleData = null;
+        if ($puzzle) {
+            $puzzleData = [
+                'path_img' => $puzzle->PathImg,
+                'clue' => $puzzle->Clue,
+                'rows' => $puzzle->Rows,
+                'cols' => $puzzle->Cols,
+                'automatic_help' => (bool) $puzzle->AutomaticHelp,
+            ];
         }
 
-        // Settings (solo si hay datos)
-        if ($gameInstance->gamesettings->isNotEmpty()) {
-            $response['settings'] = $gameInstance->gamesettings->map(function ($item) {
-                return [
-                    'key' => $item->ConfigKey,
-                    'value' => $item->ConfigValue,
-                ];
-            })->toArray();
+        // Solve the word
+        $solve = SolveTheWord::where('GameInstanceId', $gameInstanceId)->first();
+        $solveWords = null;
+        if ($solve) {
+            $solveWords = Word::where('SolveTheWordId', $solve->GameInstanceId)
+                ->get(['Word as word', 'Orientation as orientation'])
+                ->toArray();
         }
 
-        return $response;
+        // Settings generales
+        $settings = GameSettings::where('GameInstanceId', $gameInstanceId)
+            ->get(['ConfigKey as key', 'ConfigValue as value'])
+            ->toArray();
+        if (empty($settings))
+            $settings = null;
+
+        return [
+            'game_instance_id' => $game->Id,
+            'game_name' => $game->Name,
+            'game_description' => $game->Description,
+            'difficulty' => $game->Difficulty,
+            'visibility' => $game->Visibility,
+            'activated' => (bool) $game->Activated,
+            'hangman_words' => $hangmanWords,
+            'memory_pairs' => $memoryPairs,
+            'puzzle' => $puzzleData,
+            'solve_the_word' => $solveWords,
+            'settings' => $settings,
+        ];
     }
 }

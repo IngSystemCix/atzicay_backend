@@ -7,6 +7,7 @@ use App\Services\GameService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
@@ -607,20 +608,29 @@ class GameController extends Controller
      */
     public function createGame(int $userId, Request $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'gameType' => 'required|string|in:hangman,memory,puzzle,solve_the_word',
-            'data' => 'required|array'
-        ]);
+        try {
+            // Log para depuración de puzzle
+            if ($request->input('gameType') === 'puzzle') {
+                log::info('Puzzle createGame request', [
+                    'userId' => $userId,
+                    'body' => $request->all()
+                ]);
+            }
+            $validatedData = $request->validate([
+                'gameType' => 'required|string|in:hangman,memory,puzzle,solve_the_word',
+                'data' => 'required|array'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ApiResponse::error('Error de validación', 422, $e->errors());
+        }
 
         $gameType = $validatedData['gameType'];
         $data = $validatedData['data'];
 
         try {
             $message = $this->gameService->createByGameType($userId, $gameType, $data);
-
             return ApiResponse::success($message, 'Game created successfully');
         } catch (\Exception $e) {
-            // Manejo de error estándar
             return ApiResponse::error('Error creating game: ' . $e->getMessage(), 500);
         }
     }

@@ -13,6 +13,8 @@ class SolveTheWord extends Model
 
     protected $primaryKey = 'GameInstanceId';
 
+    public $incrementing = false;
+
     protected $fillable = [
         'GameInstanceId',
         'Rows',
