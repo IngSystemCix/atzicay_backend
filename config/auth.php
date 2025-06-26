@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\AuthUser;
+
 return [
 
     /*
@@ -37,7 +39,7 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],
@@ -62,7 +64,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => env('AUTH_MODEL', AuthUser::class),
         ],
 
         // 'users' => [
