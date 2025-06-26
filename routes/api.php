@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProgrammingController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GameController;
@@ -9,7 +10,7 @@ Route::prefix('v1/atzicay')->group(function () {
     // Public Auth Routes
     Route::post('/auth/generate-token', [\App\Http\Controllers\AuthController::class, 'generateToken']);
     Route::post('/auth/refresh-token', [\App\Http\Controllers\AuthController::class, 'refreshToken']);
-    Route::put('/programming-game/update-status/{gameInstanceId}', [ProgrammingController::class, 'setProgrammingGameStatus']);
+    
     // Protected Routes
     Route::middleware(['auth.jwt'])->group(function () {
         // Game Routes
@@ -24,7 +25,7 @@ Route::prefix('v1/atzicay')->group(function () {
 
         // Programming Routes
         Route::get('/my-programming-games/{userId}', [ProgrammingController::class, 'myProgrammingGames']);
-        
+        Route::put('/programming-game/update-status/{gameInstanceId}', [ProgrammingController::class, 'setProgrammingGameStatus']);
         Route::post('/programming-game/create/{gameInstanceId}/{userId}', [ProgrammingController::class, 'createProgrammingGame']);
 
         // User Routes
@@ -34,5 +35,8 @@ Route::prefix('v1/atzicay')->group(function () {
 
         // Country Routes
         Route::get('/country/all', [\App\Http\Controllers\CountryController::class, 'getAllCountries']);
+
+        // Rating Routes
+        Route::post('/rate-game/{gameInstanceId}/{userId}', [RatingController::class, 'valueRating']);
     });
 });

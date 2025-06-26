@@ -1927,19 +1927,19 @@
                 }
             }
         },
-        "/disable-programming-game/{gameInstanceId}": {
+        "/programming-game/status/{gameInstanceId}": {
             "put": {
                 "tags": [
                     "Programming Games"
                 ],
-                "summary": "Disable a Programming Game",
-                "description": "Disable the specified Programming Game by setting its 'Activated' status to false (0).",
-                "operationId": "disableProgrammingGame",
+                "summary": "Update the activation status of a Programming Game",
+                "description": "Updates the 'Activated' status of a Programming Game associated with a given GameInstanceId.",
+                "operationId": "setProgrammingGameStatus",
                 "parameters": [
                     {
                         "name": "gameInstanceId",
                         "in": "path",
-                        "description": "ID of the game instance to disable its associated programming game",
+                        "description": "ID of the game instance",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1947,9 +1947,33 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "description": "New status for the game: 0 = inactive, 1 = active",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 0
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Programming game disabled successfully",
+                        "description": "Programming game status updated successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1960,7 +1984,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Programming game disabled successfully"
+                                            "example": "Programming game status updated successfully"
                                         },
                                         "data": {
                                             "type": "string",
@@ -1992,8 +2016,8 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Failed to disable programming game",
+                    "400": {
+                        "description": "Invalid request body",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2004,7 +2028,27 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Failed to disable programming game"
+                                            "example": "Invalid status value"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unexpected error occurred"
                                         }
                                     },
                                     "type": "object"
@@ -2170,6 +2214,129 @@
                                                 }
                                             },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rate-game/{gameInstanceId}/{userId}": {
+            "post": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Rate a game instance",
+                "description": "Creates or updates a user's rating for a specific game instance.",
+                "operationId": "valueRating",
+                "parameters": [
+                    {
+                        "name": "gameInstanceId",
+                        "in": "path",
+                        "description": "ID of the game instance",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 12
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user rating the game",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "value"
+                                ],
+                                "properties": {
+                                    "value": {
+                                        "description": "Rating value (1 to 5)",
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "comments": {
+                                        "description": "Optional comments",
+                                        "type": "string",
+                                        "example": "Muy divertido"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rating processed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rating created successfully"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid rating value"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error processing rating"
                                         }
                                     },
                                     "type": "object"
@@ -2604,6 +2771,10 @@
         {
             "name": "Programming Games",
             "description": "Programming Games"
+        },
+        {
+            "name": "Ratings",
+            "description": "Ratings"
         },
         {
             "name": "Users",
