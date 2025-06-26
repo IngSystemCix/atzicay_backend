@@ -412,37 +412,50 @@ class GameService
                 return 'Hangman game created successfully';
 
             case 'memory':
-                // Para Memory, se espera que envíen al menos PathImage1 y PathImage2 en modo II
-                if (empty($data['PathImage1']) || (isset($data['Mode']) && $data['Mode'] === 'II' && empty($data['PathImage2']))) {
-                    return 'For Memory game, PathImage1 and PathImage2 (in mode II) are required';
+                if (empty($data['Mode']) || !in_array($data['Mode'], ['II', 'ID'])) {
+                    return 'Invalid or missing Mode for Memory game. Must be II or ID';
                 }
 
-                // Crear el registro base del juego en memorygame
-                $memoryGame = MemoryGame::create([
-                    'GameInstanceId' => $gameInstanceId,
-                    'Mode' => $data['Mode'] ?? 'I', // modo por defecto
-                    'PathImage1' => $data['PathImage1'] ?? '',
-                    'PathImage2' => $data['PathImage2'] ?? '',
-                ]);
+                if (empty($data['Pairs']) || !is_array($data['Pairs'])) {
+                    return 'For Memory game, an array of image pairs or items is required';
+                }
 
-                // Si hay más datos específicos del modo, se pueden manejar aquí
-                switch ($memoryGame->Mode) {
-                    case 'II':
-                        // Para el modo II, se pueden esperar más configuraciones o imágenes
-                        break;
+                foreach ($data['Pairs'] as $index => $pair) {
+                    try {
+                        if ($data['Mode'] === 'II') {
+                            if (empty($pair['PathImg1']) || empty($pair['PathImg2'])) {
+                                Log::warning('[GameService][createByGameType] Par inválido modo II', ['index' => $index, 'pair' => $pair]);
+                                continue;
+                            }
 
-                    case 'ID':
-                        // Para el modo ID, se puede esperar una descripción
-                        $memoryGame->update([
-                            'Description' => $data['Description'] ?? '',
-                        ]);
-                        break;
+                            MemoryGame::create([
+                                'GameInstanceId' => $gameInstanceId,
+                                'Mode' => 'II',
+                                'PathImg1' => $pair['PathImg1'],
+                                'PathImg2' => $pair['PathImg2'],
+                                'DescriptionImg' => null, // No aplica en modo II
+                            ]);
+                        } elseif ($data['Mode'] === 'ID') {
+                            if (empty($pair['PathImg1']) || empty($pair['DescriptionImg'])) {
+                                Log::warning('[GameService][createByGameType] Item inválido modo ID', ['index' => $index, 'pair' => $pair]);
+                                continue;
+                            }
 
-                    default:
-                        return 'Invalid mode for Memory game';
+                            MemoryGame::create([
+                                'GameInstanceId' => $gameInstanceId,
+                                'Mode' => 'ID',
+                                'PathImg1' => $pair['PathImg1'],
+                                'PathImg2' => null, // No aplica en modo ID
+                                'DescriptionImg' => $pair['DescriptionImg'],
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('[GameService][createByGameType] Error creando MemoryGame', ['error' => $e->getMessage(), 'pair' => $pair]);
+                    }
                 }
 
                 return 'Memory game created successfully';
+
 
             case 'puzzle':
                 if (empty($data['PathImg'])) {
