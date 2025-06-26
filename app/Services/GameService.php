@@ -213,7 +213,7 @@ class GameService
             return 'Game instance not found';
         }
 
-        $gameInstance->Visibility = $status;
+        $gameInstance->Activated = $status;
         $gameInstance->save();
 
         return 'Game instance status updated successfully';

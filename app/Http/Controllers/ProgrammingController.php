@@ -147,26 +147,32 @@ class ProgrammingController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/disable-programming-game/{gameInstanceId}",
-     *     operationId="disableProgrammingGame",
+     *     path="/programming-game/status/{gameInstanceId}",
+     *     operationId="setProgrammingGameStatus",
      *     tags={"Programming Games"},
-     *     summary="Disable a Programming Game",
-     *     description="Disable the specified Programming Game by setting its 'Activated' status to false (0).",
-     *     
+     *     summary="Update the activation status of a Programming Game",
+     *     description="Updates the 'Activated' status of a Programming Game associated with a given GameInstanceId.",
      *     @OA\Parameter(
      *         name="gameInstanceId",
      *         in="path",
      *         required=true,
-     *         description="ID of the game instance to disable its associated programming game",
+     *         description="ID of the game instance",
      *         @OA\Schema(type="integer", example=12)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="integer", enum={0, 1}, example=0, description="New status for the game: 0 = inactive, 1 = active")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Programming game disabled successfully",
+     *         description="Programming game status updated successfully",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Programming game disabled successfully"),
+     *             @OA\Property(property="message", type="string", example="Programming game status updated successfully"),
      *             @OA\Property(property="data", type="string", example=null)
      *         )
      *     ),
@@ -180,24 +186,44 @@ class ProgrammingController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=500,
-     *         description="Failed to disable programming game",
+     *         response=400,
+     *         description="Invalid request body",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="success", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Failed to disable programming game")
+     *             @OA\Property(property="message", type="string", example="Invalid status value")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Unexpected error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Unexpected error occurred")
      *         )
      *     )
      * )
      */
-    public function disableProgrammingGame(int $gameInstanceId): JsonResponse
+    public function setProgrammingGameStatus(Request $request, int $gameInstanceId): JsonResponse
     {
-        $result = $this->programmingService->disableProgrammingGame($gameInstanceId);
-        if ($result) {
-            return ApiResponse::success(null, 'Programming game disabled successfully');
-        } else {
-            return ApiResponse::error('Failed to disable programming game', 500);
+        $status = $request->input('status');
+
+        if (!in_array($status, [0, 1], true)) {
+            return ApiResponse::error('Invalid status value', 400);
         }
+
+        $result = $this->programmingService->setProgrammingGameStatus($gameInstanceId, $status);
+
+        if ($result === 'Programming game not found for this game instance') {
+            return ApiResponse::error($result, 404);
+        }
+
+        if ($result === 'Programming game status updated successfully') {
+            return ApiResponse::success(null, $result);
+        }
+
+        return ApiResponse::error('Unexpected error occurred', 500);
     }
 
     /**

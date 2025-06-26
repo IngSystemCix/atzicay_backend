@@ -104,7 +104,7 @@ class ProgrammingService
         ];
     }
 
-    public function disableProgrammingGame(int $gameInstanceId): string
+    public function setProgrammingGameStatus(int $gameInstanceId, int $status): string
     {
         // Buscar la instancia de ProgrammingGame por su GameInstanceId
         $programmingGame = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->first();
@@ -114,12 +114,13 @@ class ProgrammingService
             return 'Programming game not found for this game instance';
         }
 
-        // Cambiar el estado a deshabilitado (suponiendo que 0 significa deshabilitado)
-        $programmingGame->Activated = 0;
+        // Cambiar el estado a lo que se pase como parámetro
+        $programmingGame->Activated = $status;
         $programmingGame->save();
 
-        return 'Programming game disabled successfully';
+        return 'Programming game status updated successfully';
     }
+
     public function createProgrammingGame(int $gameInstanceId, int $userId, array $data): string
     {
         if (ProgrammingGame::where('GameInstancesId', $gameInstanceId)->exists()) {
