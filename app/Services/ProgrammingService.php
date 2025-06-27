@@ -123,9 +123,6 @@ class ProgrammingService
 
     public function createProgrammingGame(int $gameInstanceId, int $userId, array $data): string
     {
-        if (ProgrammingGame::where('GameInstancesId', $gameInstanceId)->exists()) {
-            return 'A programming game already exists for this game instance';
-        }
         
         $programmingGame = new ProgrammingGame();
         $programmingGame->GameInstancesId = $gameInstanceId;
