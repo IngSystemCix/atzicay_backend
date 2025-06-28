@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Assessment;
 use App\Models\GameInstance;
 use App\Models\GameSessions;
 use App\Models\GameSettings;
@@ -379,8 +380,8 @@ class GameService
                 'Description' => $data['Description'] ?? '',
                 'ProfessorId' => $professorId,
                 'Activated' => $data['Activated'] ?? true,
-                'Difficulty' => $data['Difficulty'] ?? 'Easy',
-                'Visibility' => $data['Visibility'] ?? 'Public',
+                'Difficulty' => $data['Difficulty'] ?? 'E',
+                'Visibility' => $data['Visibility'] ?? 'P',
             ]);
         } catch (\Exception $e) {
             Log::error('[GameService][createByGameType] Error creando GameInstance', ['error' => $e->getMessage()]);
@@ -560,11 +561,38 @@ class GameService
     /**
      * Devuelve la configuración completa de un juego, incluyendo detalles específicos según el tipo.
      */
-    public function getConfig(int $gameInstanceId)
+    public function getConfig(int $gameInstanceId, int $userId, bool $withProgrammings = false)
     {
         $game = GameInstance::find($gameInstanceId);
         if (!$game) {
             throw new \Exception('Game instance not found');
+        }
+
+        // Verificar si el participante ha sido calificado para esta instancia de juego
+        $hasBeenAssessed = Assessment::where('GameInstanceId', $gameInstanceId)
+            ->where('UserId', $userId)
+            ->exists();
+
+        // Obtener programaciones si se requiere
+        $programmings = null;
+        if ($withProgrammings) {
+            $programmings = ProgrammingGame::where('GameInstancesId', $gameInstanceId)
+                ->get()
+                ->map(function ($programming) use ($userId) {
+                    $assessed = Assessment::where('GameInstanceId', $programming->GameInstancesId)
+                        ->where('UserId', $userId)
+                        ->exists();
+                    return [
+                        'id' => $programming->Id,
+                        'name' => $programming->Name,
+                        'start_time' => $programming->StartTime,
+                        'end_time' => $programming->EndTime,
+                        'attempts' => $programming->Attempts,
+                        'maximum_time' => $programming->MaximumTime,
+                        'activated' => (bool) $programming->Activated,
+                        'assessed' => $assessed,
+                    ];
+                });
         }
 
         // Hangman
@@ -601,7 +629,7 @@ class GameService
             ];
         }
 
-        // Solve the word
+        // Solve the Word
         $solve = SolveTheWord::where('GameInstanceId', $gameInstanceId)->first();
         $solveWords = null;
         if ($solve) {
@@ -610,7 +638,7 @@ class GameService
                 ->toArray();
         }
 
-        // Settings generales
+        // Settings
         $settings = GameSettings::where('GameInstanceId', $gameInstanceId)
             ->get(['ConfigKey as key', 'ConfigValue as value'])
             ->toArray();
@@ -624,6 +652,8 @@ class GameService
             'difficulty' => $game->Difficulty,
             'visibility' => $game->Visibility,
             'activated' => (bool) $game->Activated,
+            'assessed' => $hasBeenAssessed,
+            'programmings' => $programmings,
             'hangman_words' => $hangmanWords,
             'memory_pairs' => $memoryPairs,
             'puzzle' => $puzzleData,
@@ -631,4 +661,5 @@ class GameService
             'settings' => $settings,
         ];
     }
+
 }

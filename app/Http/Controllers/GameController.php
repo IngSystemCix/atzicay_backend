@@ -697,13 +697,27 @@ class GameController extends Controller
      *     operationId="getSettingsGame",
      *     tags={"Games"},
      *     summary="Get the complete game configuration for a game instance",
-     *     description="Retrieves the full configuration for a game instance. The response includes base game details and, only if available, specific configurations for Hangman, Memory, Puzzle, SolveTheWord, and general game settings.",
+     *     description="Retrieves the full configuration for a game instance. The response includes base game details and, only if available, specific configurations for Hangman, Memory, Puzzle, SolveTheWord, general game settings, and optionally all programmings with assessment status.",
      *     @OA\Parameter(
      *         name="gameInstanceId",
      *         in="path",
      *         description="ID of the game instance to retrieve settings for",
      *         required=true,
      *         @OA\Schema(type="integer", example=15)
+     *     ),
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="query",
+     *         description="ID of the user to check if assessed",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=23)
+     *     ),
+     *     @OA\Parameter(
+     *         name="withProgrammings",
+     *         in="query",
+     *         description="Include all programmings and their assessment status",
+     *         required=false,
+     *         @OA\Schema(type="boolean", example=true)
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -721,7 +735,23 @@ class GameController extends Controller
      *                 @OA\Property(property="difficulty", type="string", example="Medium"),
      *                 @OA\Property(property="visibility", type="string", example="Public"),
      *                 @OA\Property(property="activated", type="boolean", example=true),
-     *                 
+     *                 @OA\Property(property="assessed", type="boolean", example=true),
+     *                 @OA\Property(
+     *                     property="programmings",
+     *                     type="array",
+     *                     nullable=true,
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=101),
+     *                         @OA\Property(property="name", type="string", example="Reto 1 - Bucle for"),
+     *                         @OA\Property(property="start_time", type="string", format="date-time", example="2025-06-28 10:00:00"),
+     *                         @OA\Property(property="end_time", type="string", format="date-time", example="2025-06-28 11:00:00"),
+     *                         @OA\Property(property="attempts", type="integer", example=3),
+     *                         @OA\Property(property="maximum_time", type="integer", example=30),
+     *                         @OA\Property(property="activated", type="boolean", example=true),
+     *                         @OA\Property(property="assessed", type="boolean", example=false)
+     *                     )
+     *                 ),
      *                 @OA\Property(
      *                     property="hangman_words",
      *                     type="array",
@@ -794,10 +824,19 @@ class GameController extends Controller
      *     )
      * )
      */
-    public function getSettingsGame(int $gameInstanceId): JsonResponse
+    public function getSettingsGame(Request $request, int $gameInstanceId): JsonResponse
     {
         try {
-            $settings = $this->gameService->getConfig($gameInstanceId);
+            // Validar parámetros requeridos
+            $userId = $request->query('userId');
+            if (!$userId) {
+                return ApiResponse::error('Missing required parameter: userId', 400);
+            }
+
+            $withProgrammings = filter_var($request->query('withProgrammings', false), FILTER_VALIDATE_BOOLEAN);
+
+            $settings = $this->gameService->getConfig($gameInstanceId, (int) $userId, $withProgrammings);
+
             return ApiResponse::success($settings, 'Game settings retrieved successfully');
         } catch (\Exception $e) {
             return ApiResponse::error('Error retrieving game settings: ' . $e->getMessage(), 500);

@@ -10,7 +10,6 @@ Route::prefix('v1/atzicay')->group(function () {
     // Public Auth Routes
     Route::post('/auth/generate-token', [\App\Http\Controllers\AuthController::class, 'generateToken']);
     Route::post('/auth/refresh-token', [\App\Http\Controllers\AuthController::class, 'refreshToken']);
-    Route::post('/programming-game/create/{gameInstanceId}/{userId}', [ProgrammingController::class, 'createProgrammingGame']);
     
     // Protected Routes
     Route::middleware(['auth.jwt'])->group(function () {
@@ -27,7 +26,7 @@ Route::prefix('v1/atzicay')->group(function () {
         // Programming Routes
         Route::get('/my-programming-games/{userId}', [ProgrammingController::class, 'myProgrammingGames']);
         Route::put('/programming-game/update-status/{gameInstanceId}', [ProgrammingController::class, 'setProgrammingGameStatus']);
-        
+        Route::post('/programming-game/create/{gameInstanceId}/{userId}', [ProgrammingController::class, 'createProgrammingGame']);
 
         // User Routes
         Route::get('/user/profile/{userId}', [UserController::class, 'getUserProfile']);

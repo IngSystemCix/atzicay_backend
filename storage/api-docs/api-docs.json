@@ -1521,7 +1521,7 @@
                     "Games"
                 ],
                 "summary": "Get the complete game configuration for a game instance",
-                "description": "Retrieves the full configuration for a game instance. The response includes base game details and, only if available, specific configurations for Hangman, Memory, Puzzle, SolveTheWord, and general game settings.",
+                "description": "Retrieves the full configuration for a game instance. The response includes base game details and, only if available, specific configurations for Hangman, Memory, Puzzle, SolveTheWord, general game settings, and optionally all programmings with assessment status.",
                 "operationId": "getSettingsGame",
                 "parameters": [
                     {
@@ -1532,6 +1532,26 @@
                         "schema": {
                             "type": "integer",
                             "example": 15
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "ID of the user to check if assessed",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 23
+                        }
+                    },
+                    {
+                        "name": "withProgrammings",
+                        "in": "query",
+                        "description": "Include all programmings and their assessment status",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": true
                         }
                     }
                 ],
@@ -1575,6 +1595,53 @@
                                                 "activated": {
                                                     "type": "boolean",
                                                     "example": true
+                                                },
+                                                "assessed": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "programmings": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 101
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Reto 1 - Bucle for"
+                                                            },
+                                                            "start_time": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2025-06-28 10:00:00"
+                                                            },
+                                                            "end_time": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2025-06-28 11:00:00"
+                                                            },
+                                                            "attempts": {
+                                                                "type": "integer",
+                                                                "example": 3
+                                                            },
+                                                            "maximum_time": {
+                                                                "type": "integer",
+                                                                "example": 30
+                                                            },
+                                                            "activated": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "assessed": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "nullable": true
                                                 },
                                                 "hangman_words": {
                                                     "type": "array",
