@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProgrammingController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\UserController;
@@ -34,7 +35,7 @@ Route::prefix('v1/atzicay')->group(function () {
         Route::post('/user/id-by-email', [UserController::class, 'getIdByEmail']);
 
         // Country Routes
-        Route::get('/country/all', [\App\Http\Controllers\CountryController::class, 'getAllCountries']);
+        Route::get('/country/all', [CountryController::class, 'getAllCountries']);
 
         // Rating Routes
         Route::post('/rate-game/{gameInstanceId}/{userId}', [RatingController::class, 'valueRating']);
