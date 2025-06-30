@@ -33,7 +33,24 @@ class UserService
         // Actualizamos solo los campos permitidos
         $user->Name = $data['name'] ?? $user->Name;
         $user->LastName = $data['last_name'] ?? $user->LastName;
-        $user->Gender = $data['gender'] ?? $user->Gender;
+        
+        // Convertir el género de texto completo a código de la base de datos
+        if (isset($data['gender'])) {
+            $genderMap = [
+                'Male' => 'M',
+                'Female' => 'F',
+                'Other' => 'O',
+                'Masculino' => 'M',
+                'Femenino' => 'F',
+                'Otro' => 'O',
+                'M' => 'M',
+                'F' => 'F',
+                'O' => 'O'
+            ];
+            
+            $user->Gender = $genderMap[$data['gender']] ?? $user->Gender;
+        }
+        
         $user->Birthdate = $data['birthdate'] ?? $user->Birthdate;
         $user->City = $data['city'] ?? $user->City;
 
