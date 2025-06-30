@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SolveTheWord extends Model
 {
@@ -21,8 +22,13 @@ class SolveTheWord extends Model
         'Cols',
     ];
 
-    public function gameInstanceId(): BelongsTo
+    public function gameInstance(): BelongsTo
     {
         return $this->belongsTo(GameInstance::class, 'GameInstanceId', 'Id');
+    }
+
+    public function words(): HasMany
+    {
+        return $this->hasMany(Word::class, 'SolveTheWordId', 'GameInstanceId');
     }
 }

@@ -17,8 +17,8 @@ class Word extends Model
         'Orientation',
     ];
 
-    public function solveTheWordId(): BelongsTo
+    public function solveTheWord(): BelongsTo
     {
-        return $this->belongsTo(SolveTheWord::class, 'SolveTheWordId');
+        return $this->belongsTo(SolveTheWord::class, 'SolveTheWordId', 'GameInstanceId');
     }
 }

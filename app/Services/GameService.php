@@ -515,12 +515,12 @@ class GameService
                     Log::error('[GameService][createByGameType] Error creando SolveTheWord', ['error' => $e->getMessage(), 'data' => $data]);
                     return 'Error creating SolveTheWord: ' . $e->getMessage();
                 }
-                Log::info('[GameService][createByGameType] SolveTheWord creado', ['solveTheWordId' => $solveTheWord->Id]);
+                Log::info('[GameService][createByGameType] SolveTheWord creado', ['solveTheWordId' => $solveTheWord->GameInstanceId]);
                 if (!empty($data['Words']) && is_array($data['Words'])) {
                     foreach ($data['Words'] as $wordData) {
                         try {
                             Word::create([
-                                'SolveTheWordId' => $solveTheWord->Id, // Relación correcta según FK
+                                'SolveTheWordId' => $solveTheWord->GameInstanceId, // Usar GameInstanceId que es la PK
                                 'Word' => $wordData['Word'] ?? '',
                                 'Orientation' => $wordData['Orientation'] ?? 'HR',
                             ]);
