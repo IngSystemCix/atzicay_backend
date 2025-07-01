@@ -10,6 +10,7 @@ use App\Models\Hangman;
 use App\Models\MemoryGame;
 use App\Models\Puzzle;
 use App\Models\SolveTheWord;
+use App\Models\User;
 use App\Models\Word;
 use App\Models\ProgrammingGame;
 use Illuminate\Support\Facades\DB;
@@ -392,7 +393,7 @@ class GameService
 
         $gameTypeLower = strtolower($gameType);
         Log::info('[GameService][createByGameType] Ejecutando switch con gameType', ['gameType' => $gameType, 'gameTypeLower' => $gameTypeLower]);
-        
+
         switch ($gameTypeLower) {
             case 'hangman':
                 if (!empty($data['Words']) && is_array($data['Words'])) {
@@ -605,22 +606,59 @@ class GameService
      */
     public function reportByGame(int $gameInstanceId)
     {
-        // Buscar el ProgrammingGameId correspondiente al GameInstanceId
-        $programmingGame = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->first();
-        $sessions = 0;
-        if ($programmingGame) {
-            $sessions = GameSessions::where('ProgrammingGameId', $programmingGame->Id)->count();
+        $gameInstance = GameInstance::find($gameInstanceId);
+
+        if (!$gameInstance) {
+            throw new \Exception("Game instance not found");
         }
-        $avgRating = DB::table('assessment')
-            ->where('GameInstanceId', $gameInstanceId)
-            ->avg('Value');
+
+        // Detectar tipo de juego según tabla relacionada con datos
+        $gameType = null;
+        if ($gameInstance->hangman()->exists()) {
+            $gameType = 'Hangman';
+        } elseif ($gameInstance->memorygame()->exists()) {
+            $gameType = 'Memory';
+        } elseif ($gameInstance->puzzle()->exists()) {
+            $gameType = 'Puzzle';
+        } elseif ($gameInstance->solvetheword()->exists()) {
+            $gameType = 'Solve The Word';
+        } else {
+            $gameType = 'Unknown';
+        }
+
+        $programmings = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->get();
+        $comments = [];
+
+        foreach ($programmings as $programming) {
+            $sessions = GameSessions::where('ProgrammingGameId', $programming->Id)->get();
+
+            foreach ($sessions as $session) {
+                // Buscar assessment del estudiante para esta instancia
+                $assessment = Assessment::where('GameInstanceId', $gameInstanceId)
+                    ->where('UserId', $session->StudentId)
+                    ->first();
+
+                if ($assessment && !empty($assessment->Comments)) {
+                    $user = User::find($session->StudentId);
+
+                    $comments[] = [
+                        'comment' => $assessment->Comments,
+                        'rating' => $assessment->Value,
+                        'user' => $user ? "{$user->Name} {$user->LastName}" : 'Desconocido',
+                        'programming_name' => $programming->Name,
+                    ];
+                }
+            }
+        }
 
         return [
-            'game_instance_id' => $gameInstanceId,
-            'sessions_count' => $sessions,
-            'average_rating' => round($avgRating, 2),
+            'game_name' => $gameInstance->Name,
+            'game_type' => $gameType,
+            'comments' => $comments,
         ];
     }
+
+
 
     /**
      * Devuelve la configuración completa de un juego, incluyendo detalles específicos según el tipo.
@@ -667,17 +705,20 @@ class GameService
             $hangmanWords = null;
 
         // Memory
-        $memory = MemoryGame::where('GameInstanceId', $gameInstanceId)->first();
-        $memoryPairs = null;
-        if ($memory) {
-            $memoryPairs = [
-                [
+        $memoryPairs = MemoryGame::where('GameInstanceId', $gameInstanceId)
+            ->get()
+            ->map(function ($memory) {
+                return [
                     'mode' => $memory->Mode,
-                    'path_image1' => $memory->PathImage1,
-                    'path_image2' => $memory->PathImage2,
-                    'description_image' => $memory->Description,
-                ]
-            ];
+                    'path_image1' => $memory->PathImg1,
+                    'path_image2' => $memory->PathImg2,
+                    'description_image' => $memory->DescriptionImg,
+                ];
+            })
+            ->toArray();
+
+        if (empty($memoryPairs)) {
+            $memoryPairs = null;
         }
 
         // Puzzle
