@@ -614,43 +614,47 @@ class GameService
             throw new \Exception("Game instance not found");
         }
 
-        // Detectar tipo de juego según tabla relacionada con datos
-        $gameType = null;
-        if ($gameInstance->hangman()->exists()) {
-            $gameType = 'Hangman';
-        } elseif ($gameInstance->memorygame()->exists()) {
-            $gameType = 'Memory';
-        } elseif ($gameInstance->puzzle()->exists()) {
-            $gameType = 'Puzzle';
-        } elseif ($gameInstance->solvetheword()->exists()) {
-            $gameType = 'Solve The Word';
-        } else {
-            $gameType = 'Unknown';
-        }
+        // Detectar tipo de juego
+        $gameType = match (true) {
+            $gameInstance->hangman()->exists() => 'Hangman',
+            $gameInstance->memorygame()->exists() => 'Memory',
+            $gameInstance->puzzle()->exists() => 'Puzzle',
+            $gameInstance->solvetheword()->exists() => 'Solve The Word',
+            default => 'Unknown'
+        };
 
-        $programmings = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->get();
+        // Obtener todos los comentarios del assessment asociados a esa instancia
+        $assessments = Assessment::with('userId')  // relación con User
+            ->where('GameInstanceId', $gameInstanceId)
+            ->whereNotNull('Comments')
+            ->get();
+
+        // Obtener las programaciones para mapear ProgrammingGameId => Nombre
+        $programmings = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->get()->keyBy('Id');
+
+        // Obtener las sesiones para mapear userId => programming name
+        $sessionMap = GameSessions::whereIn('ProgrammingGameId', $programmings->keys())
+            ->get()
+            ->groupBy('StudentId');
+
         $comments = [];
 
-        foreach ($programmings as $programming) {
-            $sessions = GameSessions::where('ProgrammingGameId', $programming->Id)->get();
+        foreach ($assessments as $assessment) {
+            $user = $assessment->userId;
 
-            foreach ($sessions as $session) {
-                // Buscar assessment del estudiante para esta instancia
-                $assessment = Assessment::where('GameInstanceId', $gameInstanceId)
-                    ->where('UserId', $session->StudentId)
-                    ->first();
-
-                if ($assessment && !empty($assessment->Comments)) {
-                    $user = User::find($session->StudentId);
-
-                    $comments[] = [
-                        'comment' => $assessment->Comments,
-                        'rating' => $assessment->Value,
-                        'user' => $user ? "{$user->Name} {$user->LastName}" : 'Desconocido',
-                        'programming_name' => $programming->Name,
-                    ];
-                }
+            // Encontrar la primera programación (si existe)
+            $programmingName = 'No registrada';
+            if (isset($sessionMap[$assessment->UserId])) {
+                $firstSession = $sessionMap[$assessment->UserId]->first();
+                $programmingName = $programmings[$firstSession->ProgrammingGameId]->Name ?? 'No encontrada';
             }
+
+            $comments[] = [
+                'comment' => $assessment->Comments,
+                'rating' => $assessment->Value,
+                'user' => $user ? "{$user->Name} {$user->LastName}" : 'Desconocido',
+                'programming_name' => $programmingName,
+            ];
         }
 
         return [
@@ -659,7 +663,6 @@ class GameService
             'comments' => $comments,
         ];
     }
-
 
 
     /**
