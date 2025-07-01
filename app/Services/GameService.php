@@ -390,7 +390,10 @@ class GameService
         $gameInstanceId = $gameInstance->Id;
         Log::info('[GameService][createByGameType] GameInstance creado', ['gameInstanceId' => $gameInstanceId]);
 
-        switch (strtolower($gameType)) {
+        $gameTypeLower = strtolower($gameType);
+        Log::info('[GameService][createByGameType] Ejecutando switch con gameType', ['gameType' => $gameType, 'gameTypeLower' => $gameTypeLower]);
+        
+        switch ($gameTypeLower) {
             case 'hangman':
                 if (!empty($data['Words']) && is_array($data['Words'])) {
                     foreach ($data['Words'] as $wordData) {
@@ -421,6 +424,9 @@ class GameService
                     return 'For Memory game, an array of image pairs or items is required';
                 }
 
+                // Directorio destino para imágenes de memory
+                $destino = rtrim(env('PATH_STORAGE'), '/\\') . DIRECTORY_SEPARATOR . 'memory';
+
                 foreach ($data['Pairs'] as $index => $pair) {
                     try {
                         if ($data['Mode'] === 'II') {
@@ -429,29 +435,85 @@ class GameService
                                 continue;
                             }
 
+                            // Procesar PathImg1
+                            $upload1 = StorageUtility::uploadImage(
+                                $pair['PathImg1'],
+                                $destino,
+                                null, // Generar nombre automáticamente
+                                ['jpg', 'jpeg', 'png'],
+                                'memory_'
+                            );
+
+                            if (empty($upload1['success'][0])) {
+                                Log::error('[GameService][createByGameType] Error subiendo PathImg1', ['errores' => $upload1['errors']]);
+                                continue;
+                            }
+
+                            // Procesar PathImg2
+                            $upload2 = StorageUtility::uploadImage(
+                                $pair['PathImg2'],
+                                $destino,
+                                null, // Generar nombre automáticamente
+                                ['jpg', 'jpeg', 'png'],
+                                'memory_'
+                            );
+
+                            if (empty($upload2['success'][0])) {
+                                Log::error('[GameService][createByGameType] Error subiendo PathImg2', ['errores' => $upload2['errors']]);
+                                continue;
+                            }
+
                             MemoryGame::create([
                                 'GameInstanceId' => $gameInstanceId,
                                 'Mode' => 'II',
-                                'PathImg1' => $pair['PathImg1'],
-                                'PathImg2' => $pair['PathImg2'],
+                                'PathImg1' => $upload1['success'][0], // ruta del archivo guardado
+                                'PathImg2' => $upload2['success'][0], // ruta del archivo guardado
                                 'DescriptionImg' => null, // No aplica en modo II
                             ]);
+
                         } elseif ($data['Mode'] === 'ID') {
                             if (empty($pair['PathImg1']) || empty($pair['DescriptionImg'])) {
                                 Log::warning('[GameService][createByGameType] Item inválido modo ID', ['index' => $index, 'pair' => $pair]);
                                 continue;
                             }
 
+                            // Procesar PathImg1
+                            $upload1 = StorageUtility::uploadImage(
+                                $pair['PathImg1'],
+                                $destino,
+                                null, // Generar nombre automáticamente
+                                ['jpg', 'jpeg', 'png'],
+                                'memory_'
+                            );
+
+                            if (empty($upload1['success'][0])) {
+                                Log::error('[GameService][createByGameType] Error subiendo PathImg1', ['errores' => $upload1['errors']]);
+                                continue;
+                            }
+
                             MemoryGame::create([
                                 'GameInstanceId' => $gameInstanceId,
                                 'Mode' => 'ID',
-                                'PathImg1' => $pair['PathImg1'],
+                                'PathImg1' => $upload1['success'][0], // ruta del archivo guardado
                                 'PathImg2' => null, // No aplica en modo ID
                                 'DescriptionImg' => $pair['DescriptionImg'],
                             ]);
                         }
                     } catch (\Exception $e) {
                         Log::error('[GameService][createByGameType] Error creando MemoryGame', ['error' => $e->getMessage(), 'pair' => $pair]);
+                    }
+                }
+
+                // Guardar configuraciones del juego si existen
+                if (!empty($data['Settings']) && is_array($data['Settings'])) {
+                    foreach ($data['Settings'] as $setting) {
+                        if (!empty($setting['Key']) && isset($setting['Value'])) {
+                            GameSettings::create([
+                                'GameInstanceId' => $gameInstanceId,
+                                'ConfigKey' => $setting['Key'],
+                                'ConfigValue' => $setting['Value'],
+                            ]);
+                        }
                     }
                 }
 
