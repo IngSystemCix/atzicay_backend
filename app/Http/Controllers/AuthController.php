@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AuthUser;
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -62,15 +63,18 @@ class AuthController extends Controller
         ]);
 
         try {
-            $auth0 = new Auth0([
-                'domain' => env('AUTH0_DOMAIN'),
-                'clientId' => env('AUTH0_CLIENT_ID'),
-                'clientSecret' => env('AUTH0_CLIENT_SECRET'),
+            $config = new SdkConfiguration([
+                'domain' => config('auth0.domain'),
+                'clientId' => config('auth0.client_id'),
+                'clientSecret' => config('auth0.client_secret'),
+                'cookieSecret' => config('auth0.cookie_secret'),
+                'audience' => [config('auth0.audience')],
                 'persistUser' => false,
                 'persistAccessToken' => false,
                 'persistRefreshToken' => false,
-                'cookieSecret' => env('AUTH0_COOKIE_SECRET'),
             ]);
+
+            $auth0 = new Auth0($config);
 
             $userInfo = $auth0->decode($request->id_token);
 
@@ -99,7 +103,7 @@ class AuthController extends Controller
                     'Name' => $name,
                     'Email' => $email,
                     'LastName' => $familyName,
-                    'Gender' => 'other', // Valor string simple, sin enum
+                    'Gender' => 'O', // Valor string simple, sin enum
                     'CountryId' => 1,
                     'City' => 'N/A',
                     'Birthdate' => '2000-01-01',
