@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Assessment;
 use App\Models\GameInstance;
+use App\Models\GameProgress;
 use App\Models\GameSessions;
 use App\Models\GameSettings;
 use App\Models\Hangman;
@@ -16,6 +17,7 @@ use App\Models\ProgrammingGame;
 use Illuminate\Support\Facades\DB;
 use App\Utils\StorageUtility;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class GameService
 {
@@ -765,6 +767,109 @@ class GameService
             'solve_the_word' => $solveWords,
             'settings' => $settings,
         ];
+    }
+
+    public function createGameSession(int $programmingGameId, int $studentId, array $data): string
+    {
+        // Validar datos de la sesión
+        $validator = Validator::make($data, [
+            'Duration' => 'required|integer|min:1',
+            'Won' => 'required|boolean',
+            'DateGame' => 'required|date',
+            'Progress' => 'required|array', // Se espera un JSON válido
+        ]);
+
+        if ($validator->fails()) {
+            return 'Error: ' . implode('; ', $validator->errors()->all());
+        }
+
+        // Crear la sesión
+        $session = new GameSessions([
+            'ProgrammingGameId' => $programmingGameId,
+            'StudentId' => $studentId,
+            'Duration' => $data['Duration'],
+            'Won' => $data['Won'],
+            'DateGame' => now(), // Fecha actual
+        ]);
+
+        $session->save();
+
+        // Crear el progreso relacionado
+        $progress = new GameProgress([
+            'GameSessionId' => $session->Id,
+            'Progress' => json_encode($data['Progress'], JSON_UNESCAPED_UNICODE)
+        ]);
+
+        $progress->save();
+
+        return 'Game session and progress created successfully. Session ID: ' . $session->Id;
+    }
+
+    public function getGameProgressByInstanceAndUser(int $gameInstanceId, int $userId): array|string
+    {
+        // Buscar la programación del juego
+        $programmings = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->pluck('Id');
+
+        if ($programmings->isEmpty()) {
+            return "No programming found for this game instance.";
+        }
+
+        // Buscar la sesión del usuario en cualquiera de las programaciones
+        $session = GameSessions::whereIn('ProgrammingGameId', $programmings)
+            ->where('StudentId', $userId)
+            ->orderByDesc('DateGame') // para traer la última jugada
+            ->first();
+
+        if (!$session) {
+            return "No session found for user in this game instance.";
+        }
+
+        $progress = GameProgress::where('GameSessionId', $session->Id)->first();
+
+        if (!$progress) {
+            return "No progress found for the user's session.";
+        }
+
+        $decoded = json_decode($progress->Progress, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return "Progress data is invalid JSON.";
+        }
+
+        return $decoded;
+    }
+
+    public function updateGameSessionByInstanceAndUser(int $gameInstanceId, int $userId, array $data): string
+    {
+        // Validar los datos de entrada
+        $validator = Validator::make($data, [
+            'Duration' => 'required|integer|min:1',
+            'Won' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return 'Error: ' . implode('; ', $validator->errors()->all());
+        }
+
+        // Buscar la programación relacionada con la instancia
+        $programmingIds = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->pluck('Id');
+
+        // Buscar la última sesión del usuario en esa instancia
+        $session = GameSessions::whereIn('ProgrammingGameId', $programmingIds)
+            ->where('StudentId', $userId)
+            ->latest('DateGame')
+            ->first();
+
+        if (!$session) {
+            return 'Error: No session found for this user and game instance.';
+        }
+
+        // Actualizar datos
+        $session->Duration = $data['Duration'];
+        $session->Won = $data['Won'];
+        $session->save();
+
+        return 'Game session updated successfully. Session ID: ' . $session->Id;
     }
 
 }

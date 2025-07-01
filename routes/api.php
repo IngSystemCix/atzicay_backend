@@ -39,5 +39,12 @@ Route::prefix('v1/atzicay')->group(function () {
 
         // Rating Routes
         Route::post('/rate-game/{gameInstanceId}/{userId}', [RatingController::class, 'valueRating']);
+
+        // game sessions
+        Route::post('/game-sessions/{programmingGameId}/{studentId}', [GameController::class, 'storeGameSession']);
+        Route::put('/game-sessions/{gameInstanceId}/{userId}', [GameController::class, 'updateSessionByInstanceAndUser']);
+
+        // game progress
+        Route::get('/game-progress/{gameInstanceId}/{userId}', [GameController::class, 'getGameProgress']);
     });
 });

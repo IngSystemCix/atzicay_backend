@@ -843,4 +843,185 @@ class GameController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/game-sessions/{programmingGameId}/{studentId}",
+     *     operationId="storeGameSession",
+     *     tags={"Game Sessions"},
+     *     summary="Crear una nueva sesión de juego",
+     *     description="Crea una nueva sesión de juego para un usuario dado y una programación específica. También almacena el progreso del juego en formato JSON. La fecha y hora se generan automáticamente.",
+     *     @OA\Parameter(
+     *         name="programmingGameId",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la programación del juego",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="studentId",
+     *         in="path",
+     *         required=true,
+     *         description="ID del estudiante que juega",
+     *         @OA\Schema(type="integer", example=42)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos de la sesión de juego",
+     *         @OA\JsonContent(
+     *             required={"Duration", "Won", "Progress"},
+     *             @OA\Property(
+     *                 property="Duration",
+     *                 type="integer",
+     *                 example=180,
+     *                 description="Duración en segundos del juego"
+     *             ),
+     *             @OA\Property(
+     *                 property="Won",
+     *                 type="boolean",
+     *                 example=true,
+     *                 description="Indica si el estudiante ganó"
+     *             ),
+     *             @OA\Property(
+     *                 property="Progress",
+     *                 type="object",
+     *                 description="Progreso del juego en formato JSON libre",
+     *                 example={
+     *                     "score": 2500,
+     *                     "steps": {"first": "move-left", "second": "match"},
+     *                     "finished": true
+     *                 }
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Sesión de juego y progreso creados exitosamente",
+     *         @OA\JsonContent(
+     *             type="string",
+     *             example="Game session and progress created successfully. Session ID: 101"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o datos incompletos",
+     *         @OA\JsonContent(
+     *             type="string",
+     *             example="Error: Duration is required; Progress must be a valid object;"
+     *         )
+     *     )
+     * )
+     */
+    public function storeGameSession(Request $request, int $programmingGameId, int $studentId)
+    {
+        $message = $this->gameService->createGameSession(
+            $programmingGameId,
+            $studentId,
+            $request->all()
+        );
+
+        return response($message);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/game-progress/{gameInstanceId}/{userId}",
+     *     operationId="getGameProgressByGameAndUser",
+     *     tags={"Game Progress"},
+     *     summary="Obtener el progreso de juego por usuario e instancia",
+     *     description="Devuelve el progreso de un usuario en un juego específico, tomando la última sesión registrada.",
+     *     @OA\Parameter(
+     *         name="gameInstanceId",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la instancia del juego",
+     *         @OA\Schema(type="integer", example=5)
+     *     ),
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         description="ID del usuario/jugador",
+     *         @OA\Schema(type="integer", example=42)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Progreso encontrado exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             example={
+     *                 "score": 800,
+     *                 "steps": {"1": "click", "2": "match"},
+     *                 "finished": true
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontró progreso para ese usuario y juego",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             example={"message": "No progress found for the user's session."}
+     *         )
+     *     )
+     * )
+     */
+    public function showProgressByGameAndUser(int $gameInstanceId, int $userId)
+    {
+        $result = $this->gameService->getGameProgressByInstanceAndUser($gameInstanceId, $userId);
+
+        if (is_string($result)) {
+            return response()->json(['message' => $result], 404);
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/game-sessions/{gameInstanceId}/{userId}",
+     *     operationId="updateGameSessionByInstanceAndUser",
+     *     tags={"Game Sessions"},
+     *     summary="Actualizar la última sesión de juego de un usuario en una instancia de juego",
+     *     description="Actualiza los datos de la última sesión registrada del usuario para una instancia de juego específica.",
+     *     @OA\Parameter(
+     *         name="gameInstanceId",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la instancia de juego",
+     *         @OA\Schema(type="integer", example=12)
+     *     ),
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         description="ID del usuario/jugador",
+     *         @OA\Schema(type="integer", example=42)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"Duration", "Won"},
+     *             @OA\Property(property="Duration", type="integer", example=220, description="Duración en segundos del juego"),
+     *             @OA\Property(property="Won", type="boolean", example=true, description="Indica si el jugador ganó")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sesión de juego actualizada exitosamente",
+     *         @OA\JsonContent(type="string", example="Game session updated successfully. Session ID: 101")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o sesión no encontrada",
+     *         @OA\JsonContent(type="string", example="Error: No session found for this user and game instance.")
+     *     )
+     * )
+     */
+    public function updateSessionByInstanceAndUser(Request $request, int $gameInstanceId, int $userId)
+    {
+        $message = $this->gameService->updateGameSessionByInstanceAndUser($gameInstanceId, $userId, $request->all());
+
+        return response($message);
+    }
+
 }
