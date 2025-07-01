@@ -504,17 +504,19 @@ class GameService
                     }
                 }
 
-                // Guardar configuraciones del juego si existen
+                // Guardar configuraciones del juego (obligatorio)
                 if (!empty($data['Settings']) && is_array($data['Settings'])) {
                     foreach ($data['Settings'] as $setting) {
-                        if (!empty($setting['Key']) && isset($setting['Value'])) {
+                        if (!empty($setting['ConfigKey']) && isset($setting['ConfigValue'])) {
                             GameSettings::create([
                                 'GameInstanceId' => $gameInstanceId,
-                                'ConfigKey' => $setting['Key'],
-                                'ConfigValue' => $setting['Value'],
+                                'ConfigKey' => $setting['ConfigKey'],
+                                'ConfigValue' => $setting['ConfigValue'],
                             ]);
                         }
                     }
+                } else {
+                    Log::warning('[GameService][createByGameType] Settings faltantes para Memory game', ['gameInstanceId' => $gameInstanceId]);
                 }
 
                 return 'Memory game created successfully';
