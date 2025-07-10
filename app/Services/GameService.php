@@ -876,4 +876,21 @@ class GameService
         return 'Game session updated successfully. Session ID: ' . $session->Id;
     }
 
+    public function privacityGame(int $gameInstanceId, string $privacity): string
+    {
+        $gameInstance = GameInstance::find($gameInstanceId);
+        if (!$gameInstance) {
+            return 'Game instance not found';
+        }
+
+        // Validar el valor de privacidad
+        if (!in_array($privacity, ['P', 'R'])) {
+            return 'Invalid privacy value. Use "P" for public or "R" for restricted.';
+        }
+
+        $gameInstance->Visibility = $privacity;
+        $gameInstance->save();
+
+        return 'Game instance privacy updated successfully';
+    }
 }

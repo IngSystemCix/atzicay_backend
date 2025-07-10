@@ -1024,4 +1024,59 @@ class GameController extends Controller
         return response($message);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/games/{gameInstanceId}/privacy/{privacity}",
+     *     summary="Actualizar la privacidad de una instancia de juego",
+     *     description="Establece la visibilidad de una GameInstance como pública (P) o restringida (R)",
+     *     operationId="privacityGame",
+     *     tags={"Games"},
+     *
+     *     @OA\Parameter(
+     *         name="gameInstanceId",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la instancia del juego",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="privacity",
+     *         in="path",
+     *         required=true,
+     *         description="Valor de privacidad: 'P' para público, 'R' para restringido",
+     *         @OA\Schema(type="string", enum={"P", "R"}, example="P")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Privacidad actualizada exitosamente",
+     *         @OA\JsonContent(
+     *             type="string",
+     *             example="Game instance privacy updated successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="GameInstance no encontrada",
+     *         @OA\JsonContent(
+     *             type="string",
+     *             example="Game instance not found"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Valor de privacidad inválido",
+     *         @OA\JsonContent(
+     *             type="string",
+     *             example="Invalid privacy value. Use P for public or R for restricted."
+     *         )
+     *     )
+     * )
+     */
+    public function privacityGame(int $gameInstanceId, string $privacity)
+    {
+        $message = $this->gameService->privacityGame($gameInstanceId, $privacity);
+        return response()->json($message);
+    }
+
 }

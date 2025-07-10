@@ -23,6 +23,7 @@ Route::prefix('v1/atzicay')->group(function () {
         Route::post('/my-game/create/{userId}', [GameController::class, 'createGame']);
         Route::get('/game/report/{gameInstanceId}', [GameController::class, 'reportGame']);
         Route::get('/game/settings/{gameInstanceId}', [GameController::class, 'getSettingsGame']);
+        Route::put('/game/{gameInstanceId}/privacy/{privacity}', [GameController::class, 'privacityGame']);
 
         // Programming Routes
         Route::get('/my-programming-games/{userId}', [ProgrammingController::class, 'myProgrammingGames']);

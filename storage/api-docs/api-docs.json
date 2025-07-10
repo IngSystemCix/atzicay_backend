@@ -1801,6 +1801,320 @@
                 }
             }
         },
+        "/game-sessions/{programmingGameId}/{studentId}": {
+            "post": {
+                "tags": [
+                    "Game Sessions"
+                ],
+                "summary": "Crear una nueva sesión de juego",
+                "description": "Crea una nueva sesión de juego para un usuario dado y una programación específica. También almacena el progreso del juego en formato JSON. La fecha y hora se generan automáticamente.",
+                "operationId": "storeGameSession",
+                "parameters": [
+                    {
+                        "name": "programmingGameId",
+                        "in": "path",
+                        "description": "ID de la programación del juego",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "studentId",
+                        "in": "path",
+                        "description": "ID del estudiante que juega",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 42
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Datos de la sesión de juego",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Duration",
+                                    "Won",
+                                    "Progress"
+                                ],
+                                "properties": {
+                                    "Duration": {
+                                        "description": "Duración en segundos del juego",
+                                        "type": "integer",
+                                        "example": 180
+                                    },
+                                    "Won": {
+                                        "description": "Indica si el estudiante ganó",
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "Progress": {
+                                        "description": "Progreso del juego en formato JSON libre",
+                                        "type": "object",
+                                        "example": {
+                                            "score": 2500,
+                                            "steps": {
+                                                "first": "move-left",
+                                                "second": "match"
+                                            },
+                                            "finished": true
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sesión de juego y progreso creados exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Game session and progress created successfully. Session ID: 101"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación o datos incompletos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Error: Duration is required; Progress must be a valid object;"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game-progress/{gameInstanceId}/{userId}": {
+            "get": {
+                "tags": [
+                    "Game Progress"
+                ],
+                "summary": "Obtener el progreso de juego por usuario e instancia",
+                "description": "Devuelve el progreso de un usuario en un juego específico, tomando la última sesión registrada.",
+                "operationId": "getGameProgressByGameAndUser",
+                "parameters": [
+                    {
+                        "name": "gameInstanceId",
+                        "in": "path",
+                        "description": "ID de la instancia del juego",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID del usuario/jugador",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 42
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Progreso encontrado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "score": 800,
+                                    "steps": {
+                                        "1": "click",
+                                        "2": "match"
+                                    },
+                                    "finished": true
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró progreso para ese usuario y juego",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "No progress found for the user's session."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game-sessions/{gameInstanceId}/{userId}": {
+            "put": {
+                "tags": [
+                    "Game Sessions"
+                ],
+                "summary": "Actualizar la última sesión de juego de un usuario en una instancia de juego",
+                "description": "Actualiza los datos de la última sesión registrada del usuario para una instancia de juego específica.",
+                "operationId": "updateGameSessionByInstanceAndUser",
+                "parameters": [
+                    {
+                        "name": "gameInstanceId",
+                        "in": "path",
+                        "description": "ID de la instancia de juego",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 12
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID del usuario/jugador",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 42
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Duration",
+                                    "Won"
+                                ],
+                                "properties": {
+                                    "Duration": {
+                                        "description": "Duración en segundos del juego",
+                                        "type": "integer",
+                                        "example": 220
+                                    },
+                                    "Won": {
+                                        "description": "Indica si el jugador ganó",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sesión de juego actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Game session updated successfully. Session ID: 101"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación o sesión no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Error: No session found for this user and game instance."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/games/{gameInstanceId}/privacy/{privacity}": {
+            "put": {
+                "tags": [
+                    "Games"
+                ],
+                "summary": "Actualizar la privacidad de una instancia de juego",
+                "description": "Establece la visibilidad de una GameInstance como pública (P) o restringida (R)",
+                "operationId": "privacityGame",
+                "parameters": [
+                    {
+                        "name": "gameInstanceId",
+                        "in": "path",
+                        "description": "ID de la instancia del juego",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "privacity",
+                        "in": "path",
+                        "description": "Valor de privacidad: 'P' para público, 'R' para restringido",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "P",
+                                "R"
+                            ],
+                            "example": "P"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Privacidad actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Game instance privacy updated successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "GameInstance no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Game instance not found"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Valor de privacidad inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Invalid privacy value. Use P for public or R for restricted."
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/my-programming-games/{userId}": {
             "get": {
                 "tags": [
@@ -2834,6 +3148,14 @@
         {
             "name": "Games",
             "description": "Games"
+        },
+        {
+            "name": "Game Sessions",
+            "description": "Game Sessions"
+        },
+        {
+            "name": "Game Progress",
+            "description": "Game Progress"
         },
         {
             "name": "Programming Games",
