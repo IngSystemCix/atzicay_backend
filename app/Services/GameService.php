@@ -71,7 +71,7 @@ class GameService
             ->leftJoin('puzzle', 'puzzle.GameInstanceId', '=', 'gameinstances.Id')
             ->leftJoin('solvetheword', 'solvetheword.GameInstanceId', '=', 'gameinstances.Id')
             ->leftJoin('assessment', 'assessment.GameInstanceId', '=', 'gameinstances.Id')
-            ->where('gameinstances.Activated', true)
+            ->where('gameinstances.Visibility', 'P') // Solo juegos públicos
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where(DB::raw("CONCAT(users.Name, ' ', users.LastName)"), 'like', "%$search%")
