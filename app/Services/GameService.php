@@ -895,4 +895,21 @@ class GameService
 
         return 'Game instance privacy updated successfully';
     }
+
+    public function averageAssessment(int $userId): array|string
+    {
+        $user = User::find($userId);
+        if (!$user) {
+            return 'User not found';
+        }
+        $gameInstances = GameInstance::where('ProfessorId', $userId)->pluck('Id');
+        // ahora todos los asessments de las instancias de juego del profesor pero calculate the average que califican otros usuarios
+        $average = Assessment::whereIn('GameInstanceId', $gameInstances)
+            ->where('UserId', '!=', $userId) // Excluir las calificaciones del propio profesor
+            ->avg('Value');
+
+        return [
+            'average_assessment' => $average
+        ];
+    }
 }

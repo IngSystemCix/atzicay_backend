@@ -24,6 +24,7 @@ Route::prefix('v1/atzicay')->group(function () {
         Route::get('/game/report/{gameInstanceId}', [GameController::class, 'reportGame']);
         Route::get('/game/settings/{gameInstanceId}', [GameController::class, 'getSettingsGame']);
         Route::put('/game/{gameInstanceId}/privacy/{privacity}', [GameController::class, 'privacityGame']);
+        Route::get('/assessments/average/{userId}', [GameController::class, 'averageAssessmentByUser']);
 
         // Programming Routes
         Route::get('/my-programming-games/{userId}', [ProgrammingController::class, 'myProgrammingGames']);

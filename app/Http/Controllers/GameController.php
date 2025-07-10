@@ -1079,4 +1079,72 @@ class GameController extends Controller
         return response()->json($message);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/assessments/average/{userId}",
+     *     summary="Obtener el promedio de valoraciones del usuario",
+     *     description="Calcula el promedio de las valoraciones (assessments) hechas por un usuario en las instancias de juegos.",
+     *     operationId="averageAssessmentByUser",
+     *     tags={"Assessments"},
+     *
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         description="ID del usuario",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             example=5
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Promedio de valoraciones encontrado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 oneOf={
+     *                     @OA\Schema(
+     *                         type="object",
+     *                         @OA\Property(property="average_assessment", type="number", format="float", example=87.5)
+     *                     ),
+     *                     @OA\Schema(
+     *                         type="string",
+     *                         example="No assessments found for this user."
+     *                     )
+     *                 }
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno al obtener el promedio",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error retrieving average assessment: internal error")
+     *         )
+     *     )
+     * )
+     */
+    public function averageAssessmentByUser(int $userId): JsonResponse
+    {
+        try {
+            $average = $this->gameService->averageAssessment($userId);
+            return response()->json([
+                'success' => true,
+                'data' => $average
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error retrieving average assessment: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
