@@ -157,6 +157,7 @@ class GameService
             ->select([
                 'gameinstances.Name AS name',
                 'gameinstances.Difficulty AS difficulty',
+                'gameinstances.Activated AS activated',
                 'gameinstances.Visibility AS visibility',
                 DB::raw("CONCAT(users.Name, ' ', users.LastName) AS author"),
                 DB::raw("CASE
@@ -190,6 +191,7 @@ class GameService
                 'gameinstances.Id',
                 'gameinstances.Name',
                 'gameinstances.Difficulty',
+                'gameinstances.Activated',
                 'gameinstances.Visibility',
                 'users.Name',
                 'users.LastName',
