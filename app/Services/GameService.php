@@ -419,6 +419,34 @@ class GameService
                         'Presentation' => $data['Presentation'] ?? '',
                     ]);
                 }
+
+                // Guardar configuraciones del juego (Settings)
+                if (!empty($data['Settings']) && is_array($data['Settings'])) {
+                    foreach ($data['Settings'] as $setting) {
+                        if (!empty($setting['ConfigKey']) && isset($setting['ConfigValue'])) {
+                            try {
+                                GameSettings::create([
+                                    'GameInstanceId' => $gameInstanceId,
+                                    'ConfigKey' => $setting['ConfigKey'],
+                                    'ConfigValue' => $setting['ConfigValue'],
+                                ]);
+                                Log::info('[GameService][createByGameType] Setting guardado para Hangman', [
+                                    'gameInstanceId' => $gameInstanceId,
+                                    'ConfigKey' => $setting['ConfigKey'],
+                                    'ConfigValue' => $setting['ConfigValue']
+                                ]);
+                            } catch (\Exception $e) {
+                                Log::error('[GameService][createByGameType] Error guardando Setting para Hangman', [
+                                    'error' => $e->getMessage(),
+                                    'setting' => $setting
+                                ]);
+                            }
+                        }
+                    }
+                } else {
+                    Log::warning('[GameService][createByGameType] Settings faltantes para Hangman game', ['gameInstanceId' => $gameInstanceId]);
+                }
+
                 return 'Hangman game created successfully';
 
             case 'memory':
@@ -500,8 +528,8 @@ class GameService
                             MemoryGame::create([
                                 'GameInstanceId' => $gameInstanceId,
                                 'Mode' => 'ID',
-                                'PathImg1' => $upload1['success'][0], // ruta del archivo guardado
-                                'PathImg2' => null, // No aplica en modo ID
+                                'PathImg1' => $upload1['success'][0], 
+                                'PathImg2' => null, 
                                 'DescriptionImg' => $pair['DescriptionImg'],
                             ]);
                         }
@@ -545,13 +573,13 @@ class GameService
                 $upload = StorageUtility::uploadImage(
                     $data['PathImg'],
                     $destino,
-                    null, // Generar nombre automáticamente
+                    null, 
                     ['jpg', 'jpeg', 'png'],
                     'puzzle_'
                 );
 
                 if (!empty($upload['success'][0])) {
-                    $data['PathImg'] = $upload['success'][0]; // ruta absoluta
+                    $data['PathImg'] = $upload['success'][0]; 
                     Log::info('[GameService][createByGameType] Imagen puzzle guardada', ['ruta' => $data['PathImg']]);
                 } else {
                     Log::error('[GameService][createByGameType] Error subiendo imagen puzzle', ['errores' => $upload['errors']]);
@@ -562,7 +590,7 @@ class GameService
                 try {
                     $puzzle = Puzzle::create([
                         'GameInstanceId' => $gameInstanceId,
-                        'PathImg' => $data['PathImg'], // ruta absoluta
+                        'PathImg' => $data['PathImg'], 
                         'Clue' => $data['Clue'] ?? '',
                         'Rows' => $data['Rows'] ?? 3,
                         'Cols' => $data['Cols'] ?? 3,
@@ -572,14 +600,42 @@ class GameService
                     Log::error('[GameService][createByGameType] Error creando Puzzle', ['error' => $e->getMessage(), 'data' => $data]);
                     return 'Error creating Puzzle: ' . $e->getMessage();
                 }
-                Log::info('[GameService][createByGameType] Puzzle creado', ['puzzleId' => $puzzle->Id]);
+                Log::info('[GameService][createByGameType] Puzzle creado', ['puzzleId' => $puzzle->GameInstanceId]);
+
+                // Guardar configuraciones del juego (Settings)
+                if (!empty($data['Settings']) && is_array($data['Settings'])) {
+                    foreach ($data['Settings'] as $setting) {
+                        if (!empty($setting['ConfigKey']) && isset($setting['ConfigValue'])) {
+                            try {
+                                GameSettings::create([
+                                    'GameInstanceId' => $gameInstanceId,
+                                    'ConfigKey' => $setting['ConfigKey'],
+                                    'ConfigValue' => $setting['ConfigValue'],
+                                ]);
+                                Log::info('[GameService][createByGameType] Setting guardado para Puzzle', [
+                                    'gameInstanceId' => $gameInstanceId,
+                                    'ConfigKey' => $setting['ConfigKey'],
+                                    'ConfigValue' => $setting['ConfigValue']
+                                ]);
+                            } catch (\Exception $e) {
+                                Log::error('[GameService][createByGameType] Error guardando Setting para Puzzle', [
+                                    'error' => $e->getMessage(),
+                                    'setting' => $setting
+                                ]);
+                            }
+                        }
+                    }
+                } else {
+                    Log::warning('[GameService][createByGameType] Settings faltantes para Puzzle game', ['gameInstanceId' => $gameInstanceId]);
+                }
+
                 return 'Puzzle game created successfully';
             case 'solve_the_word':
                 try {
                     $solveTheWord = SolveTheWord::create([
                         'GameInstanceId' => $gameInstanceId,
-                        'Rows' => $data['Rows'] ?? 5, // valor por defecto
-                        'Cols' => $data['Cols'] ?? 5, // valor por defecto
+                        'Rows' => $data['Rows'] ?? 5, 
+                        'Cols' => $data['Cols'] ?? 5, 
                     ]);
                 } catch (\Exception $e) {
                     Log::error('[GameService][createByGameType] Error creando SolveTheWord', ['error' => $e->getMessage(), 'data' => $data]);
@@ -590,7 +646,7 @@ class GameService
                     foreach ($data['Words'] as $wordData) {
                         try {
                             Word::create([
-                                'SolveTheWordId' => $solveTheWord->GameInstanceId, // Usar GameInstanceId que es la PK
+                                'SolveTheWordId' => $solveTheWord->GameInstanceId, 
                                 'Word' => $wordData['Word'] ?? '',
                                 'Orientation' => $wordData['Orientation'] ?? 'HR',
                             ]);
@@ -599,6 +655,34 @@ class GameService
                         }
                     }
                 }
+
+                // Guardar configuraciones del juego (Settings)
+                if (!empty($data['Settings']) && is_array($data['Settings'])) {
+                    foreach ($data['Settings'] as $setting) {
+                        if (!empty($setting['ConfigKey']) && isset($setting['ConfigValue'])) {
+                            try {
+                                GameSettings::create([
+                                    'GameInstanceId' => $gameInstanceId,
+                                    'ConfigKey' => $setting['ConfigKey'],
+                                    'ConfigValue' => $setting['ConfigValue'],
+                                ]);
+                                Log::info('[GameService][createByGameType] Setting guardado para SolveTheWord', [
+                                    'gameInstanceId' => $gameInstanceId,
+                                    'ConfigKey' => $setting['ConfigKey'],
+                                    'ConfigValue' => $setting['ConfigValue']
+                                ]);
+                            } catch (\Exception $e) {
+                                Log::error('[GameService][createByGameType] Error guardando Setting para SolveTheWord', [
+                                    'error' => $e->getMessage(),
+                                    'setting' => $setting
+                                ]);
+                            }
+                        }
+                    }
+                } else {
+                    Log::warning('[GameService][createByGameType] Settings faltantes para SolveTheWord game', ['gameInstanceId' => $gameInstanceId]);
+                }
+
                 return 'Solve the word game created successfully';
             default:
                 Log::error('[GameService][createByGameType] Tipo de juego inválido', ['gameType' => $gameType]);
