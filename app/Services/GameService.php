@@ -716,6 +716,11 @@ class GameService
             default => 'Unknown'
         };
 
+        // Obtener el total de comentarios sin paginación
+        $totalComments = Assessment::where('GameInstanceId', $gameInstanceId)
+            ->whereNotNull('Comments')
+            ->count();
+
         // Obtener los assessments paginados (solo los que tienen comentarios)
         $assessments = Assessment::with('userId')
             ->where('GameInstanceId', $gameInstanceId)
@@ -755,9 +760,11 @@ class GameService
         return [
             'game_name' => $gameInstance->Name,
             'game_type' => $gameType,
+            'total_comments' => $totalComments,
             'comments' => $comments,
         ];
     }
+
 
     /**
      * Genera un reporte de usuarios que han jugado un juego específico.
@@ -782,7 +789,13 @@ class GameService
             throw new \Exception("No ProgrammingGame associated with this instance");
         }
 
-        // Obtener el historial de jugadores con limit y offset
+        // Obtener el total de jugadores sin paginación
+        $total = DB::table('gamesessions')
+            ->where('ProgrammingGameId', $programmingGame->Id)
+            ->distinct('StudentId')
+            ->count('StudentId');
+
+        // Obtener el historial de jugadores con paginación
         $report = DB::table('gamesessions')
             ->join('users', 'gamesessions.StudentId', '=', 'users.Id')
             ->where('gamesessions.ProgrammingGameId', $programmingGame->Id)
@@ -802,9 +815,11 @@ class GameService
 
         return [
             'game_name' => $gameInstance->Name,
+            'total_players' => $total,
             'players' => $report->toArray(),
         ];
     }
+
 
     /**
      * Devuelve la configuración completa de un juego, incluyendo detalles específicos según el tipo.
