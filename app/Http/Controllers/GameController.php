@@ -637,17 +637,31 @@ class GameController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/game/report/{gameInstanceId}",
-     *     operationId="reportGame",
+     *     path="/game/ratings/{gameInstanceId}",
+     *     operationId="ratingsGame",
      *     tags={"Games"},
-     *     summary="Get game session report by game instance",
-     *     description="Generates a report of game sessions for a specific game instance, including total sessions, total minutes played, and average minutes per session per user and month.",
+     *     summary="Get game session ratings by game instance",
+     *     description="Generates a ratings of game sessions for a specific game instance, including total sessions, total minutes played, and average minutes per session per user and month.",
      *     @OA\Parameter(
      *         name="gameInstanceId",
      *         in="path",
-     *         description="ID of the game instance (ProgrammingGameId) for which the report is generated",
+     *         description="ID of the game instance (ProgrammingGameId) for which the ratings are generated",
      *         required=true,
      *         @OA\Schema(type="integer", example=12)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Number of results to return (default is 6)",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=6)
+     *     ),
+     *     @OA\Parameter(
+     *         name="offset",
+     *         in="query",
+     *         description="Number of results to skip (default is 0)",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=0)
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -655,7 +669,7 @@ class GameController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Game session report generated successfully"),
+     *             @OA\Property(property="message", type="string", example="Game session ratings generated successfully"),
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
@@ -681,13 +695,90 @@ class GameController extends Controller
      *     )
      * )
      */
-    public function ratingsGame(int $gameInstanceId)
+    public function ratingsGame(Request $request, int $gameInstanceId)
     {
         try {
-            $report = $this->gameService->ratingsByGame($gameInstanceId);
+            $limit = $request->query('limit', 6);
+            $offset = $request->query('offset', 0);
+            $report = $this->gameService->ratingsByGame($gameInstanceId, $limit, $offset);
             return ApiResponse::success($report, 'Game session ratings generated successfully');
         } catch (\Exception $e) {
             return ApiResponse::error('Error generating ratings: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Reporte de jugadores por instancia de juego.
+     *
+     * @OA\Get(
+     *     path="/game/report/{gameInstanceId}",
+     *     summary="Obtener reporte de usuarios que han jugado un juego específico",
+     *     operationId="reportGame",
+     *     tags={"Game Reports"},
+     *     @OA\Parameter(
+     *         name="gameInstanceId",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la instancia del juego",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Number of results to return (default is 6)",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=6)
+     *     ),
+     *     @OA\Parameter(
+     *         name="offset",
+     *         in="query",
+     *         description="Number of results to skip (default is 0)",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=0)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Reporte generado exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="game_name", type="string", example="Programación Básica"),
+     *             @OA\Property(
+     *                 property="players",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="UserId", type="integer", example=5),
+     *                     @OA\Property(property="Name", type="string", example="Juan"),
+     *                     @OA\Property(property="LastName", type="string", example="Romero"),
+     *                     @OA\Property(property="Email", type="string", example="juan@example.com"),
+     *                     @OA\Property(property="Duration", type="integer", example=120),
+     *                     @OA\Property(property="Won", type="boolean", example=true),
+     *                     @OA\Property(property="DateGame", type="string", format="date-time", example="2025-07-20T15:30:00Z")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Instancia de juego no encontrada o sin jugadores registrados",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Game instance not found")
+     *         )
+     *     )
+     * )
+     *
+     * @param int $gameInstanceId
+     * @return JsonResponse
+     */
+    public function reportGame(Request $request, int $gameInstanceId): JsonResponse
+    {
+        try {
+            $limit = $request->query('limit', 6);
+            $offset = $request->query('offset', 0);
+            $report = $this->gameService->reportByGame($gameInstanceId, $limit, $offset);
+            return ApiResponse::success($report, 'Game report generated successfully');
+        } catch (\Exception $e) {
+            return ApiResponse::error('Error generating report: ' . $e->getMessage(), 500);
         }
     }
 

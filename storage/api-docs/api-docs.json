@@ -1418,23 +1418,43 @@
                 }
             }
         },
-        "/game/report/{gameInstanceId}": {
+        "/game/ratings/{gameInstanceId}": {
             "get": {
                 "tags": [
                     "Games"
                 ],
-                "summary": "Get game session report by game instance",
-                "description": "Generates a report of game sessions for a specific game instance, including total sessions, total minutes played, and average minutes per session per user and month.",
-                "operationId": "reportGame",
+                "summary": "Get game session ratings by game instance",
+                "description": "Generates a ratings of game sessions for a specific game instance, including total sessions, total minutes played, and average minutes per session per user and month.",
+                "operationId": "ratingsGame",
                 "parameters": [
                     {
                         "name": "gameInstanceId",
                         "in": "path",
-                        "description": "ID of the game instance (ProgrammingGameId) for which the report is generated",
+                        "description": "ID of the game instance (ProgrammingGameId) for which the ratings are generated",
                         "required": true,
                         "schema": {
                             "type": "integer",
                             "example": 12
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return (default is 6)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 6
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Number of results to skip (default is 0)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
                         }
                     }
                 ],
@@ -1451,7 +1471,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Game session report generated successfully"
+                                            "example": "Game session ratings generated successfully"
                                         },
                                         "data": {
                                             "type": "array",
@@ -1505,6 +1525,119 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Error generating report: Some error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/report/{gameInstanceId}": {
+            "get": {
+                "tags": [
+                    "Game Reports"
+                ],
+                "summary": "Obtener reporte de usuarios que han jugado un juego específico",
+                "description": "Reporte de jugadores por instancia de juego.",
+                "operationId": "reportGame",
+                "parameters": [
+                    {
+                        "name": "gameInstanceId",
+                        "in": "path",
+                        "description": "ID de la instancia del juego",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return (default is 6)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 6
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Number of results to skip (default is 0)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte generado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "game_name": {
+                                            "type": "string",
+                                            "example": "Programación Básica"
+                                        },
+                                        "players": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "UserId": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "Name": {
+                                                        "type": "string",
+                                                        "example": "Juan"
+                                                    },
+                                                    "LastName": {
+                                                        "type": "string",
+                                                        "example": "Romero"
+                                                    },
+                                                    "Email": {
+                                                        "type": "string",
+                                                        "example": "juan@example.com"
+                                                    },
+                                                    "Duration": {
+                                                        "type": "integer",
+                                                        "example": 120
+                                                    },
+                                                    "Won": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "DateGame": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-07-20T15:30:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Instancia de juego no encontrada o sin jugadores registrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Game instance not found"
                                         }
                                     },
                                     "type": "object"
@@ -2109,6 +2242,84 @@
                                     "type": "string"
                                 },
                                 "example": "Invalid privacy value. Use P for public or R for restricted."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/assessments/average/{userId}": {
+            "get": {
+                "tags": [
+                    "Assessments"
+                ],
+                "summary": "Obtener el promedio de valoraciones del usuario",
+                "description": "Calcula el promedio de las valoraciones (assessments) hechas por un usuario en las instancias de juegos.",
+                "operationId": "averageAssessmentByUser",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID del usuario",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Promedio de valoraciones encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "oneOf": [
+                                                {
+                                                    "properties": {
+                                                        "average_assessment": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 87.5
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "example": "No assessments found for this user."
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno al obtener el promedio",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error retrieving average assessment: internal error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
                             }
                         }
                     }
@@ -3150,12 +3361,20 @@
             "description": "Games"
         },
         {
+            "name": "Game Reports",
+            "description": "Game Reports"
+        },
+        {
             "name": "Game Sessions",
             "description": "Game Sessions"
         },
         {
             "name": "Game Progress",
             "description": "Game Progress"
+        },
+        {
+            "name": "Assessments",
+            "description": "Assessments"
         },
         {
             "name": "Programming Games",

@@ -528,8 +528,8 @@ class GameService
                             MemoryGame::create([
                                 'GameInstanceId' => $gameInstanceId,
                                 'Mode' => 'ID',
-                                'PathImg1' => $upload1['success'][0], 
-                                'PathImg2' => null, 
+                                'PathImg1' => $upload1['success'][0],
+                                'PathImg2' => null,
                                 'DescriptionImg' => $pair['DescriptionImg'],
                             ]);
                         }
@@ -573,13 +573,13 @@ class GameService
                 $upload = StorageUtility::uploadImage(
                     $data['PathImg'],
                     $destino,
-                    null, 
+                    null,
                     ['jpg', 'jpeg', 'png'],
                     'puzzle_'
                 );
 
                 if (!empty($upload['success'][0])) {
-                    $data['PathImg'] = $upload['success'][0]; 
+                    $data['PathImg'] = $upload['success'][0];
                     Log::info('[GameService][createByGameType] Imagen puzzle guardada', ['ruta' => $data['PathImg']]);
                 } else {
                     Log::error('[GameService][createByGameType] Error subiendo imagen puzzle', ['errores' => $upload['errors']]);
@@ -590,7 +590,7 @@ class GameService
                 try {
                     $puzzle = Puzzle::create([
                         'GameInstanceId' => $gameInstanceId,
-                        'PathImg' => $data['PathImg'], 
+                        'PathImg' => $data['PathImg'],
                         'Clue' => $data['Clue'] ?? '',
                         'Rows' => $data['Rows'] ?? 3,
                         'Cols' => $data['Cols'] ?? 3,
@@ -634,8 +634,8 @@ class GameService
                 try {
                     $solveTheWord = SolveTheWord::create([
                         'GameInstanceId' => $gameInstanceId,
-                        'Rows' => $data['Rows'] ?? 5, 
-                        'Cols' => $data['Cols'] ?? 5, 
+                        'Rows' => $data['Rows'] ?? 5,
+                        'Cols' => $data['Cols'] ?? 5,
                     ]);
                 } catch (\Exception $e) {
                     Log::error('[GameService][createByGameType] Error creando SolveTheWord', ['error' => $e->getMessage(), 'data' => $data]);
@@ -646,7 +646,7 @@ class GameService
                     foreach ($data['Words'] as $wordData) {
                         try {
                             Word::create([
-                                'SolveTheWordId' => $solveTheWord->GameInstanceId, 
+                                'SolveTheWordId' => $solveTheWord->GameInstanceId,
                                 'Word' => $wordData['Word'] ?? '',
                                 'Orientation' => $wordData['Orientation'] ?? 'HR',
                             ]);
@@ -692,8 +692,14 @@ class GameService
 
     /**
      * Genera un reporte de sesiones y estadísticas para un juego específico.
+     * 
+     * @param int $gameInstanceId
+     * @param int $limit Número máximo de comentarios a devolver (por defecto 6)
+     * @param int $offset Número de comentarios a omitir (por defecto 0)
+     * @return array
+     * @throws \Exception
      */
-    public function ratingsByGame(int $gameInstanceId)
+    public function ratingsByGame(int $gameInstanceId, int $limit = 6, int $offset = 0)
     {
         $gameInstance = GameInstance::find($gameInstanceId);
 
@@ -710,10 +716,12 @@ class GameService
             default => 'Unknown'
         };
 
-        // Obtener todos los comentarios del assessment asociados a esa instancia
-        $assessments = Assessment::with('userId')  // relación con User
+        // Obtener los assessments paginados (solo los que tienen comentarios)
+        $assessments = Assessment::with('userId')
             ->where('GameInstanceId', $gameInstanceId)
             ->whereNotNull('Comments')
+            ->limit($limit)
+            ->offset($offset)
             ->get();
 
         // Obtener las programaciones para mapear ProgrammingGameId => Nombre
@@ -751,6 +759,52 @@ class GameService
         ];
     }
 
+    /**
+     * Genera un reporte de usuarios que han jugado un juego específico.
+     * 
+     * @param int $gameInstanceId
+     * @param int $limit Número de resultados a retornar (por defecto 6)
+     * @param int $offset Número de resultados a omitir (por defecto 0)
+     * @return array
+     * @throws \Exception
+     */
+    public function reportByGame(int $gameInstanceId, int $limit = 6, int $offset = 0)
+    {
+        // Validar si la instancia del juego existe
+        $gameInstance = GameInstance::find($gameInstanceId);
+        if (!$gameInstance) {
+            throw new \Exception("Game instance not found");
+        }
+
+        // Buscar el juego de programación relacionado a esa instancia
+        $programmingGame = ProgrammingGame::where('GameInstancesId', $gameInstanceId)->first();
+        if (!$programmingGame) {
+            throw new \Exception("No ProgrammingGame associated with this instance");
+        }
+
+        // Obtener el historial de jugadores con limit y offset
+        $report = DB::table('gamesessions')
+            ->join('users', 'gamesessions.StudentId', '=', 'users.Id')
+            ->where('gamesessions.ProgrammingGameId', $programmingGame->Id)
+            ->select(
+                'users.Id as UserId',
+                'users.Name',
+                'users.LastName',
+                'users.Email',
+                'gamesessions.Duration',
+                'gamesessions.Won',
+                'gamesessions.DateGame'
+            )
+            ->orderBy('gamesessions.DateGame', 'desc')
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
+
+        return [
+            'game_name' => $gameInstance->Name,
+            'players' => $report->toArray(),
+        ];
+    }
 
     /**
      * Devuelve la configuración completa de un juego, incluyendo detalles específicos según el tipo.
