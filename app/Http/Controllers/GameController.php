@@ -681,13 +681,13 @@ class GameController extends Controller
      *     )
      * )
      */
-    public function reportGame(int $gameInstanceId)
+    public function ratingsGame(int $gameInstanceId)
     {
         try {
-            $report = $this->gameService->reportByGame($gameInstanceId);
-            return ApiResponse::success($report, 'Game session report generated successfully');
+            $report = $this->gameService->ratingsByGame($gameInstanceId);
+            return ApiResponse::success($report, 'Game session ratings generated successfully');
         } catch (\Exception $e) {
-            return ApiResponse::error('Error generating report: ' . $e->getMessage(), 500);
+            return ApiResponse::error('Error generating ratings: ' . $e->getMessage(), 500);
         }
     }
 

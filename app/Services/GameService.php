@@ -693,7 +693,7 @@ class GameService
     /**
      * Genera un reporte de sesiones y estadísticas para un juego específico.
      */
-    public function reportByGame(int $gameInstanceId)
+    public function ratingsByGame(int $gameInstanceId)
     {
         $gameInstance = GameInstance::find($gameInstanceId);
 

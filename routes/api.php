@@ -21,7 +21,7 @@ Route::prefix('v1/atzicay')->group(function () {
         Route::put('/my-game/update-status/{gameInstanceId}', [GameController::class, 'updateStatusGameInstance']);
         Route::put('/my-game/update/{gameInstanceId}', [GameController::class, 'updateGameInstance']);
         Route::post('/my-game/create/{userId}', [GameController::class, 'createGame']);
-        Route::get('/game/report/{gameInstanceId}', [GameController::class, 'reportGame']);
+        Route::get('/game/ratings/{gameInstanceId}', [GameController::class, 'ratingsGame']);
         Route::get('/game/settings/{gameInstanceId}', [GameController::class, 'getSettingsGame']);
         Route::put('/game/{gameInstanceId}/privacy/{privacity}', [GameController::class, 'privacityGame']);
         Route::get('/assessments/average/{userId}', [GameController::class, 'averageAssessmentByUser']);
